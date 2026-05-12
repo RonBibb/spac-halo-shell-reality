@@ -1,5 +1,7 @@
 # Data Provenance — halo_shells_paper2 v1.0
 
+**Snapshot date:** 2026-05-12
+
 This file documents the provenance of every data file in this package: source script, input dependencies, output schema, and the manuscript section(s) that cite it.
 
 ---
@@ -11,24 +13,43 @@ This file documents the provenance of every data file in this package: source sc
 - **Producer:** `scripts/antiwarp_subsample.py`
 - **Inputs:** Paper I canonical fits CSV, galaxy_classifications.csv, sparc_sample123.csv, Rotmod_LTG/*.dat
 - **Schema:** 67 rows × 18 cols. Columns: Galaxy, T, Q, n_total, position (inner/outer), r_sh_kpc, M_sh, sigma_sh_kpc, sigma_over_r, r_over_RHI, V_gas_at_kms, V_disk_at_kms, V_bulge_at_kms, is_disk_dominated, is_inner, is_bulge_dom, is_bulgeless, is_clean
-- **Sample convention:** NGC 6674 EXCLUDED (degenerate fit at r₁ = r₂ = 3.12 kpc with both masses pegged at the upper bound). The CSV is preserved with this exclusion. The accompanying `antiwarp_summary.txt` was regenerated with NGC 6674 INCLUDED to align with Paper I; this discrepancy is documented in VALIDATION_STATUS.md and is on the future-revisions list.
-- **Cited in:** §3.3.5 (anti-warp clean subsample), §3.1.2 (mass-bound check), §3.1.4 (inner-vs-outer paired tests)
+- **Sample convention:** NGC 6674 EXCLUDED (degenerate two-shell fit at r₁ = r₂ = 3.12 kpc with both masses pegged at the upper bound 5×10¹⁰ M☉). Matches manuscript §3.3.5 primary table at 67 shells / 25 anti-warp clean shells.
+- **Cited in:** §3.3.5 (anti-warp clean subsample), §3.1.2 (scaling relations and mass-bound check), §3.1.3 (σ/r quartile gradient), §3.1.4 (inner-vs-outer paired tests)
 
 ### antiwarp_summary.txt
 
-- **Producer:** `scripts/antiwarp_subsample.py` (regenerated rerun with NGC 6674 included)
-- **Inputs:** Same as antiwarp_per_shell.csv plus Paper I canonical CSV
+- **Producer:** `scripts/antiwarp_subsample.py`
+- **Inputs:** Same as antiwarp_per_shell.csv
 - **Schema:** Plain text, formatted output
-- **Sample convention:** NGC 6674 INCLUDED, 69 shells across 52 galaxies
+- **Sample convention:** NGC 6674 EXCLUDED — matches the per-shell CSV at 67 shells across 51 galaxies, 25 anti-warp clean shells.
 - **Cited in:** §3.3.5 Table 3.3.5
+
+### backbone_shift.csv
+
+- **Producer:** `scripts/backbone_shift_test.py`
+- **Inputs:** Paper I canonical fits CSV, Rotmod_LTG/*.dat, Paper I fitter (via `shell_reality_nulls.py` shared module)
+- **Test design:** For each of 102 galaxies in the Paper I-aligned sample, refit the Paper I framework at n_shells = 0, 1, 2 and record the Burkert backbone parameters (ρ₀, a) at every level. Compare (ρ₀, a) at the BIC-selected n against (ρ₀, a) at the constrained n=0, separately for shell-bearing and non-shell-bearing galaxies.
+- **Schema:** 102 rows × ~25 cols. Columns: Galaxy, T, V_flat, v7_n_shells, v7_burk_rho0, v7_burk_a, n_pts, n0_rho0, n0_a, n0_chi2, n0_bic, n1_rho0, n1_a, n1_chi2, n1_bic, n2_rho0, n2_a, n2_chi2, n2_bic, n_selected, delta_rho0_select, delta_a_select, log_ratio_rho0, ratio_a
+- **Sample convention:** NGC 6674 INCLUDED (102-galaxy Paper I-aligned). §2.3 exception. Headline conclusions bounded against NGC 6674 exclusion (88.5% → 85.7–90.2% range).
+- **Cited in:** §3.3.7, §3.3.9 (combined verdict channel)
+- **Headline result:** Median log₁₀(ρ₀[BIC]/ρ₀[n=0]) = -0.624 dex; median log₁₀(a[BIC]/a[n=0]) = +0.318 dex; 46/52 (88.5%) shell-bearing galaxies show the "absorbing pattern" of ρ₀ down + a up when shells allowed. Wilcoxon p < 10⁻⁴ for both shifts. Shift correlates with T-type (Spearman ρ = +0.44, p = 0.001).
+
+### backbone_shift_summary.txt
+
+- **Producer:** `scripts/backbone_shift_test.py`
+- **Inputs:** Same as backbone_shift.csv
+- **Schema:** Plain text, formatted population-level summary
+- **Sample convention:** Same as backbone_shift.csv (102-galaxy Paper I-aligned, NGC 6674 included)
+- **Cited in:** §3.3.7
 
 ### upsilon_perturbation_per_galaxy.csv
 
 - **Producer:** `scripts/upsilon_perturbation.py`
-- **Inputs:** SPARC Rotmod files, sparc_sample123.csv, Paper I v7.0 production fitter (`run_canonical_fits.py` from Paper I repo)
-- **Test design:** 20 realizations per galaxy. Each draws (log Υ_disk', log Υ_bulge') from independent normal distributions with means (log 0.5, log 0.7) and standard deviation 0.1 dex. Refits the v7.0 framework on each perturbed input.
-- **Schema:** 2,040 rows × 20 cols (102 galaxies × 20 realizations; 39 fits failed on V_obs² > V_bar² mask after Υ rescaling). Columns: Galaxy, realization, Upsilon_disk, Upsilon_bulge, status, n_shells, n_points, rho0, a_kpc, chi2, chi2_red, bic, r_sh1, M_sh1, sigma_sh1, sigma_over_r1, r_sh2, M_sh2, sigma_sh2, sigma_over_r2
-- **Cited in:** §3.3.2; §3.3.7 channel (ii)
+- **Inputs:** SPARC Rotmod files, sparc_sample123.csv, Paper I Paper I production fitter
+- **Test design:** 20 realizations per galaxy. Each draws (log Υ_disk', log Υ_bulge') from independent normal distributions with means (log 0.5, log 0.7) and standard deviation 0.1 dex. Refits the Paper I framework on each perturbed input.
+- **Schema:** 2,040 rows × 20 cols (102 galaxies × 20 realizations). Columns: Galaxy, realization, Upsilon_disk, Upsilon_bulge, status, n_shells, n_points, rho0, a_kpc, chi2, chi2_red, bic, r_sh1, M_sh1, sigma_sh1, sigma_over_r1, r_sh2, M_sh2, sigma_sh2, sigma_over_r2
+- **Sample convention:** NGC 6674 INCLUDED (102-galaxy Paper I-aligned). §2.3 exception.
+- **Cited in:** §3.3.2; §3.3.9 channel (ii)
 - **Run log:** `logs/upsilon_perturbation_log.txt`
 - **Headline result:** Per-galaxy modal n_shells matches canonical in 95.1% of galaxies; per-fit match 86.2%.
 
@@ -38,7 +59,8 @@ This file documents the provenance of every data file in this package: source sc
 - **Inputs:** Same as upsilon_perturbation
 - **Test design:** 20 realizations. Each draws D' from N(D, e_D) using SPARC catalog uncertainties, refits with perturbed radii (r → r · D'/D) and perturbed baryonic velocities (V_bar → V_bar · √(D'/D)). V_obs unchanged.
 - **Schema:** 2,040 rows × 22 cols. Columns: Galaxy, realization, D_nominal_Mpc, D_perturbed_Mpc, distance_factor, e_D_Mpc, status, n_shells, n_points, rho0, a_kpc, chi2, chi2_red, bic, r_sh1, M_sh1, sigma_sh1, sigma_over_r1, r_sh2, M_sh2, sigma_sh2, sigma_over_r2
-- **Cited in:** §3.3.3; §3.3.7 channel (iii)
+- **Sample convention:** NGC 6674 INCLUDED. §2.3 exception.
+- **Cited in:** §3.3.3; §3.3.9 channel (iii)
 - **Run log:** `logs/distance_perturbation_log.txt`
 - **Headline result:** Per-galaxy modal match 94.1%; per-fit 89.6%. Fractional perturbation magnitudes: median 8.7%, mean 13.8%.
 
@@ -48,23 +70,26 @@ This file documents the provenance of every data file in this package: source sc
 - **Inputs:** Same as upsilon_perturbation
 - **Test design:** 20 realizations. Each draws Inc' from N(Inc, e_Inc) per-galaxy, rescales V_obs and e_V_obs by sin(Inc)/sin(Inc'). 11 galaxies at Inc = 90° excluded by `0 < Inc < 90` check.
 - **Schema:** 1,820 rows × 22 cols (91 galaxies × 20 realizations). Columns include Inc_nominal_deg, Inc_perturbed_deg, e_Inc_deg, vobs_factor, plus the same fit columns as the other perturbation CSVs.
-- **Cited in:** §3.3.4; §3.3.7 channel (iv)
+- **Sample convention:** NGC 6674 INCLUDED. §2.3 exception.
+- **Cited in:** §3.3.4; §3.3.9 channel (iv)
 - **Run log:** `logs/inclination_perturbation_log.txt`
 - **Headline result:** Per-galaxy modal match 98.9%; per-fit 95.7%. Tightest position recovery of the three perturbation tests (median Δ log r₁ = 0.005 dex).
 
 ### nulltest_per_realization.csv
 
 - **Producer:** `scripts/shell_reality_nulls.py`
-- **Inputs:** SPARC Rotmod files, Paper I canonical CSV, v7.0 production fitter
+- **Inputs:** SPARC Rotmod files, Paper I canonical CSV, Paper I production fitter
 - **Test design:** Two null types — *scramble* (within-galaxy permutation of dark-matter residuals around the canonical Burkert backbone) and *permute* (within-galaxy permutation of V_obs values across radii). 20 realizations per null type. Each realization fits all 102 galaxies and computes per-T-bin and per-galaxy Spearman ρ.
 - **Schema:** 40 rows × 24 cols (2 null types × 20 realizations). Columns: null_type, realization, rho_per_T, p_per_T, rho_per_gal, p_per_gal, n_shellbearing, n_total, plus per-T shell-bearing fractions (frac_T2 through frac_T9 with their counts).
-- **Cited in:** §3.2
+- **Sample convention:** NGC 6674 INCLUDED. §2.3 exception.
+- **Cited in:** §3.2, §3.3.8 (cross-reference), §3.3.9 channel (viii)
 
 ### nulltest_per_galaxy.csv
 
 - **Producer:** `scripts/shell_reality_nulls.py`
 - **Inputs:** Same as nulltest_per_realization.csv
 - **Schema:** 4,080 rows × 8 cols (2 null types × 20 realizations × 102 galaxies). Columns: null_type, realization, Galaxy, T, n_pts, n_shells, chi2, bic.
+- **Sample convention:** NGC 6674 INCLUDED.
 - **Cited in:** §3.2 (per-galaxy fit details available for stratification)
 
 ### nulltest_summary.txt
@@ -97,7 +122,7 @@ This file documents the provenance of every data file in this package: source sc
 
 ### Rotmod_LTG/
 
-- **Source:** SPARC distribution. 175 SPARC galaxies; 102 are used in the T = 2-9 sample after quality cuts.
+- **Source:** SPARC distribution. 175 SPARC galaxies; 102 are used in the T = 2-9 sample after Paper I quality cuts. 101 in primary §3.1/§3.3.5/§3.3.6 analyses (NGC 6674 excluded).
 - **Schema:** Tab-separated ASCII files with columns: Rad (kpc), V_obs (km/s), errV (km/s), V_gas, V_disk, V_bulge, SBdisk, SBbul.
 - **Cited in:** §2.1; primary input to all fitting analyses.
 
@@ -114,18 +139,23 @@ This file documents the provenance of every data file in this package: source sc
   ```
   git clone https://github.com/RonBibb/sparc-halo-shells.git
   cd sparc-halo-shells && git checkout v7.1.0
-  cp data/sparc_T2-T9_canonical_fits.csv ../halo_shells_paper2_v1.0/data/
+  cp data/sparc_T2-T9_canonical_fits.csv ../halo_shells_paper2/data/
   ```
 
-### Paper I v7.0 production fitter (`run_canonical_fits.py`)
+### Paper I Einasto fits CSV (`einasto_full_sample_results.csv`)
 
-- **Source:** Paper I repository at v7.1.0, in `scripts/`
-- **Required for:** The four perturbation runner scripts (`upsilon_`, `distance_`, `inclination_`, `shell_reality_nulls`) which call out to the v7.0 fitter on perturbed inputs
-- **Why not duplicated:** Paper I is the canonical source for the fitter; embedding a copy risks divergence
+- **Source:** Paper I repository at v7.1.0, in `data/`
+- **Required for:** §3.3.6 backbone-family Einasto comparison via `scripts/einasto_control.py`
+- **Why not duplicated:** Same as canonical fits — Paper I is the canonical source
 - **How to obtain:**
   ```
-  cp sparc-halo-shells/scripts/run_canonical_fits.py ../halo_shells_paper2_v1.0/scripts/
+  cp sparc-halo-shells/data/einasto_full_sample_results.csv ../halo_shells_paper2/data/
   ```
+
+### Paper I Paper I production fitter (`run_canonical_fits.py`)
+
+- **Source:** Paper I repository at v7.1.0, in `scripts/`. A copy is included in this package's `scripts/` directory for convenience; the canonical version remains in Paper I.
+- **Required for:** All perturbation runner scripts (`upsilon_`, `distance_`, `inclination_`, `shell_reality_nulls`, `backbone_shift_test`) which call out to the Paper I fitter on perturbed inputs
 
 ---
 
@@ -139,6 +169,7 @@ This file documents the provenance of every data file in this package: source sc
 | §3.1.2 Scaling relations | antiwarp_per_shell.csv | antiwarp_summary.txt |
 | §3.1.3 σ/r quartile gradient | antiwarp_per_shell.csv | — |
 | §3.1.4 Inner-vs-outer | antiwarp_per_shell.csv + sparc_sample123.csv (r_vir) | — |
+| §3.1.5 Multiple-comparisons summary | (recomputed from above) | — |
 | §3.2.1 Scramble null | nulltest_per_realization.csv | nulltest_summary.txt |
 | §3.2.2 Permute null | nulltest_per_realization.csv | nulltest_summary.txt |
 | §3.2.3 Per-T fractions | nulltest_summary.txt | nulltest_per_galaxy.csv |
@@ -147,5 +178,7 @@ This file documents the provenance of every data file in this package: source sc
 | §3.3.3 Distance perturbation | distance_perturbation_per_galaxy.csv | logs/distance_perturbation_log.txt |
 | §3.3.4 Inclination perturbation | inclination_perturbation_per_galaxy.csv | logs/inclination_perturbation_log.txt |
 | §3.3.5 Anti-warp clean subsample | antiwarp_summary.txt | antiwarp_per_shell.csv |
-| §3.3.6 Cross-ref to §3.2 | nulltest_summary.txt | — |
-| §3.3.7 Combined verdict | (citations above) | — |
+| §3.3.6 Einasto backbone-family control | (Paper I einasto_full_sample_results.csv — external) | einasto_control.py output |
+| §3.3.7 Backbone-shift test | backbone_shift_summary.txt | backbone_shift.csv |
+| §3.3.8 Cross-ref to §3.2 | nulltest_summary.txt | — |
+| §3.3.9 Combined verdict | (citations above) | — |

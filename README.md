@@ -4,8 +4,8 @@
 
 Author: Ron Bibb (<ronbibb@gmail.com>)
 ORCID: 0009-0004-1153-2464
-Version: v1.0
-Release date: 2026-05-10
+Version: v1.0-draft (2026-05-12 snapshot)
+Target journal: AJ
 
 ---
 
@@ -13,23 +13,40 @@ Release date: 2026-05-10
 
 This package contains the manuscript, data, producer scripts, and documentation for Paper II in the SPARC halo-shells program. Paper II is a companion to Paper I (Bibb 2026, AJ submission, repository at https://github.com/RonBibb/sparc-halo-shells, release tag v7.1.0).
 
-**Scope of Paper II.** Paper I established that a Burkert backbone augmented by zero, one, or two BIC-selected Gaussian shells improves rotation curve fits in 91/102 SPARC galaxies and that shell-bearing rate decreases monotonically with morphological lateness (ρ_per_T = -0.833, p = 0.010). Paper II asks whether the resulting shell population constitutes a coherent statistical phenomenon — internally organized, robust to artifact channels, and distinguishable from random fitting behavior — or whether it is a constellation of unrelated detections sharing a fitting framework.
+**Scope of Paper II.** Paper I established that a Burkert backbone augmented by zero, one, or two BIC-selected Gaussian shells improves rotation curve fits in 91/102 SPARC galaxies and that shell-bearing rate decreases monotonically with morphological lateness (ρ_per_T = -0.833, p = 0.010 on the Paper I-aligned 102-galaxy sample). Paper II asks whether the resulting shell population constitutes a coherent statistical phenomenon — internally organized, robust to artifact channels, and distinguishable from random fitting behavior — or whether it is a constellation of unrelated detections sharing a fitting framework.
+
+Paper II's primary analyses use a **101-galaxy sample (NGC 6674 excluded)** due to a degenerate two-shell fit at r₁ = r₂ = 3.12 kpc with both masses pegged at the upper bound; the §2.3 partition disclosure quantifies why qualitative conclusions are unchanged relative to the Paper I 102-galaxy version.
 
 **Findings.**
 
-1. The 69 fitted shells exhibit four largely independent organizational dimensions: bulge correlation (OR = 3.88, p = 0.003), radial scaling (σ ∝ r^1.04, ρ = +0.78), σ/r near-universality (median 0.27 with population gradient 0.35 → 0.19 across radius quartiles), and inner-vs-outer mass ordering in two-shell galaxies (14/17, p = 0.017).
-2. Two destructive nulls (within-galaxy residual scrambling, cross-radius velocity permutation) fail to reproduce the morphology gradient with asymmetric failure modes, at z = -3.0 to -8.3 depending on statistic.
-3. Shell selections are stable under realistic perturbations to mass-to-light ratio (95.1% per-galaxy mode-recovery), distance (94.1%), and inclination (98.9%).
-4. A conservative anti-warp clean subsample preserves all five headline patterns in direction.
+1. The 67 fitted shells exhibit organized signatures grouped by robustness under multiple-comparisons correction (§3.1.5):
 
-The shell population is not consistent with random fitting behavior, baryonic input mismodeling, disk dynamical coincidence, or warp-related velocity-field artifacts as primary drivers within the channels and amplitudes tested. Whether the structures correspond to genuine localized halo mass features or to other forms of organized galactic dynamics remains an open physical question.
+   - **Primary signatures** (Bonferroni-robust; preserved or strengthened under Einasto backbone): mass-radius scaling (M ∝ r^0.76, ρ = +0.64, p < 10⁻⁴), width-radius scaling under Burkert backbone (σ ∝ r^1.04, ρ = +0.78), inner-vs-outer mass ordering in two-shell galaxies (14/16, p = 0.0001).
+   - **Secondary signatures** (BH-FDR pass, Bonferroni fail): bulge correlation (OR = 3.67, p ≈ 0.01; near-equivalent to morphology gradient), morphology gradient (ρ_per_T = -0.762, p = 0.028), inner-vs-outer width ordering, two-population separation in r/r_vir.
+
+2. **Width-related signatures are partially backbone-baseline-dependent.** Under an Einasto backbone (one extra free parameter, strictly more flexible than Burkert), the σ-r slope drops from 1.04 to 0.38 and the σ/r median from 0.275 to 0.173; mass-feature signatures and galaxy-level signatures are preserved or strengthened (§3.3.6).
+
+3. **Shells are dynamically coupled to the smooth backbone.** When the Paper I framework is constrained to n_shells = 0, the Burkert backbone systematically deforms (ρ₀ rises by a factor of ≈4.2; scale radius a contracts by a factor of ≈2.1) in 46 of 52 (88.5%) shell-bearing galaxies. The non-shell-bearing control population does not show this systematic deformation. This rules out the strong form of the basis-function alternative (§3.3.7).
+
+4. **Two destructive nulls** (within-galaxy residual scrambling, cross-radius velocity permutation) fail to reproduce the morphology gradient with asymmetric failure modes, at z = -3.0 to -8.3 depending on statistic.
+
+5. **Shell selections are stable** under realistic perturbations to mass-to-light ratio (95.1% per-galaxy mode-recovery), distance (94.1%), and inclination (98.9%).
+
+6. **A conservative anti-warp clean subsample** preserves all five headline patterns in direction.
+
+The shell population is not consistent with random fitting behavior, baryonic input mismodeling, disk dynamical coincidence, warp-related velocity-field artifacts, or single-backbone-family flexibility as primary drivers within the channels and amplitudes tested. Whether the structures correspond to genuine localized halo mass features or to other forms of organized galactic dynamics remains an open physical question.
 
 ## Relationship to Paper I
 
-This package is **not standalone** with respect to Paper I's canonical fits. Paper II uses Paper I's v7.0/v7.1.0 canonical fit catalog (`sparc_T2-T9_canonical_fits.csv`) as the primary input to all per-shell analyses. That catalog lives in the Paper I repository (`https://github.com/RonBibb/sparc-halo-shells/releases/tag/v7.1.0`, in `data/`) and is not duplicated here to avoid drift between the two papers. Reproducing Paper II's analyses requires:
+This package is **not standalone** with respect to Paper I's canonical fits or Einasto comparison fits. Paper II uses:
+
+- Paper I's Paper I (v7.1.0) canonical fit catalog (`sparc_T2-T9_canonical_fits.csv`) as the primary input to all per-shell analyses.
+- Paper I's Einasto-backbone fit catalog (`einasto_full_sample_results.csv`) as the input to §3.3.6.
+
+Both catalogs live in the Paper I repository (`https://github.com/RonBibb/sparc-halo-shells/releases/tag/v7.1.0`, in `data/`) and are not duplicated here to avoid drift between the two papers. Reproducing Paper II's analyses requires:
 
 1. Cloning the Paper I package at tag `v7.1.0`
-2. Placing `data/sparc_T2-T9_canonical_fits.csv` from Paper I into this package's `data/` directory (or symlinking)
+2. Placing `data/sparc_T2-T9_canonical_fits.csv` and `data/einasto_full_sample_results.csv` from Paper I into this package's `data/` directory (or symlinking)
 3. Then running the Paper II scripts
 
 The Paper I PDF (`source/paper1_v7.1.0.pdf`) is included for reference.
@@ -39,10 +56,11 @@ The Paper I PDF (`source/paper1_v7.1.0.pdf`) is included for reference.
 ```
 halo_shells_paper2_v1.0/
 ├── README.md                          (this file)
+├── STATUS.md                          single-source-of-truth for package state (read first)
 ├── VALIDATION_STATUS.md               version alignment, validation tracking
 ├── DATA_PROVENANCE.md                 CSV-to-script-to-section traceability
 ├── ALIGNMENT_AUDIT.md                 audit of Paper I ↔ Paper II numerical alignment
-├── PROJECT_README.md                  project file manifest (was the working manifest)
+├── PROJECT_README.md                  project file manifest (preserved)
 ├── LICENSE                            MIT License
 ├── requirements.txt                   Python dependencies
 │
@@ -52,13 +70,16 @@ halo_shells_paper2_v1.0/
 │   └── paper1_v7.1.0.pdf              Paper I reference PDF
 │
 ├── data/
-│   ├── Rotmod_LTG/                    SPARC rotmod files (175 galaxies; 102 used in T=2-9 sample)
+│   ├── Rotmod_LTG/                    SPARC rotmod files (175 galaxies; 102 in T=2-9 sample)
 │   ├── sparc_sample123.csv            SPARC catalog metadata
 │   ├── galaxy_classifications.csv     Augmented catalog with bulge/dwarf/MW-like flags
 │   ├── nfw_fixedc_fits.csv            NFW fixed-concentration reference fits (Paper II §1 context)
 │   │
-│   ├── antiwarp_per_shell.csv         §3.3.5 per-shell catalog (67 shells; NGC6674 excluded)
-│   ├── antiwarp_summary.txt           §3.3.5 statistical comparison
+│   ├── antiwarp_per_shell.csv         §3.3.5 per-shell catalog (67 shells; NGC 6674-excluded)
+│   ├── antiwarp_summary.txt           §3.3.5 statistical comparison (NGC 6674-excluded)
+│   │
+│   ├── backbone_shift.csv             §3.3.7 backbone parameters at n=0/1/2 per galaxy
+│   ├── backbone_shift_summary.txt     §3.3.7 population-level summary
 │   │
 │   ├── upsilon_perturbation_per_galaxy.csv    §3.3.2 M*/L perturbation results
 │   ├── distance_perturbation_per_galaxy.csv   §3.3.3 distance perturbation
@@ -69,11 +90,14 @@ halo_shells_paper2_v1.0/
 │   └── nulltest_summary.txt           §3.2 formatted summary
 │
 ├── scripts/
-│   ├── antiwarp_subsample.py          §3.3.5 reconstructed analysis script
+│   ├── antiwarp_subsample.py          §3.3.5 analysis
+│   ├── backbone_shift_test.py         §3.3.7 backbone-shift production runner
+│   ├── shell_reality_nulls.py         §3.2 null test runner + shared Paper I fitter
 │   ├── upsilon_perturbation.py        §3.3.2 perturbation runner
 │   ├── distance_perturbation.py       §3.3.3 perturbation runner
 │   ├── inclination_perturbation.py    §3.3.4 perturbation runner
-│   └── shell_reality_nulls.py         §3.2 null test runner
+│   ├── run_canonical_fits.py          Paper I production fitter (copied from Paper I)
+│   └── einasto_control.py             §3.3.6 post-hoc analysis on Paper I Einasto fits
 │
 ├── logs/
 │   ├── antiwarp_log.txt
@@ -89,8 +113,8 @@ halo_shells_paper2_v1.0/
 ### Prerequisites
 
 - Python 3.10+ with numpy, scipy, pandas, matplotlib (see `requirements.txt`)
-- Paper I package at tag v7.1.0 (for the canonical fits CSV and the v7.0 production fitter)
-- Approximately 30-60 minutes of CPU time on a modern Apple Silicon Mac for the full perturbation + null suite
+- Paper I package at tag v7.1.0 (for the canonical fits CSV and the Einasto fits CSV)
+- Approximately 60-90 minutes of CPU time on a modern Apple Silicon Mac for the full perturbation + null + backbone-shift suite
 
 ### Setup
 
@@ -101,9 +125,10 @@ halo_shells_paper2_v1.0/
    git checkout v7.1.0
    ```
 
-2. Copy Paper I's canonical fits CSV into Paper II's data directory:
+2. Copy Paper I's catalogs into Paper II's data directory:
    ```
    cp sparc-halo-shells/data/sparc_T2-T9_canonical_fits.csv halo_shells_paper2_v1.0/data/
+   cp sparc-halo-shells/data/einasto_full_sample_results.csv halo_shells_paper2_v1.0/data/
    ```
 
 3. Install dependencies:
@@ -117,16 +142,16 @@ halo_shells_paper2_v1.0/
 From `halo_shells_paper2_v1.0/scripts/`:
 
 ```bash
-# Anti-warp clean subsample analysis (~5 seconds; pure analysis, no fitting)
-python3 antiwarp_subsample.py
+# Pure-analysis scripts (seconds; no fitting)
+python3 antiwarp_subsample.py      # data/antiwarp_per_shell.csv, antiwarp_summary.txt
+python3 einasto_control.py         # post-hoc analysis on Paper I Einasto fits
 
-# Spatial-coherence null tests (~30-60 minutes; 20 realizations × 2 null types)
-python3 shell_reality_nulls.py
-
-# Baryonic systematic perturbations (~10-15 minutes each)
-python3 upsilon_perturbation.py
-python3 distance_perturbation.py
-python3 inclination_perturbation.py
+# Production runs (with fitting; longer)
+python3 shell_reality_nulls.py     # ~30-60 min; 20 realizations × 2 null types
+python3 backbone_shift_test.py     # ~5-15 min; 102 galaxies × 3 n_shells levels
+python3 upsilon_perturbation.py    # ~10-15 min; 102 × 20 realizations
+python3 distance_perturbation.py   # ~10-15 min
+python3 inclination_perturbation.py # ~10-15 min
 ```
 
 Outputs are written to `data/` with the canonical filenames listed above.
@@ -135,26 +160,28 @@ Outputs are written to `data/` with the canonical filenames listed above.
 
 Each script prints a summary of the headline statistics on completion. Cross-check against:
 - `data/antiwarp_summary.txt` (anti-warp results)
+- `data/backbone_shift_summary.txt` (backbone-shift results)
 - `data/nulltest_summary.txt` (null test z-scores)
 - The per-galaxy CSVs for perturbation results
 
 ## Status
 
-This package is **release v1.0**, draft state, suitable for internal review and figure generation. AJ submission pending Paper I publication.
+This package is **release v1.0-draft**, suitable for internal review and figure generation. AJ submission pending Paper I publication and completion of items in `STATUS.md`.
 
 | Component | Status |
 | --- | --- |
-| Manuscript text | ✅ Drafted; ~11,400 words |
-| LaTeX source | ✅ Compiles; figures pending |
-| Markdown source | ✅ Preserved for ongoing edits |
-| Data CSVs (Paper II outputs) | ✅ DONE (8 CSVs in `data/`) |
+| Manuscript text | ✅ Drafted; ~12,000 words |
+| Markdown source | ✅ Canonical; ongoing edits |
+| Data CSVs (Paper II outputs) | ✅ DONE (10 CSVs in `data/`) |
 | SPARC inputs | ✅ DONE (Rotmod_LTG/, classifications, sparc_sample123) |
-| Producer scripts | ⚠️ Reconstructed from algorithm specs; verify against Mac-side reference |
+| Producer scripts | ✅ DONE (all 8 scripts in `scripts/`) |
 | Logs | ✅ Captured for all four perturbation/antiwarp runs |
-| Figures | ⏳ 10 placeholders; generation scripts to be written |
+| Figures | ⏳ 11 placeholders; generation scripts to be written |
 | Bibliography | ⏳ Skeleton entries; full DOIs at submission |
-| Paper I canonical CSV | ❌ NOT INCLUDED — see "Relationship to Paper I" above |
-| Validation pass | ⏳ Pending; checklist in `VALIDATION_STATUS.md` |
+| Paper I canonical CSV | ❌ EXTERNAL — see "Relationship to Paper I" |
+| Paper I Einasto CSV | ❌ EXTERNAL — see "Relationship to Paper I" |
+| Mac-side NGC 6674 reruns of §3.2/§3.3.2-4/§3.3.7 | ⏳ Pending (disclosed in §2.3) |
+| Tier 2 discrepancy resolution | ⏳ Pending (documented in VALIDATION_STATUS.md) |
 | Zenodo deposit | ⏳ Pending Paper I publication |
 | AJ submission | ⏳ Pending |
 
