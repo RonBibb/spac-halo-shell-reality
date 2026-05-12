@@ -1,0 +1,64 @@
+[2026-05-09 06:44:21] === Anti-warp clean subsample analysis ===
+[2026-05-09 06:44:21]   canonical CSV    = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/Localized Residual Structure in SPARC Rotation Curves/sparc-halo-shells/data/sparc_T2-T9_canonical_fits.csv
+[2026-05-09 06:44:21]   classifications  = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/data/galaxy_classifications.csv
+[2026-05-09 06:44:21]   SPARC catalog    = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/Localized Residual Structure in SPARC Rotation Curves/sparc-halo-shells/data/sparc_sample123.csv
+[2026-05-09 06:44:21]   rotmod dir       = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/data
+[2026-05-09 06:44:21]   output dir       = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/outputs
+[2026-05-09 06:44:21] 
+[2026-05-09 06:44:21]   Anti-warp cuts:
+[2026-05-09 06:44:21]     r/R_HI < 0.3: True
+[2026-05-09 06:44:21]     require disk-dominated: True
+[2026-05-09 06:44:21]     require Q==1: True
+[2026-05-09 06:44:21]     inner shells only: True
+[2026-05-09 06:44:21]   Loaded 102 canonical galaxies
+[2026-05-09 06:44:21]   Building per-shell catalog...
+[2026-05-09 06:44:21]   WARNING: skipped 51 galaxies with missing rotmod files: ['ESO079-G014', 'ESO563-G021', 'IC2574', 'IC4202', 'NGC0024']...
+[2026-05-09 06:45:52] === Anti-warp clean subsample analysis ===
+[2026-05-09 06:45:52]   canonical CSV    = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/Localized Residual Structure in SPARC Rotation Curves/sparc-halo-shells/data/sparc_T2-T9_canonical_fits.csv
+[2026-05-09 06:45:52]   classifications  = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/data/galaxy_classifications.csv
+[2026-05-09 06:45:52]   SPARC catalog    = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/Localized Residual Structure in SPARC Rotation Curves/sparc-halo-shells/data/sparc_sample123.csv
+[2026-05-09 06:45:52]   rotmod dir       = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2
+[2026-05-09 06:45:52]   output dir       = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/outputs
+[2026-05-09 06:45:52] 
+[2026-05-09 06:45:52]   Anti-warp cuts:
+[2026-05-09 06:45:52]     r/R_HI < 0.3: True
+[2026-05-09 06:45:52]     require disk-dominated: True
+[2026-05-09 06:45:52]     require Q==1: True
+[2026-05-09 06:45:52]     inner shells only: True
+[2026-05-09 06:45:52]   Loaded 102 canonical galaxies
+[2026-05-09 06:45:52]   Building per-shell catalog...
+[2026-05-09 06:45:52]   WARNING: skipped 51 galaxies with missing rotmod files: ['ESO079-G014', 'ESO563-G021', 'IC2574', 'IC4202', 'NGC0024']...
+[2026-05-09 06:45:59] === Anti-warp clean subsample analysis ===
+[2026-05-09 06:45:59]   canonical CSV    = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/Localized Residual Structure in SPARC Rotation Curves/sparc-halo-shells/data/sparc_T2-T9_canonical_fits.csv
+[2026-05-09 06:45:59]   classifications  = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/data/galaxy_classifications.csv
+[2026-05-09 06:45:59]   SPARC catalog    = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/Localized Residual Structure in SPARC Rotation Curves/sparc-halo-shells/data/sparc_sample123.csv
+[2026-05-09 06:45:59]   rotmod dir       = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2
+[2026-05-09 06:45:59]   output dir       = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/outputs
+[2026-05-09 06:45:59] 
+[2026-05-09 06:45:59]   Anti-warp cuts:
+[2026-05-09 06:45:59]     r/R_HI < 0.3: True
+[2026-05-09 06:45:59]     require disk-dominated: True
+[2026-05-09 06:45:59]     require Q==1: True
+[2026-05-09 06:45:59]     inner shells only: True
+[2026-05-09 06:45:59]   Loaded 102 canonical galaxies
+[2026-05-09 06:45:59]   Building per-shell catalog...
+[2026-05-09 06:45:59]   WARNING: skipped 51 galaxies with missing rotmod files: ['ESO079-G014', 'ESO563-G021', 'IC2574', 'IC4202', 'NGC0024']...
+[2026-05-09 06:46:24] === Anti-warp clean subsample analysis ===
+[2026-05-09 06:46:24]   canonical CSV    = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/Localized Residual Structure in SPARC Rotation Curves/sparc-halo-shells/data/sparc_T2-T9_canonical_fits.csv
+[2026-05-09 06:46:24]   classifications  = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/data/galaxy_classifications.csv
+[2026-05-09 06:46:24]   SPARC catalog    = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/Localized Residual Structure in SPARC Rotation Curves/sparc-halo-shells/data/sparc_sample123.csv
+[2026-05-09 06:46:24]   rotmod dir       = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/Rotmod_LTG
+[2026-05-09 06:46:24]   output dir       = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/outputs
+[2026-05-09 06:46:24] 
+[2026-05-09 06:46:24]   Anti-warp cuts:
+[2026-05-09 06:46:24]     r/R_HI < 0.3: True
+[2026-05-09 06:46:24]     require disk-dominated: True
+[2026-05-09 06:46:24]     require Q==1: True
+[2026-05-09 06:46:24]     inner shells only: True
+[2026-05-09 06:46:24]   Loaded 102 canonical galaxies
+[2026-05-09 06:46:24]   Building per-shell catalog...
+[2026-05-09 06:46:24]   Total shells: 67 across 51 galaxies
+[2026-05-09 06:46:24]   Clean (anti-warp) shells: 25 across 25 galaxies
+[2026-05-09 06:46:24]   Per-shell catalog written: /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/outputs/antiwarp_per_shell.csv
+[2026-05-09 06:46:24]   Summary written: /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/outputs/antiwarp_summary.txt
+[2026-05-09 06:46:24] === Done ===

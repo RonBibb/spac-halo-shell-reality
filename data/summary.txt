@@ -1,0 +1,47 @@
+========================================================================
+SHELL REALITY NULL TESTS — Summary
+========================================================================
+v7.0 pipeline, strict sigma/r <= 0.4 enforcement
+N_REALIZATIONS per null type = 20
+Galaxies fit per realization = 102
+
+REAL-DATA BASELINE (v7.0 canonical fits)
+  rho_per_T-bin  = -0.8333  (p = 0.0102)
+  rho_per_galaxy = -0.2962  (p = 0.0025)
+  shell-bearing fraction (real) = 52/102 = 0.510
+
+------------------------------------------------------------------------
+NULL TYPE: SCRAMBLE
+------------------------------------------------------------------------
+  rho_per_T: mean=-0.1967 std=0.1458 min=-0.5389 max=+0.0952
+  Empirical one-sided p (null rho <= real rho=-0.8333): 0.0000 (0/20)
+  rho_per_gal: mean=-0.1498 std=0.0478 min=-0.2413 max=-0.0949
+  Empirical one-sided p (null rho <= real rho=-0.2962): 0.0000 (0/20)
+
+  Mean per-T shell-bearing fraction across null realizations:
+    T=2: null=0.794  real=1.000  ratio=1.26x
+    T=3: null=0.150  real=0.545  ratio=3.64x
+    T=4: null=0.309  real=0.529  ratio=1.71x
+    T=5: null=0.308  real=0.538  ratio=1.75x
+    T=6: null=0.291  real=0.562  ratio=1.94x
+    T=7: null=0.225  real=0.357  ratio=1.59x
+    T=8: null=0.383  real=0.333  ratio=0.87x
+    T=9: null=0.231  real=0.312  ratio=1.35x
+
+------------------------------------------------------------------------
+NULL TYPE: PERMUTE
+------------------------------------------------------------------------
+  rho_per_T: mean=+0.3749 std=0.2315 min=-0.1687 max=+0.7904
+  Empirical one-sided p (null rho <= real rho=-0.8333): 0.0000 (0/20)
+  rho_per_gal: mean=+0.1624 std=0.0551 min=+0.0435 max=+0.2495
+  Empirical one-sided p (null rho <= real rho=-0.2962): 0.0000 (0/20)
+
+  Mean per-T shell-bearing fraction across null realizations:
+    T=2: null=0.961  real=1.000  ratio=1.04x
+    T=3: null=0.723  real=0.545  ratio=0.75x
+    T=4: null=0.815  real=0.529  ratio=0.65x
+    T=5: null=0.923  real=0.538  ratio=0.58x
+    T=6: null=0.972  real=0.562  ratio=0.58x
+    T=7: null=0.921  real=0.357  ratio=0.39x
+    T=8: null=0.925  real=0.333  ratio=0.36x
+    T=9: null=0.969  real=0.312  ratio=0.32x

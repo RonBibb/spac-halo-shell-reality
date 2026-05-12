@@ -1,0 +1,167 @@
+[2026-05-09 05:33:19] === Distance perturbation test starting ===
+[2026-05-09 05:33:19] ==================================================================
+[2026-05-09 05:33:19] === DISTANCE PERTURBATION TEST                                  ===
+[2026-05-09 05:33:19] === USING v7.0 PRODUCTION FITTER (run_canonical_fits.py)        ===
+[2026-05-09 05:33:19] === Per-galaxy D draws from N(D, e_D) using SPARC catalog.      ===
+[2026-05-09 05:33:19] ==================================================================
+[2026-05-09 05:33:19] ERROR: run_canonical_fits.py not found. Set V7_FITTER_DIR near the top of distance_perturbation.py to the absolute path of the directory containing run_canonical_fits.py.
+Searched: ['/Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2', '/Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic', '/Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/scripts', '/Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2']
+[2026-05-09 05:37:45] === Distance perturbation test starting ===
+[2026-05-09 05:37:45] ==================================================================
+[2026-05-09 05:37:45] === DISTANCE PERTURBATION TEST                                  ===
+[2026-05-09 05:37:45] === USING v7.0 PRODUCTION FITTER (run_canonical_fits.py)        ===
+[2026-05-09 05:37:45] === Per-galaxy D draws from N(D, e_D) using SPARC catalog.      ===
+[2026-05-09 05:37:45] ==================================================================
+[2026-05-09 05:37:45] ERROR: V7_FITTER_DIR is set to './' but run_canonical_fits.py was not found there.
+[2026-05-09 05:38:02] === Distance perturbation test starting ===
+[2026-05-09 05:38:02] ==================================================================
+[2026-05-09 05:38:02] === DISTANCE PERTURBATION TEST                                  ===
+[2026-05-09 05:38:02] === USING v7.0 PRODUCTION FITTER (run_canonical_fits.py)        ===
+[2026-05-09 05:38:02] === Per-galaxy D draws from N(D, e_D) using SPARC catalog.      ===
+[2026-05-09 05:38:02] ==================================================================
+[2026-05-09 05:38:02]   v7.0 fitter dir   = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/scripts
+[2026-05-09 05:38:02] ERROR: sparc_sample123.csv not found. Set SPARC_CATALOG_PATH near the top of distance_perturbation.py to the absolute path of the file.
+Searched: ['/Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/sparc_sample123.csv', '/Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/scripts/sparc_sample123.csv', '/Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/data/sparc_sample123.csv', '/Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/sparc_sample123.csv', '/Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/sparc_sample123.csv', '/Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/sparc_sample123.csv']
+[2026-05-09 05:58:42] === Distance perturbation test starting ===
+[2026-05-09 05:58:42] ==================================================================
+[2026-05-09 05:58:42] === DISTANCE PERTURBATION TEST                                  ===
+[2026-05-09 05:58:42] === USING v7.0 PRODUCTION FITTER (run_canonical_fits.py)        ===
+[2026-05-09 05:58:42] === Per-galaxy D draws from N(D, e_D) using SPARC catalog.      ===
+[2026-05-09 05:58:42] ==================================================================
+[2026-05-09 05:58:42]   v7.0 fitter dir   = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/scripts
+[2026-05-09 05:58:42]   SPARC catalog     = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/data
+[2026-05-09 05:58:42]   N_realizations    = 20
+[2026-05-09 05:58:42]   seed              = 20260510
+[2026-05-09 05:58:42]   canonical CSV     = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/data/sparc_T2-T9_canonical_fits.csv
+[2026-05-09 05:58:42]   rotmod dir        = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/Rotmod_LTG
+[2026-05-09 05:58:42]   output dir        = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/outputs
+[2026-05-09 05:58:42]   N galaxies        = 102
+[2026-05-09 06:06:33] === Distance perturbation test starting ===
+[2026-05-09 06:06:33] ==================================================================
+[2026-05-09 06:06:33] === DISTANCE PERTURBATION TEST                                  ===
+[2026-05-09 06:06:33] === USING v7.0 PRODUCTION FITTER (run_canonical_fits.py)        ===
+[2026-05-09 06:06:33] === Per-galaxy D draws from N(D, e_D) using SPARC catalog.      ===
+[2026-05-09 06:06:33] ==================================================================
+[2026-05-09 06:06:33]   v7.0 fitter dir   = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/scripts
+[2026-05-09 06:06:33]   SPARC catalog     = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/data/galaxy_classifications.csv
+[2026-05-09 06:06:33]   N_realizations    = 20
+[2026-05-09 06:06:33]   seed              = 20260510
+[2026-05-09 06:06:33]   canonical CSV     = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/data/sparc_T2-T9_canonical_fits.csv
+[2026-05-09 06:06:33]   rotmod dir        = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/Rotmod_LTG
+[2026-05-09 06:06:33]   output dir        = /Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/shell_reality_v2/outputs
+[2026-05-09 06:06:33]   N galaxies        = 102
+[2026-05-09 06:06:33]   Generating per-galaxy distance perturbations...
+[2026-05-09 06:06:33]   Per-galaxy fractional distance uncertainties (e_D/D):
+[2026-05-09 06:06:33]     median: 13.9%, mean: 17.1%, min: 3.0%, max: 30.3%
+[2026-05-09 06:06:33]   Tasks to run     = 2040
+[2026-05-09 06:06:33]   Parallel workers = 19
+[2026-05-09 06:06:33]   Beginning fits. Each row written to CSV as it completes.
+[2026-05-09 06:06:37]   Progress: 20/2040 (1.0%)  rate=6.04 fits/sec  ETA=5.6 min
+[2026-05-09 06:06:40]   Progress: 40/2040 (2.0%)  rate=6.01 fits/sec  ETA=5.5 min
+[2026-05-09 06:06:46]   Progress: 60/2040 (2.9%)  rate=4.76 fits/sec  ETA=6.9 min
+[2026-05-09 06:06:56]   Progress: 80/2040 (3.9%)  rate=3.48 fits/sec  ETA=9.4 min
+[2026-05-09 06:07:03]   Progress: 100/2040 (4.9%)  rate=3.41 fits/sec  ETA=9.5 min
+[2026-05-09 06:07:10]   Progress: 120/2040 (5.9%)  rate=3.32 fits/sec  ETA=9.7 min
+[2026-05-09 06:07:14]   Progress: 140/2040 (6.9%)  rate=3.46 fits/sec  ETA=9.1 min
+[2026-05-09 06:07:19]   Progress: 160/2040 (7.8%)  rate=3.53 fits/sec  ETA=8.9 min
+[2026-05-09 06:07:25]   Progress: 180/2040 (8.8%)  rate=3.49 fits/sec  ETA=8.9 min
+[2026-05-09 06:07:30]   Progress: 200/2040 (9.8%)  rate=3.53 fits/sec  ETA=8.7 min
+[2026-05-09 06:07:34]   Progress: 220/2040 (10.8%)  rate=3.64 fits/sec  ETA=8.3 min
+[2026-05-09 06:07:38]   Progress: 240/2040 (11.8%)  rate=3.72 fits/sec  ETA=8.1 min
+[2026-05-09 06:07:40]   Progress: 260/2040 (12.7%)  rate=3.91 fits/sec  ETA=7.6 min
+[2026-05-09 06:07:45]   Progress: 280/2040 (13.7%)  rate=3.90 fits/sec  ETA=7.5 min
+[2026-05-09 06:07:50]   Progress: 300/2040 (14.7%)  rate=3.91 fits/sec  ETA=7.4 min
+[2026-05-09 06:07:54]   Progress: 320/2040 (15.7%)  rate=3.97 fits/sec  ETA=7.2 min
+[2026-05-09 06:07:57]   Progress: 340/2040 (16.7%)  rate=4.06 fits/sec  ETA=7.0 min
+[2026-05-09 06:08:00]   Progress: 360/2040 (17.6%)  rate=4.18 fits/sec  ETA=6.7 min
+[2026-05-09 06:08:04]   Progress: 380/2040 (18.6%)  rate=4.19 fits/sec  ETA=6.6 min
+[2026-05-09 06:08:13]   Progress: 400/2040 (19.6%)  rate=4.02 fits/sec  ETA=6.8 min
+[2026-05-09 06:08:19]   Progress: 420/2040 (20.6%)  rate=3.98 fits/sec  ETA=6.8 min
+[2026-05-09 06:08:23]   Progress: 440/2040 (21.6%)  rate=4.01 fits/sec  ETA=6.7 min
+[2026-05-09 06:08:27]   Progress: 460/2040 (22.5%)  rate=4.05 fits/sec  ETA=6.5 min
+[2026-05-09 06:08:33]   Progress: 480/2040 (23.5%)  rate=4.03 fits/sec  ETA=6.4 min
+[2026-05-09 06:08:39]   Progress: 500/2040 (24.5%)  rate=3.98 fits/sec  ETA=6.4 min
+[2026-05-09 06:08:45]   Progress: 520/2040 (25.5%)  rate=3.97 fits/sec  ETA=6.4 min
+[2026-05-09 06:08:51]   Progress: 540/2040 (26.5%)  rate=3.92 fits/sec  ETA=6.4 min
+[2026-05-09 06:08:55]   Progress: 560/2040 (27.5%)  rate=3.95 fits/sec  ETA=6.3 min
+[2026-05-09 06:09:02]   Progress: 580/2040 (28.4%)  rate=3.90 fits/sec  ETA=6.2 min
+[2026-05-09 06:09:06]   Progress: 600/2040 (29.4%)  rate=3.93 fits/sec  ETA=6.1 min
+[2026-05-09 06:09:12]   Progress: 620/2040 (30.4%)  rate=3.91 fits/sec  ETA=6.1 min
+[2026-05-09 06:09:17]   Progress: 640/2040 (31.4%)  rate=3.91 fits/sec  ETA=6.0 min
+[2026-05-09 06:09:22]   Progress: 660/2040 (32.4%)  rate=3.91 fits/sec  ETA=5.9 min
+[2026-05-09 06:09:27]   Progress: 680/2040 (33.3%)  rate=3.91 fits/sec  ETA=5.8 min
+[2026-05-09 06:09:37]   Progress: 700/2040 (34.3%)  rate=3.82 fits/sec  ETA=5.8 min
+[2026-05-09 06:09:45]   Progress: 720/2040 (35.3%)  rate=3.76 fits/sec  ETA=5.8 min
+[2026-05-09 06:09:49]   Progress: 740/2040 (36.3%)  rate=3.78 fits/sec  ETA=5.7 min
+[2026-05-09 06:09:53]   Progress: 760/2040 (37.3%)  rate=3.81 fits/sec  ETA=5.6 min
+[2026-05-09 06:09:58]   Progress: 780/2040 (38.2%)  rate=3.81 fits/sec  ETA=5.5 min
+[2026-05-09 06:10:03]   Progress: 800/2040 (39.2%)  rate=3.83 fits/sec  ETA=5.4 min
+[2026-05-09 06:10:10]   Progress: 820/2040 (40.2%)  rate=3.79 fits/sec  ETA=5.4 min
+[2026-05-09 06:10:15]   Progress: 840/2040 (41.2%)  rate=3.80 fits/sec  ETA=5.3 min
+[2026-05-09 06:10:20]   Progress: 860/2040 (42.2%)  rate=3.80 fits/sec  ETA=5.2 min
+[2026-05-09 06:10:29]   Progress: 880/2040 (43.1%)  rate=3.73 fits/sec  ETA=5.2 min
+[2026-05-09 06:10:37]   Progress: 900/2040 (44.1%)  rate=3.70 fits/sec  ETA=5.1 min
+[2026-05-09 06:10:43]   Progress: 920/2040 (45.1%)  rate=3.69 fits/sec  ETA=5.1 min
+[2026-05-09 06:10:45]   Progress: 940/2040 (46.1%)  rate=3.73 fits/sec  ETA=4.9 min
+[2026-05-09 06:10:49]   Progress: 960/2040 (47.1%)  rate=3.75 fits/sec  ETA=4.8 min
+[2026-05-09 06:10:54]   Progress: 980/2040 (48.0%)  rate=3.76 fits/sec  ETA=4.7 min
+[2026-05-09 06:11:02]   Progress: 1000/2040 (49.0%)  rate=3.72 fits/sec  ETA=4.7 min
+[2026-05-09 06:11:06]   Progress: 1020/2040 (50.0%)  rate=3.74 fits/sec  ETA=4.5 min
+[2026-05-09 06:11:10]   Progress: 1040/2040 (51.0%)  rate=3.76 fits/sec  ETA=4.4 min
+[2026-05-09 06:11:14]   Progress: 1060/2040 (52.0%)  rate=3.77 fits/sec  ETA=4.3 min
+[2026-05-09 06:11:19]   Progress: 1080/2040 (52.9%)  rate=3.79 fits/sec  ETA=4.2 min
+[2026-05-09 06:11:27]   Progress: 1100/2040 (53.9%)  rate=3.75 fits/sec  ETA=4.2 min
+[2026-05-09 06:11:32]   Progress: 1120/2040 (54.9%)  rate=3.75 fits/sec  ETA=4.1 min
+[2026-05-09 06:11:36]   Progress: 1140/2040 (55.9%)  rate=3.77 fits/sec  ETA=4.0 min
+[2026-05-09 06:11:40]   Progress: 1160/2040 (56.9%)  rate=3.79 fits/sec  ETA=3.9 min
+[2026-05-09 06:11:42]   Progress: 1180/2040 (57.8%)  rate=3.82 fits/sec  ETA=3.8 min
+[2026-05-09 06:11:50]   Progress: 1200/2040 (58.8%)  rate=3.79 fits/sec  ETA=3.7 min
+[2026-05-09 06:11:56]   Progress: 1220/2040 (59.8%)  rate=3.79 fits/sec  ETA=3.6 min
+[2026-05-09 06:12:01]   Progress: 1240/2040 (60.8%)  rate=3.78 fits/sec  ETA=3.5 min
+[2026-05-09 06:12:06]   Progress: 1260/2040 (61.8%)  rate=3.79 fits/sec  ETA=3.4 min
+[2026-05-09 06:12:11]   Progress: 1280/2040 (62.7%)  rate=3.80 fits/sec  ETA=3.3 min
+[2026-05-09 06:12:19]   Progress: 1300/2040 (63.7%)  rate=3.77 fits/sec  ETA=3.3 min
+[2026-05-09 06:12:24]   Progress: 1320/2040 (64.7%)  rate=3.76 fits/sec  ETA=3.2 min
+[2026-05-09 06:12:29]   Progress: 1340/2040 (65.7%)  rate=3.77 fits/sec  ETA=3.1 min
+[2026-05-09 06:12:33]   Progress: 1360/2040 (66.7%)  rate=3.79 fits/sec  ETA=3.0 min
+[2026-05-09 06:12:35]   Progress: 1380/2040 (67.6%)  rate=3.82 fits/sec  ETA=2.9 min
+[2026-05-09 06:12:41]   Progress: 1400/2040 (68.6%)  rate=3.81 fits/sec  ETA=2.8 min
+[2026-05-09 06:12:45]   Progress: 1420/2040 (69.6%)  rate=3.82 fits/sec  ETA=2.7 min
+[2026-05-09 06:12:55]   Progress: 1440/2040 (70.6%)  rate=3.77 fits/sec  ETA=2.6 min
+[2026-05-09 06:13:05]   Progress: 1460/2040 (71.6%)  rate=3.73 fits/sec  ETA=2.6 min
+[2026-05-09 06:13:11]   Progress: 1480/2040 (72.5%)  rate=3.73 fits/sec  ETA=2.5 min
+[2026-05-09 06:13:20]   Progress: 1500/2040 (73.5%)  rate=3.69 fits/sec  ETA=2.4 min
+[2026-05-09 06:13:25]   Progress: 1520/2040 (74.5%)  rate=3.69 fits/sec  ETA=2.3 min
+[2026-05-09 06:13:34]   Progress: 1540/2040 (75.5%)  rate=3.67 fits/sec  ETA=2.3 min
+[2026-05-09 06:13:37]   Progress: 1560/2040 (76.5%)  rate=3.68 fits/sec  ETA=2.2 min
+[2026-05-09 06:13:41]   Progress: 1580/2040 (77.5%)  rate=3.69 fits/sec  ETA=2.1 min
+[2026-05-09 06:13:47]   Progress: 1600/2040 (78.4%)  rate=3.69 fits/sec  ETA=2.0 min
+[2026-05-09 06:13:51]   Progress: 1620/2040 (79.4%)  rate=3.70 fits/sec  ETA=1.9 min
+[2026-05-09 06:14:00]   Progress: 1640/2040 (80.4%)  rate=3.67 fits/sec  ETA=1.8 min
+[2026-05-09 06:14:04]   Progress: 1660/2040 (81.4%)  rate=3.69 fits/sec  ETA=1.7 min
+[2026-05-09 06:14:06]   Progress: 1680/2040 (82.4%)  rate=3.71 fits/sec  ETA=1.6 min
+[2026-05-09 06:14:11]   Progress: 1700/2040 (83.3%)  rate=3.71 fits/sec  ETA=1.5 min
+[2026-05-09 06:14:18]   Progress: 1720/2040 (84.3%)  rate=3.70 fits/sec  ETA=1.4 min
+[2026-05-09 06:14:26]   Progress: 1740/2040 (85.3%)  rate=3.68 fits/sec  ETA=1.4 min
+[2026-05-09 06:14:32]   Progress: 1760/2040 (86.3%)  rate=3.68 fits/sec  ETA=1.3 min
+[2026-05-09 06:14:37]   Progress: 1780/2040 (87.3%)  rate=3.68 fits/sec  ETA=1.2 min
+[2026-05-09 06:14:42]   Progress: 1800/2040 (88.2%)  rate=3.68 fits/sec  ETA=1.1 min
+[2026-05-09 06:14:48]   Progress: 1820/2040 (89.2%)  rate=3.68 fits/sec  ETA=1.0 min
+[2026-05-09 06:14:57]   Progress: 1840/2040 (90.2%)  rate=3.66 fits/sec  ETA=0.9 min
+[2026-05-09 06:15:02]   Progress: 1860/2040 (91.2%)  rate=3.66 fits/sec  ETA=0.8 min
+[2026-05-09 06:15:07]   Progress: 1880/2040 (92.2%)  rate=3.66 fits/sec  ETA=0.7 min
+[2026-05-09 06:15:12]   Progress: 1900/2040 (93.1%)  rate=3.67 fits/sec  ETA=0.6 min
+[2026-05-09 06:15:18]   Progress: 1920/2040 (94.1%)  rate=3.66 fits/sec  ETA=0.5 min
+[2026-05-09 06:15:24]   Progress: 1940/2040 (95.1%)  rate=3.66 fits/sec  ETA=0.5 min
+[2026-05-09 06:15:29]   Progress: 1960/2040 (96.1%)  rate=3.66 fits/sec  ETA=0.4 min
+[2026-05-09 06:15:33]   Progress: 1980/2040 (97.1%)  rate=3.67 fits/sec  ETA=0.3 min
+[2026-05-09 06:15:36]   Progress: 2000/2040 (98.0%)  rate=3.68 fits/sec  ETA=0.2 min
+[2026-05-09 06:15:41]   Progress: 2020/2040 (99.0%)  rate=3.69 fits/sec  ETA=0.1 min
+[2026-05-09 06:16:00]   Progress: 2040/2040 (100.0%)  rate=3.60 fits/sec  ETA=0.0 min
+[2026-05-09 06:16:00] === Done. 2040 fits in this session, 9.4 min total (avg 0.3 sec/fit) ===
+[2026-05-09 06:16:00] Total rows in CSV: 2040
+[2026-05-09 06:16:00] Status counts: {'ok': 2036, 'insufficient_DM_points': 4}
+[2026-05-09 06:16:00] n_shells distribution (all realizations, all galaxies):
+[2026-05-09 06:16:00]   n_shells=0: 1019 (50.0%)
+[2026-05-09 06:16:00]   n_shells=1: 702 (34.5%)
+[2026-05-09 06:16:00]   n_shells=2: 315 (15.5%)

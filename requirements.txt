@@ -1,0 +1,10 @@
+# Paper II — halo_shells_paper2 v1.0
+# Python dependencies for reproducing the analyses in scripts/
+
+numpy>=1.24.0
+scipy>=1.10.0
+pandas>=2.0.0
+matplotlib>=3.7.0
+
+# Optional but recommended
+seaborn>=0.12.0

@@ -1,0 +1,71 @@
+========================================================================
+BACKBONE SHIFT TEST — Summary
+========================================================================
+Tests whether Burkert backbone (rho_0, a) shifts systematically
+when the framework is allowed shells (n>=1) vs constrained to n=0.
+
+Sample: 102 galaxies from v7.0 canonical sample
+
+BIC-selection agreement with v7.0 canonical CSV: 102/102 (100.0%)
+
+Shell-bearing galaxies (this run): 52
+Non-shell-bearing galaxies:        50
+
+------------------------------------------------------------------------
+HEADLINE TEST: backbone shift in shell-bearing galaxies
+------------------------------------------------------------------------
+Comparison: (rho_0, a) at BIC-selected n vs (rho_0, a) at n=0.
+If the smooth backbone is absorbing shell structure when n=0, then
+allowing shells should systematically:
+  - INCREASE a (less compact core; smooth profile no longer needs
+    to peak as much because shells handle the inner excess)
+  - DECREASE rho_0 (lower central density; same reasoning)
+
+  log10(rho_0[sel]/rho_0[n=0]) over 52 shell-bearing galaxies:
+    median: -0.624 dex
+    mean:   -0.542 dex
+    std:    0.610 dex
+    Wilcoxon p (two-sided, vs zero): 0.0000
+
+  log10(a[sel]/a[n=0]) over 52 shell-bearing galaxies:
+    median: +0.318 dex
+    mean:   +0.326 dex
+    std:    0.469 dex
+    Wilcoxon p (two-sided, vs zero): 0.0000
+
+  Sign of shift (the 'absorbing' pattern: rho_0 down + a up):
+    rho_0 decreases AND a increases: 46/52 (88.5%) — absorbing pattern
+    rho_0 increases AND a decreases: 5/52 (9.6%) — opposite pattern
+    Other (mixed signs):             1/52
+
+------------------------------------------------------------------------
+CONTROL: backbone shift in non-shell-bearing galaxies (n=2 vs n=0)
+------------------------------------------------------------------------
+These galaxies BIC-prefer n=0, so 'allowing shells' shouldn't shift
+the backbone systematically — if it does, it indicates optimizer
+noise in our (rho_0, a) estimates rather than physical signal.
+
+  log10(rho_0[n=2]/rho_0[n=0]) over 50 non-shell-bearing:
+    median: -0.331 dex
+    std:    0.705 dex
+  log10(a[n=2]/a[n=0]) over 50 non-shell-bearing:
+    median: +0.115 dex
+    std:    0.719 dex
+
+  If the SB and NSB shift distributions look similar, it's optimizer
+  noise. If SB shows a systematic shift that NSB does not, the shift
+  is real and tied to the presence of shells.
+
+------------------------------------------------------------------------
+SHIFT MAGNITUDE vs galaxy properties (shell-bearing only)
+------------------------------------------------------------------------
+  log_ratio_rho0     vs T         : rho=+0.441 p=0.0011
+  ratio_a            vs T         : rho=-0.235 p=0.0935
+  log_ratio_rho0     vs V_flat    : rho=-0.304 p=0.0282
+  ratio_a            vs V_flat    : rho=+0.097 p=0.4959
+  log_ratio_rho0     vs n0_rho0   : rho=-0.224 p=0.1112
+  ratio_a            vs n0_rho0   : rho=-0.009 p=0.9497
+  log_ratio_rho0     vs n0_a      : rho=+0.121 p=0.3939
+  ratio_a            vs n0_a      : rho=+0.022 p=0.8759
+
+========================================================================
