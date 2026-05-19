@@ -1,0 +1,979 @@
+"""
+make_figures.py — Paper II figure generation.
+
+Generates all manuscript figures from project data CSVs. One function per figure;
+runnable individually or all at once. Output: ../figures/ as PDF + PNG.
+
+Usage:
+  python3 make_figures.py --all
+  python3 make_figures.py --figure 3.1.1
+  python3 make_figures.py --figure 3.1.1,3.1.2
+  python3 make_figures.py --list
+
+Data sources (resolved automatically from package layout or local fallback):
+  ../antiwarp_per_shell.csv         (67 shells, 51 galaxies, 101-galaxy sample)
+  ../galaxy_classifications.csv     (123 galaxies, full SPARC + classifications)
+  ../per_realization.csv            (N=20 null realizations; replaced by N=100 when run completes)
+  ../upsilon_perturbation_per_galaxy.csv     (2040 rows: 102 galaxies × 20 realizations)
+  ../distance_perturbation_per_galaxy.csv    (2040 rows)
+  ../inclination_perturbation_per_galaxy.csv (1820 rows)
+
+Coverage:
+  Fig 3.1.1   bulge correlation                    ✓ buildable
+  Fig 3.1.2   scaling relations (M-r, σ-r, σ/r)    ✓ buildable
+  Fig 3.1.3   σ/r quartile gradient                ✓ buildable
+  Fig 3.1.4   inner-vs-outer (two-shell paired)    ✓ buildable
+  Fig 3.2.1   scramble null distribution           ✓ buildable
+  Fig 3.2.2   permute null distribution            ✓ buildable
+  Fig 3.3.1   disk dynamical scale coincidence     ✓ partial (3 of 4 panels)
+  Fig 3.3.2   Υ perturbation stability             ✓ buildable
+  Fig 3.3.3   distance perturbation stability      ✓ buildable
+  Fig 3.3.4   inclination perturbation stability   ✓ buildable
+  Fig 3.3.5   anti-warp clean subsample            ✓ buildable
+  Fig 3.3.6   Einasto backbone comparison          ✗ requires Paper I einasto_full_sample_results.csv
+  Fig 3.3.7   backbone-shift test                  ✗ requires joint-refit data (see §3.3.7 production run)
+
+Tested against project data; numerical outputs match manuscript values.
+"""
+
+import os
+import sys
+import argparse
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.ticker import LogLocator, FuncFormatter, MaxNLocator
+from scipy.stats import spearmanr, wilcoxon, kstest, fisher_exact
+import warnings
+warnings.filterwarnings('ignore')
+
+
+# ============================================================
+# Path resolution
+# ============================================================
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_PACKAGE = os.path.dirname(_HERE)
+
+
+def _resolve_data(filename):
+    """Find data CSV in package root or local fallback."""
+    candidates = [
+        os.path.join(_PACKAGE, filename),
+        os.path.join(_PACKAGE, 'data', filename),
+        os.path.join('.', filename),
+        os.path.join('..', filename),
+    ]
+    for p in candidates:
+        if os.path.isfile(p):
+            return p
+    raise FileNotFoundError(f"Data file not found in any of: {candidates}")
+
+
+def _output_dir():
+    """Resolve figures output directory (../figures/ relative to scripts/)."""
+    candidates = [
+        os.path.join(_PACKAGE, 'figures'),
+        os.path.join('.', 'figures'),
+        os.path.join('..', 'figures'),
+    ]
+    for p in candidates:
+        if os.path.isdir(p) or os.path.isdir(os.path.dirname(p)):
+            os.makedirs(p, exist_ok=True)
+            return p
+    # Last resort
+    out = os.path.join(_PACKAGE, 'figures')
+    os.makedirs(out, exist_ok=True)
+    return out
+
+
+# ============================================================
+# Style configuration — applied once at module load
+# ============================================================
+def _configure_style():
+    """Publication-quality matplotlib defaults. AASTeX-compatible."""
+    plt.rcParams.update({
+        # Fonts — use mathtext for math, no LaTeX dependency required
+        'font.family':       'serif',
+        'font.serif':        ['DejaVu Serif', 'Times New Roman', 'Times'],
+        'mathtext.fontset':  'dejavuserif',
+        'font.size':         9,
+        'axes.labelsize':    10,
+        'axes.titlesize':    10,
+        'xtick.labelsize':   8,
+        'ytick.labelsize':   8,
+        'legend.fontsize':   8,
+        # Lines and markers
+        'lines.linewidth':   1.2,
+        'lines.markersize':  4,
+        'axes.linewidth':    0.8,
+        'xtick.major.width': 0.8,
+        'ytick.major.width': 0.8,
+        'xtick.minor.width': 0.5,
+        'ytick.minor.width': 0.5,
+        # Ticks
+        'xtick.direction':   'in',
+        'ytick.direction':   'in',
+        'xtick.top':         True,
+        'ytick.right':       True,
+        'xtick.minor.visible': True,
+        'ytick.minor.visible': True,
+        # Layout
+        'figure.dpi':        150,
+        'savefig.dpi':       300,
+        'savefig.bbox':      'tight',
+        'savefig.pad_inches': 0.05,
+        # Misc
+        'axes.grid':         False,
+        'legend.frameon':    False,
+        'legend.handlelength': 1.5,
+    })
+
+
+# Color palette — distinguishable in grayscale, AAS-friendly
+COLORS = {
+    'primary':    '#1f77b4',  # dark blue
+    'secondary':  '#d62728',  # dark red
+    'tertiary':   '#2ca02c',  # dark green
+    'highlight':  '#ff7f0e',  # orange (for "highlighted" subsets)
+    'neutral':    '#7f7f7f',  # mid-gray
+    'reference':  '#bcbcbc',  # light gray (for "real data" or "expected" reference)
+    'null_burk':  '#9467bd',  # purple (Burkert-truth null)
+    'null_nfw':   '#8c564b',  # brown (NFW-truth null)
+    'scramble':   '#1f77b4',  # blue
+    'permute':    '#d62728',  # red
+    'bulge_dom':  '#d62728',  # red
+    'bulgeless':  '#1f77b4',  # blue
+}
+
+
+# AASTeX column widths (inches)
+WIDTH_SINGLE = 3.4    # single-column
+WIDTH_DOUBLE = 7.0    # double-column / full page-width
+
+
+# ============================================================
+# Output helper
+# ============================================================
+def _save_figure(fig, name, also_png=True):
+    """Save figure as PDF (primary) and PNG (preview) into ../figures/."""
+    outdir = _output_dir()
+    pdf_path = os.path.join(outdir, f'{name}.pdf')
+    fig.savefig(pdf_path, format='pdf')
+    if also_png:
+        png_path = os.path.join(outdir, f'{name}.png')
+        fig.savefig(png_path, format='png')
+    plt.close(fig)
+    return pdf_path
+
+
+# ============================================================
+# Fig 3.1.1 — Bulge correlation
+# ============================================================
+def fig_3_1_1():
+    """
+    Bulge-dominated galaxies preferentially host shells.
+    Stacked bar of bulge-dom vs bulgeless, with shell-bearing fraction.
+    Reproduces manuscript §3.1.1: OR = 3.67, Fisher p ≈ 0.01.
+    """
+    gc = pd.read_csv(_resolve_data('galaxy_classifications.csv'))
+    sh = pd.read_csv(_resolve_data('antiwarp_per_shell.csv'))
+
+    # 101-galaxy convention: T=2-9, NGC 6674 excluded
+    g101 = gc[(gc['T'] >= 2) & (gc['T'] <= 9) & (gc['Galaxy'] != 'NGC6674')].copy()
+    shell_bearing = set(sh['Galaxy'].unique())
+    g101['shellbearing'] = g101['Galaxy'].isin(shell_bearing)
+
+    # Counts
+    bulge_dom    = g101[g101['is_bulge_dom']]
+    bulgeless    = g101[g101['is_bulgeless']]
+    n_bd, sb_bd = len(bulge_dom), bulge_dom['shellbearing'].sum()
+    n_bl, sb_bl = len(bulgeless), bulgeless['shellbearing'].sum()
+
+    # Stats — manuscript reports OR = 3.67, Fisher p ≈ 0.01
+    table = np.array([[sb_bd, n_bd - sb_bd],
+                      [sb_bl, n_bl - sb_bl]])
+    odds_ratio, fisher_p = fisher_exact(table, alternative='two-sided')
+
+    # Figure: single column, stacked bars
+    fig, ax = plt.subplots(figsize=(WIDTH_SINGLE, 2.8))
+    labels = ['Bulge-dominated', 'Bulgeless']
+    sb = [sb_bd, sb_bl]
+    ns = [n_bd - sb_bd, n_bl - sb_bl]
+    x = np.arange(2)
+    width = 0.6
+
+    p1 = ax.bar(x, sb, width, color=[COLORS['bulge_dom'], COLORS['bulgeless']],
+                label='Shell-bearing', edgecolor='black', linewidth=0.5)
+    p2 = ax.bar(x, ns, width, bottom=sb,
+                color=[COLORS['bulge_dom'], COLORS['bulgeless']], alpha=0.35,
+                label='Non-shell-bearing', edgecolor='black', linewidth=0.5)
+
+    # Annotations
+    for i, (s, n_total) in enumerate(zip(sb, [n_bd, n_bl])):
+        frac = 100 * s / n_total
+        ax.text(i, s/2, f'{s}/{n_total}\n{frac:.1f}%',
+                ha='center', va='center', fontsize=9,
+                fontweight='bold', color='white')
+        ax.text(i, s + (n_total - s)/2, f'{n_total - s}',
+                ha='center', va='center', fontsize=9, color='black', alpha=0.6)
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.set_ylabel('Number of galaxies')
+    ax.set_xlim(-0.6, 1.6)
+    ax.set_ylim(0, max(n_bd, n_bl) * 1.15)
+
+    # Stats box
+    stat_text = (f'OR = {odds_ratio:.2f}\n'
+                 f'Fisher $p = {fisher_p:.3f}$\n'
+                 f'(two-sided)')
+    ax.text(0.98, 0.97, stat_text, transform=ax.transAxes,
+            ha='right', va='top', fontsize=8,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.3', alpha=0.9))
+
+    ax.legend(loc='upper left', fontsize=8)
+    ax.set_title('Bulge-dominated galaxies preferentially host shells')
+
+    print(f"  bulge-dom: {sb_bd}/{n_bd} = {100*sb_bd/n_bd:.1f}% shell-bearing")
+    print(f"  bulgeless: {sb_bl}/{n_bl} = {100*sb_bl/n_bl:.1f}% shell-bearing")
+    print(f"  OR={odds_ratio:.2f}, Fisher p={fisher_p:.4f}")
+    return _save_figure(fig, 'fig_3_1_1_bulge_correlation')
+
+
+# ============================================================
+# Fig 3.1.2 — Scaling relations (M-r, σ-r, σ/r vs r)
+# ============================================================
+def fig_3_1_2():
+    """
+    Three-panel: M-r scaling, σ-r scaling, σ/r vs r.
+    Reproduces manuscript §3.1.2-3.1.3:
+      M-r: slope 0.76, Spearman ρ=+0.64, p<1e-4
+      σ-r: slope 1.04, Spearman ρ=+0.78, p<1e-4
+      σ/r: median 0.275, std 0.116
+    """
+    sh = pd.read_csv(_resolve_data('antiwarp_per_shell.csv'))
+    r   = sh['r_sh_kpc'].values
+    M   = sh['M_sh'].values
+    sig = sh['sigma_sh_kpc'].values
+    sor = sh['sigma_over_r'].values
+
+    logr = np.log10(r)
+    logM = np.log10(M)
+    logsig = np.log10(sig)
+
+    # Linear fits in log space
+    m_slope, m_intercept = np.polyfit(logr, logM, 1)
+    s_slope, s_intercept = np.polyfit(logr, logsig, 1)
+    rho_M, p_M     = spearmanr(r, M)
+    rho_S, p_S     = spearmanr(r, sig)
+
+    fig, axes = plt.subplots(1, 3, figsize=(WIDTH_DOUBLE, 2.5))
+
+    # --- Panel 1: M-r ---
+    ax = axes[0]
+    ax.loglog(r, M, 'o', ms=4, mfc=COLORS['primary'], mec='black', mew=0.3, alpha=0.7)
+    r_line = np.logspace(np.log10(r.min()*0.9), np.log10(r.max()*1.1), 100)
+    M_line = 10**(m_slope * np.log10(r_line) + m_intercept)
+    ax.loglog(r_line, M_line, '-', color=COLORS['secondary'], lw=1.2,
+              label=f'slope={m_slope:.2f}')
+    ax.set_xlabel(r'$r_{\rm sh}$ (kpc)')
+    ax.set_ylabel(r'$M_{\rm sh}$ ($M_\odot$)')
+    ax.text(0.04, 0.96, f'$\\rho = {rho_M:+.2f}$\n$p < 10^{{-4}}$',
+            transform=ax.transAxes, va='top', fontsize=8,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.25', alpha=0.9))
+    ax.legend(loc='lower right', fontsize=8)
+    ax.set_title('Mass-radius scaling')
+
+    # --- Panel 2: σ-r ---
+    ax = axes[1]
+    ax.loglog(r, sig, 'o', ms=4, mfc=COLORS['tertiary'], mec='black', mew=0.3, alpha=0.7)
+    sig_line = 10**(s_slope * np.log10(r_line) + s_intercept)
+    ax.loglog(r_line, sig_line, '-', color=COLORS['secondary'], lw=1.2,
+              label=f'slope={s_slope:.2f}')
+    # Hard cap: σ/r = 0.4 line
+    ax.loglog(r_line, 0.4 * r_line, '--', color=COLORS['neutral'], lw=0.8,
+              label=r'$\sigma/r \leq 0.4$ cap')
+    ax.set_xlabel(r'$r_{\rm sh}$ (kpc)')
+    ax.set_ylabel(r'$\sigma_{\rm sh}$ (kpc)')
+    ax.text(0.04, 0.96, f'$\\rho = {rho_S:+.2f}$\n$p < 10^{{-4}}$',
+            transform=ax.transAxes, va='top', fontsize=8,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.25', alpha=0.9))
+    ax.legend(loc='lower right', fontsize=8)
+    ax.set_title('Width-radius scaling')
+
+    # --- Panel 3: σ/r vs r ---
+    ax = axes[2]
+    ax.semilogx(r, sor, 'o', ms=4, mfc=COLORS['highlight'], mec='black', mew=0.3, alpha=0.7)
+    median = np.median(sor)
+    ax.axhline(median, color=COLORS['secondary'], lw=1.2,
+               label=f'median $= {median:.3f}$')
+    ax.axhline(0.4, ls='--', color=COLORS['neutral'], lw=0.8,
+               label=r'$\sigma/r \leq 0.4$ cap')
+    ax.set_xlabel(r'$r_{\rm sh}$ (kpc)')
+    ax.set_ylabel(r'$\sigma_{\rm sh}/r_{\rm sh}$')
+    ax.set_ylim(0, 0.45)
+    ax.set_title(r'Fractional width $\sigma/r$')
+    ax.text(0.04, 0.96, f'median = {median:.3f}\nstd = {sor.std():.3f}',
+            transform=ax.transAxes, va='top', fontsize=8,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.25', alpha=0.9))
+    ax.legend(loc='lower right', fontsize=8)
+
+    plt.tight_layout()
+    print(f"  M-r: slope={m_slope:.2f}, ρ={rho_M:+.2f}, p={p_M:.2e}")
+    print(f"  σ-r: slope={s_slope:.2f}, ρ={rho_S:+.2f}, p={p_S:.2e}")
+    print(f"  σ/r: median={median:.3f}, std={sor.std():.3f}")
+    return _save_figure(fig, 'fig_3_1_2_scaling_relations')
+
+
+# ============================================================
+# Fig 3.1.3 — σ/r vs radius quartile gradient
+# ============================================================
+def fig_3_1_3():
+    """
+    σ/r by radius quartile — tests for systematic gradient in fractional width.
+    Box-and-whiskers per quartile + per-shell scatter overlay.
+    """
+    sh = pd.read_csv(_resolve_data('antiwarp_per_shell.csv'))
+    r   = sh['r_sh_kpc'].values
+    sor = sh['sigma_over_r'].values
+
+    # Quartile binning
+    quartiles_cat = pd.qcut(r, 4)
+    qranges = quartiles_cat.categories
+    quartiles = pd.qcut(r, 4, labels=['Q1', 'Q2', 'Q3', 'Q4'])
+    qlabels = [f'Q{i+1}\n[{q.left:.1f}–{q.right:.1f}]\nkpc'
+               for i, q in enumerate(qranges)]
+
+    df = pd.DataFrame({'sor': sor, 'q': quartiles, 'r': r})
+
+    fig, ax = plt.subplots(figsize=(WIDTH_SINGLE * 1.2, 2.8))
+
+    # Box plot
+    box_data = [df[df['q'].astype(str) == qstr]['sor'].values
+                for qstr in df['q'].astype(str).unique()]
+    # Get them in order
+    box_data = [df[df['q'] == q]['sor'].values for q in quartiles.unique()
+                if not pd.isna(q)]
+
+    bp = ax.boxplot(box_data, positions=range(1, 5),
+                    widths=0.5, patch_artist=True,
+                    boxprops=dict(facecolor=COLORS['primary'], alpha=0.4,
+                                   edgecolor=COLORS['primary']),
+                    medianprops=dict(color=COLORS['secondary'], linewidth=1.3),
+                    whiskerprops=dict(color='black', linewidth=0.7),
+                    capprops=dict(color='black', linewidth=0.7),
+                    flierprops=dict(marker='o', markersize=2.5,
+                                    markerfacecolor=COLORS['neutral'],
+                                    markeredgecolor='black', markeredgewidth=0.3))
+
+    # Scatter overlay (small jitter on x)
+    rng = np.random.default_rng(seed=42)
+    for i, q in enumerate(quartiles.unique()):
+        if pd.isna(q):
+            continue
+        sub = df[df['q'] == q]['sor'].values
+        xj = rng.uniform(-0.12, 0.12, size=len(sub)) + (i + 1)
+        ax.scatter(xj, sub, s=6, c=COLORS['highlight'], alpha=0.55,
+                   edgecolors='black', linewidths=0.2)
+
+    ax.axhline(0.4, ls='--', color=COLORS['neutral'], lw=0.8, alpha=0.7,
+               label=r'$\sigma/r = 0.4$ cap')
+    overall_median = np.median(sor)
+    ax.axhline(overall_median, ls=':', color=COLORS['secondary'], lw=0.8,
+               label=f'population median = {overall_median:.3f}')
+
+    ax.set_xticks(range(1, 5))
+    ax.set_xticklabels(qlabels, fontsize=7)
+    ax.set_xlabel(r'$r_{\rm sh}$ quartile (kpc)')
+    ax.set_ylabel(r'$\sigma_{\rm sh}/r_{\rm sh}$')
+    ax.set_ylim(0, 0.45)
+    ax.legend(loc='lower left', fontsize=7)
+    ax.set_title(r'Fractional width by radius quartile')
+
+    # Quartile-level medians, for the test
+    q_medians = [np.median(b) for b in box_data]
+    rho_q, p_q = spearmanr([1, 2, 3, 4], q_medians)
+    ax.text(0.98, 0.97,
+            f'quartile medians:\n{q_medians[0]:.3f}, {q_medians[1]:.3f}, '
+            f'{q_medians[2]:.3f}, {q_medians[3]:.3f}\n'
+            f'Spearman $\\rho = {rho_q:+.2f}$',
+            transform=ax.transAxes, va='top', ha='right', fontsize=7,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.25', alpha=0.9))
+
+    print(f"  quartile medians: {q_medians}")
+    print(f"  Spearman ρ across quartiles: {rho_q:+.2f}, p={p_q:.3f}")
+    return _save_figure(fig, 'fig_3_1_3_sigma_over_r_quartile')
+
+
+# ============================================================
+# Fig 3.1.4 — Inner-vs-outer paired comparison (two-shell galaxies)
+# ============================================================
+def fig_3_1_4():
+    """
+    Two-shell paired comparison: inner vs outer mass and width.
+    Reproduces manuscript §3.1.4 inner-vs-outer signature.
+    """
+    sh = pd.read_csv(_resolve_data('antiwarp_per_shell.csv'))
+    # Two-shell galaxies (n_total = 2)
+    two = sh[sh['n_total'] == 2].copy()
+    inner = two[two['position'] == 'inner'].sort_values('Galaxy').reset_index(drop=True)
+    outer = two[two['position'] == 'outer'].sort_values('Galaxy').reset_index(drop=True)
+
+    # Wilcoxon paired tests
+    M_in, M_out = inner['M_sh'].values, outer['M_sh'].values
+    s_in, s_out = inner['sigma_sh_kpc'].values, outer['sigma_sh_kpc'].values
+    w_M, p_M = wilcoxon(M_out, M_in, alternative='greater')
+    w_s, p_s = wilcoxon(s_out, s_in, alternative='greater')
+
+    n_pairs = len(inner)
+    n_out_heavier = int(np.sum(M_out > M_in))
+    n_out_wider = int(np.sum(s_out > s_in))
+
+    fig, axes = plt.subplots(1, 2, figsize=(WIDTH_DOUBLE * 0.85, 3.0))
+
+    # --- Panel 1: mass ---
+    ax = axes[0]
+    diag_min = min(M_in.min(), M_out.min()) * 0.6
+    diag_max = max(M_in.max(), M_out.max()) * 1.6
+    ax.loglog([diag_min, diag_max], [diag_min, diag_max], '--',
+              color=COLORS['neutral'], lw=0.8, label='outer = inner')
+    ax.loglog(M_in, M_out, 'o', ms=6, mfc=COLORS['primary'],
+              mec='black', mew=0.5, alpha=0.8)
+    ax.set_xlabel(r'inner shell $M_{\rm sh}$ ($M_\odot$)')
+    ax.set_ylabel(r'outer shell $M_{\rm sh}$ ($M_\odot$)')
+    ax.set_xlim(diag_min, diag_max)
+    ax.set_ylim(diag_min, diag_max)
+    ax.set_aspect('equal', adjustable='box')
+    ax.text(0.04, 0.96,
+            f'$n = {n_pairs}$ pairs\n'
+            f'$M_{{\\rm outer}} > M_{{\\rm inner}}$: {n_out_heavier}/{n_pairs}\n'
+            f'Wilcoxon $p = {p_M:.4f}$',
+            transform=ax.transAxes, va='top', fontsize=8,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.25', alpha=0.9))
+    ax.set_title('Mass: outer vs inner')
+    ax.legend(loc='lower right', fontsize=7)
+
+    # --- Panel 2: width ---
+    ax = axes[1]
+    diag_min = min(s_in.min(), s_out.min()) * 0.6
+    diag_max = max(s_in.max(), s_out.max()) * 1.6
+    ax.loglog([diag_min, diag_max], [diag_min, diag_max], '--',
+              color=COLORS['neutral'], lw=0.8, label='outer = inner')
+    ax.loglog(s_in, s_out, 'o', ms=6, mfc=COLORS['tertiary'],
+              mec='black', mew=0.5, alpha=0.8)
+    ax.set_xlabel(r'inner shell $\sigma_{\rm sh}$ (kpc)')
+    ax.set_ylabel(r'outer shell $\sigma_{\rm sh}$ (kpc)')
+    ax.set_xlim(diag_min, diag_max)
+    ax.set_ylim(diag_min, diag_max)
+    ax.set_aspect('equal', adjustable='box')
+    ax.text(0.04, 0.96,
+            f'$n = {n_pairs}$ pairs\n'
+            f'$\\sigma_{{\\rm outer}} > \\sigma_{{\\rm inner}}$: {n_out_wider}/{n_pairs}\n'
+            f'Wilcoxon $p = {p_s:.4f}$',
+            transform=ax.transAxes, va='top', fontsize=8,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.25', alpha=0.9))
+    ax.set_title('Width: outer vs inner')
+    ax.legend(loc='lower right', fontsize=7)
+
+    plt.tight_layout()
+    print(f"  Mass: outer heavier in {n_out_heavier}/{n_pairs}, Wilcoxon p={p_M:.4f}")
+    print(f"  Width: outer wider in {n_out_wider}/{n_pairs}, Wilcoxon p={p_s:.4f}")
+    return _save_figure(fig, 'fig_3_1_4_inner_vs_outer')
+
+
+# ============================================================
+# Helper: null figure
+# ============================================================
+def _null_figure(null_type, name, title_suffix, color):
+    """Generic null-distribution figure for scramble or permute."""
+    pr = pd.read_csv(_resolve_data('per_realization.csv'))
+    sub = pr[pr['null_type'] == null_type]
+    n_real = len(sub)
+
+    # Real-data baseline from per_realization.csv: stored in nulls? No, in summary.
+    # Hardcode baseline (computed live from canonical CSV at run time = -0.833 / -0.296):
+    real_rho_per_T = -0.833
+    real_rho_per_gal = -0.296
+
+    rho_T   = sub['rho_per_T'].dropna().values
+    rho_gal = sub['rho_per_gal'].dropna().values
+
+    p_emp_T   = int(np.sum(rho_T   <= real_rho_per_T))   / max(len(rho_T), 1)
+    p_emp_gal = int(np.sum(rho_gal <= real_rho_per_gal)) / max(len(rho_gal), 1)
+    count_T   = (int(np.sum(rho_T   <= real_rho_per_T)),   len(rho_T))
+    count_gal = (int(np.sum(rho_gal <= real_rho_per_gal)), len(rho_gal))
+
+    fig, axes = plt.subplots(1, 2, figsize=(WIDTH_DOUBLE * 0.85, 2.8))
+
+    # --- Panel 1: per-T-bin Spearman rho ---
+    ax = axes[0]
+    bins = max(8, int(np.sqrt(len(rho_T))))
+    ax.hist(rho_T, bins=bins, color=color, alpha=0.6, edgecolor='black', lw=0.5)
+    ax.axvline(real_rho_per_T, color=COLORS['secondary'], lw=1.5,
+               label=f'real data: $\\rho = {real_rho_per_T:.3f}$')
+    ax.axvline(0, color=COLORS['neutral'], lw=0.6, ls=':', alpha=0.6)
+    ax.set_xlabel(r'$\rho_{\rm per\text{-}T}$ (null realizations)')
+    ax.set_ylabel('count')
+    ax.legend(loc='upper left', fontsize=7)
+    ax.text(0.97, 0.95,
+            f'$n = {len(rho_T)}$ real.\n'
+            f'mean = {rho_T.mean():+.3f}\n'
+            f'std  = {rho_T.std():.3f}\n'
+            f'emp. $p = {count_T[0]}/{count_T[1]}$',
+            transform=ax.transAxes, va='top', ha='right', fontsize=7,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.25', alpha=0.9))
+    ax.set_title(r'Per-$T$-bin trend')
+
+    # --- Panel 2: per-galaxy Spearman rho ---
+    ax = axes[1]
+    bins = max(8, int(np.sqrt(len(rho_gal))))
+    ax.hist(rho_gal, bins=bins, color=color, alpha=0.6, edgecolor='black', lw=0.5)
+    ax.axvline(real_rho_per_gal, color=COLORS['secondary'], lw=1.5,
+               label=f'real data: $\\rho = {real_rho_per_gal:.3f}$')
+    ax.axvline(0, color=COLORS['neutral'], lw=0.6, ls=':', alpha=0.6)
+    ax.set_xlabel(r'$\rho_{\rm per\text{-}galaxy}$ (null realizations)')
+    ax.set_ylabel('count')
+    ax.legend(loc='upper left', fontsize=7)
+    ax.text(0.97, 0.95,
+            f'$n = {len(rho_gal)}$ real.\n'
+            f'mean = {rho_gal.mean():+.3f}\n'
+            f'std  = {rho_gal.std():.3f}\n'
+            f'emp. $p = {count_gal[0]}/{count_gal[1]}$',
+            transform=ax.transAxes, va='top', ha='right', fontsize=7,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.25', alpha=0.9))
+    ax.set_title(r'Per-galaxy trend')
+
+    fig.suptitle(f'{title_suffix} null distribution (N = {n_real} realizations)',
+                 fontsize=10, y=1.02)
+    plt.tight_layout()
+    print(f"  {null_type} N={n_real}: ρ_T mean={rho_T.mean():+.3f} std={rho_T.std():.3f}, "
+          f"emp p={count_T[0]}/{count_T[1]}; "
+          f"ρ_gal mean={rho_gal.mean():+.3f} std={rho_gal.std():.3f}, "
+          f"emp p={count_gal[0]}/{count_gal[1]}")
+    return _save_figure(fig, name)
+
+
+def fig_3_2_1():
+    """Scramble null distribution (within-galaxy DM residual scrambling)."""
+    return _null_figure('scramble', 'fig_3_2_1_scramble_null',
+                        'Scramble', COLORS['scramble'])
+
+
+def fig_3_2_2():
+    """Permute null distribution (V_obs permutation across radii)."""
+    return _null_figure('permute', 'fig_3_2_2_permute_null',
+                        'Permute', COLORS['permute'])
+
+
+# ============================================================
+# Fig 3.3.1 — Disk dynamical scale coincidence
+# ============================================================
+def fig_3_3_1():
+    """
+    Three-panel CDF: |r_sh - r_scale|/r_scale for Rdisk, 2.15·Rdisk, Reff.
+    Compares observed shell-radii distribution against uniform-placement null.
+    (V_rot peak panel deferred — requires Rotmod-file parsing for V_rot maximum.)
+    """
+    sh = pd.read_csv(_resolve_data('antiwarp_per_shell.csv'))
+    gc = pd.read_csv(_resolve_data('galaxy_classifications.csv'))
+
+    # Join shell catalog with galaxy properties
+    merged = sh.merge(gc[['Galaxy', 'Rdisk', 'Reff', 'RHI']], on='Galaxy', how='left')
+    merged = merged.dropna(subset=['Rdisk', 'Reff'])
+
+    # Three candidate scales (V_rot peak deferred)
+    scales = {
+        r'$R_{\rm disk}$': merged['Rdisk'].values,
+        r'$2.15\,R_{\rm disk}$': 2.15 * merged['Rdisk'].values,
+        r'$R_{\rm eff}$': merged['Reff'].values,
+    }
+    r_sh = merged['r_sh_kpc'].values
+
+    fig, axes = plt.subplots(1, 3, figsize=(WIDTH_DOUBLE, 2.6))
+
+    for ax, (label, r_scale) in zip(axes, scales.items()):
+        dist = np.abs(r_sh - r_scale) / r_scale
+        dist_sorted = np.sort(dist)
+        cdf = np.arange(1, len(dist_sorted) + 1) / len(dist_sorted)
+        ax.plot(dist_sorted, cdf, '-', color=COLORS['primary'], lw=1.4,
+                label='observed shells')
+
+        # Uniform-placement null: shells distributed uniformly across [0, max(r_sh)]
+        # within each galaxy. Approximate: distribute uniform on [0, observed r_sh max]
+        rng = np.random.default_rng(seed=42)
+        n_null = 2000
+        # For each null shell, sample a galaxy and a uniform radius in that galaxy's range
+        gal_groups = merged.groupby('Galaxy').first()
+        gal_names = gal_groups.index.values
+        gal_rdisk = gal_groups['Rdisk'].values
+        gal_reff  = gal_groups['Reff'].values
+        scale_by_galaxy = {
+            r'$R_{\rm disk}$':       dict(zip(gal_names, gal_rdisk)),
+            r'$2.15\,R_{\rm disk}$': dict(zip(gal_names, 2.15 * gal_rdisk)),
+            r'$R_{\rm eff}$':        dict(zip(gal_names, gal_reff)),
+        }
+        # Sample observed r_sh values' galaxies uniformly and r_max from that galaxy
+        null_dists = []
+        r_max_overall = r_sh.max()
+        for _ in range(n_null):
+            r_rand = rng.uniform(0, r_max_overall)
+            g_rand = rng.choice(merged['Galaxy'].values)
+            r_scale_g = scale_by_galaxy[label].get(g_rand, np.nan)
+            if r_scale_g and not np.isnan(r_scale_g):
+                null_dists.append(np.abs(r_rand - r_scale_g) / r_scale_g)
+        null_dists = np.array(null_dists)
+        null_sorted = np.sort(null_dists)
+        null_cdf = np.arange(1, len(null_sorted) + 1) / len(null_sorted)
+        ax.plot(null_sorted, null_cdf, '--', color=COLORS['neutral'], lw=1.0,
+                label='uniform null')
+
+        # KS test
+        ks_stat, ks_p = kstest(dist, null_dists)
+
+        ax.set_xlabel(rf'$|r_{{\rm sh}} - $ {label}$|\,/\,$ {label}')
+        ax.set_ylabel('CDF')
+        ax.set_xlim(0, min(np.percentile(np.concatenate([dist, null_dists]), 99), 5))
+        ax.set_ylim(0, 1.05)
+        ax.set_title(label)
+        ax.text(0.96, 0.05, f'KS $p = {ks_p:.3f}$',
+                transform=ax.transAxes, ha='right', va='bottom', fontsize=8,
+                bbox=dict(facecolor='white', edgecolor='gray',
+                          boxstyle='round,pad=0.25', alpha=0.9))
+        ax.legend(loc='center right', fontsize=7)
+
+    plt.tight_layout()
+    print(f"  3 of 4 disk dynamical scales tested (V_rot peak panel deferred)")
+    return _save_figure(fig, 'fig_3_3_1_disk_dynamical_scales')
+
+
+# ============================================================
+# Helper: perturbation stability figure
+# ============================================================
+def _perturbation_figure(csv_name, label, name, color, n_realizations=20):
+    """
+    Generic perturbation stability figure:
+      Left panel: stacked bar of n_shells stability by canonical class
+      Right panel: scatter of perturbed vs canonical r_sh1
+    """
+    df = pd.read_csv(_resolve_data(csv_name))
+    # Strip whitespace from columns
+    df.columns = [c.strip() for c in df.columns]
+
+    sh = pd.read_csv(_resolve_data('antiwarp_per_shell.csv'))
+    # Canonical n_shells per galaxy: 0 if not in shell catalog, otherwise n_total
+    gc = pd.read_csv(_resolve_data('galaxy_classifications.csv'))
+    g102 = gc[(gc['T'] >= 2) & (gc['T'] <= 9)]['Galaxy'].values
+    canon_n = {}
+    for g in g102:
+        rows = sh[sh['Galaxy'] == g]
+        if len(rows) == 0:
+            canon_n[g] = 0
+        else:
+            canon_n[g] = int(rows['n_total'].iloc[0])
+
+    # Filter only successful fits
+    df_ok = df[df['status'].astype(str).str.strip() == 'ok'].copy()
+
+    df_ok['canon_n'] = df_ok['Galaxy'].map(canon_n)
+    df_ok['matches'] = (df_ok['n_shells'] == df_ok['canon_n'])
+
+    # Per-canonical-class stability
+    classes = [0, 1, 2]
+    match_rates = []
+    counts = []
+    for c in classes:
+        sub = df_ok[df_ok['canon_n'] == c]
+        if len(sub) > 0:
+            rate = sub['matches'].mean() * 100
+            match_rates.append(rate)
+            counts.append(len(sub))
+        else:
+            match_rates.append(0.0)
+            counts.append(0)
+
+    overall_match = df_ok['matches'].mean() * 100
+
+    fig, axes = plt.subplots(1, 2, figsize=(WIDTH_DOUBLE * 0.85, 2.8))
+
+    # --- Panel 1: stability by canonical class ---
+    ax = axes[0]
+    x = np.arange(3)
+    bars = ax.bar(x, match_rates, color=color, alpha=0.7,
+                  edgecolor='black', linewidth=0.5)
+    for i, (rate, ct) in enumerate(zip(match_rates, counts)):
+        ax.text(i, rate + 1.5, f'{rate:.1f}%\n($n={ct}$)',
+                ha='center', va='bottom', fontsize=8)
+    ax.set_xticks(x)
+    ax.set_xticklabels(['canonical\n$n=0$', 'canonical\n$n=1$', 'canonical\n$n=2$'])
+    ax.set_ylabel('per-fit match rate (%)')
+    ax.set_ylim(0, 109)
+    ax.axhline(overall_match, color=COLORS['secondary'], ls='--', lw=1.0,
+               label=f'overall: {overall_match:.1f}%')
+    ax.legend(loc='lower left', fontsize=7)
+    ax.set_title(f'$n_{{\\rm shells}}$ stability by canonical class')
+
+    # --- Panel 2: r_sh1 perturbed vs canonical (fully-stable shell-bearing only) ---
+    ax = axes[1]
+    sh_canon = sh[['Galaxy', 'r_sh_kpc', 'position', 'n_total']].copy()
+    inner_canon = sh_canon[sh_canon['position'] == 'inner'].rename(
+        columns={'r_sh_kpc': 'r_sh_canon'})
+    df_fully_stable = df_ok[(df_ok['canon_n'] > 0) & (df_ok['matches'])].copy()
+    df_fully_stable = df_fully_stable.merge(
+        inner_canon[['Galaxy', 'r_sh_canon']], on='Galaxy', how='left')
+    df_fully_stable = df_fully_stable.dropna(subset=['r_sh1', 'r_sh_canon'])
+
+    r_canon = df_fully_stable['r_sh_canon'].values
+    r_pert  = df_fully_stable['r_sh1'].values
+
+    rmin = min(r_canon.min(), r_pert.min()) * 0.7
+    rmax = max(r_canon.max(), r_pert.max()) * 1.4
+    ax.loglog([rmin, rmax], [rmin, rmax], '--', color=COLORS['neutral'], lw=0.8,
+              label='perturbed = canonical')
+    # ±25% bands
+    ax.loglog([rmin, rmax], [1.25*rmin, 1.25*rmax], ':', color=COLORS['neutral'],
+              lw=0.6, alpha=0.7)
+    ax.loglog([rmin, rmax], [0.75*rmin, 0.75*rmax], ':', color=COLORS['neutral'],
+              lw=0.6, alpha=0.7, label=r'$\pm25\%$ band')
+    ax.loglog(r_canon, r_pert, '.', ms=2.5, color=color, alpha=0.4)
+    ax.set_xlabel(r'canonical $r_{\rm sh,1}$ (kpc)')
+    ax.set_ylabel(r'perturbed $r_{\rm sh,1}$ (kpc)')
+    ax.set_xlim(rmin, rmax)
+    ax.set_ylim(rmin, rmax)
+    ax.set_aspect('equal', adjustable='box')
+
+    # Scatter statistic: median |log10(r_pert/r_canon)|
+    log_ratio = np.log10(r_pert / r_canon)
+    median_scatter = np.median(np.abs(log_ratio))
+    ax.text(0.04, 0.96,
+            f'$n = {len(r_canon)}$ fits\n'
+            f'median $|\\Delta \\log_{{10}} r| = {median_scatter:.3f}$ dex',
+            transform=ax.transAxes, va='top', fontsize=7,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.25', alpha=0.9))
+    ax.legend(loc='lower right', fontsize=7)
+    ax.set_title(r'$r_{\rm sh,1}$ stability')
+
+    fig.suptitle(f'{label} perturbation stability (N = {n_realizations} realizations)',
+                 fontsize=10, y=1.02)
+    plt.tight_layout()
+    print(f"  {label}: overall match {overall_match:.1f}%, "
+          f"per-class [{match_rates[0]:.1f}%, {match_rates[1]:.1f}%, {match_rates[2]:.1f}%]")
+    return _save_figure(fig, name)
+
+
+def fig_3_3_2():
+    """Υ perturbation stability."""
+    return _perturbation_figure('upsilon_perturbation_per_galaxy.csv',
+                                r'$\Upsilon$',
+                                'fig_3_3_2_upsilon_perturbation',
+                                COLORS['primary'])
+
+
+def fig_3_3_3():
+    """Distance perturbation stability."""
+    return _perturbation_figure('distance_perturbation_per_galaxy.csv',
+                                'Distance',
+                                'fig_3_3_3_distance_perturbation',
+                                COLORS['tertiary'])
+
+
+def fig_3_3_4():
+    """Inclination perturbation stability."""
+    return _perturbation_figure('inclination_perturbation_per_galaxy.csv',
+                                'Inclination',
+                                'fig_3_3_4_inclination_perturbation',
+                                COLORS['highlight'])
+
+
+# ============================================================
+# Fig 3.3.5 — Anti-warp clean subsample
+# ============================================================
+def fig_3_3_5():
+    """
+    Compare full-sample (67 shells) vs anti-warp clean subsample (25 shells)
+    in M-r and σ-r scaling.
+    """
+    sh = pd.read_csv(_resolve_data('antiwarp_per_shell.csv'))
+    clean = sh[sh['is_clean']]
+
+    fig, axes = plt.subplots(1, 2, figsize=(WIDTH_DOUBLE * 0.85, 2.8))
+
+    # --- Panel 1: M-r ---
+    ax = axes[0]
+    ax.loglog(sh['r_sh_kpc'], sh['M_sh'], 'o', ms=4,
+              mfc=COLORS['reference'], mec='black', mew=0.3, alpha=0.7,
+              label=f'full (n={len(sh)})')
+    ax.loglog(clean['r_sh_kpc'], clean['M_sh'], 'o', ms=5,
+              mfc=COLORS['highlight'], mec='black', mew=0.4,
+              label=f'clean (n={len(clean)})')
+
+    # Fits
+    for data, color, lw in [(sh, COLORS['neutral'], 1.0),
+                             (clean, COLORS['secondary'], 1.3)]:
+        logr, logM = np.log10(data['r_sh_kpc']), np.log10(data['M_sh'])
+        slope, intercept = np.polyfit(logr, logM, 1)
+        r_line = np.logspace(np.log10(sh['r_sh_kpc'].min()*0.9),
+                             np.log10(sh['r_sh_kpc'].max()*1.1), 100)
+        ax.loglog(r_line, 10**(slope * np.log10(r_line) + intercept),
+                  '-', color=color, lw=lw, alpha=0.8)
+
+    rho_full,  _ = spearmanr(sh['r_sh_kpc'], sh['M_sh'])
+    rho_clean, _ = spearmanr(clean['r_sh_kpc'], clean['M_sh'])
+    slope_full,  _ = np.polyfit(np.log10(sh['r_sh_kpc']),    np.log10(sh['M_sh']),    1)
+    slope_clean, _ = np.polyfit(np.log10(clean['r_sh_kpc']), np.log10(clean['M_sh']), 1)
+
+    ax.set_xlabel(r'$r_{\rm sh}$ (kpc)')
+    ax.set_ylabel(r'$M_{\rm sh}$ ($M_\odot$)')
+    ax.text(0.04, 0.96,
+            f'full: slope={slope_full:.2f}, $\\rho={rho_full:+.2f}$\n'
+            f'clean: slope={slope_clean:.2f}, $\\rho={rho_clean:+.2f}$',
+            transform=ax.transAxes, va='top', fontsize=7,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.25', alpha=0.9))
+    ax.legend(loc='lower right', fontsize=7)
+    ax.set_title(r'Mass-radius scaling')
+
+    # --- Panel 2: σ-r ---
+    ax = axes[1]
+    ax.loglog(sh['r_sh_kpc'], sh['sigma_sh_kpc'], 'o', ms=4,
+              mfc=COLORS['reference'], mec='black', mew=0.3, alpha=0.7,
+              label=f'full (n={len(sh)})')
+    ax.loglog(clean['r_sh_kpc'], clean['sigma_sh_kpc'], 'o', ms=5,
+              mfc=COLORS['highlight'], mec='black', mew=0.4,
+              label=f'clean (n={len(clean)})')
+
+    for data, color, lw in [(sh, COLORS['neutral'], 1.0),
+                             (clean, COLORS['secondary'], 1.3)]:
+        logr, logs = np.log10(data['r_sh_kpc']), np.log10(data['sigma_sh_kpc'])
+        slope, intercept = np.polyfit(logr, logs, 1)
+        r_line = np.logspace(np.log10(sh['r_sh_kpc'].min()*0.9),
+                             np.log10(sh['r_sh_kpc'].max()*1.1), 100)
+        ax.loglog(r_line, 10**(slope * np.log10(r_line) + intercept),
+                  '-', color=color, lw=lw, alpha=0.8)
+
+    rho_full,  _ = spearmanr(sh['r_sh_kpc'], sh['sigma_sh_kpc'])
+    rho_clean, _ = spearmanr(clean['r_sh_kpc'], clean['sigma_sh_kpc'])
+    slope_full,  _ = np.polyfit(np.log10(sh['r_sh_kpc']),    np.log10(sh['sigma_sh_kpc']),    1)
+    slope_clean, _ = np.polyfit(np.log10(clean['r_sh_kpc']), np.log10(clean['sigma_sh_kpc']), 1)
+
+    ax.set_xlabel(r'$r_{\rm sh}$ (kpc)')
+    ax.set_ylabel(r'$\sigma_{\rm sh}$ (kpc)')
+    ax.text(0.04, 0.96,
+            f'full: slope={slope_full:.2f}, $\\rho={rho_full:+.2f}$\n'
+            f'clean: slope={slope_clean:.2f}, $\\rho={rho_clean:+.2f}$',
+            transform=ax.transAxes, va='top', fontsize=7,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.25', alpha=0.9))
+    ax.legend(loc='lower right', fontsize=7)
+    ax.set_title(r'Width-radius scaling')
+
+    plt.tight_layout()
+    # Recompute clean diagnostic prints (don't reuse loop variables)
+    Mr_full,  _  = np.polyfit(np.log10(sh['r_sh_kpc']),    np.log10(sh['M_sh']),         1)[:2], None
+    Mr_clean, _  = np.polyfit(np.log10(clean['r_sh_kpc']), np.log10(clean['M_sh']),      1)[:2], None
+    sr_full,  _  = np.polyfit(np.log10(sh['r_sh_kpc']),    np.log10(sh['sigma_sh_kpc']),  1)[:2], None
+    sr_clean, _  = np.polyfit(np.log10(clean['r_sh_kpc']), np.log10(clean['sigma_sh_kpc']),1)[:2], None
+    print(f"  full sample: {len(sh)} shells; clean subsample: {len(clean)} shells")
+    print(f"  M-r:  full slope {Mr_full[0]:.2f}, clean slope {Mr_clean[0]:.2f}")
+    print(f"  σ-r:  full slope {sr_full[0]:.2f}, clean slope {sr_clean[0]:.2f}")
+    return _save_figure(fig, 'fig_3_3_5_antiwarp_clean')
+
+
+# ============================================================
+# Stubs for figures requiring external data
+# ============================================================
+def fig_3_3_6():
+    """Stub — Einasto comparison needs Paper I einasto_full_sample_results.csv."""
+    print("  ⚠  Fig 3.3.6 requires Paper I `einasto_full_sample_results.csv`")
+    print("     Place this file in the package root or data/ directory and rerun.")
+    print("     Expected columns: Galaxy, T, einasto_best_n_shells, einasto_r_sh, ...")
+    return None
+
+
+def fig_3_3_7():
+    """Stub — Backbone-shift test needs joint-refit data (ρ₀, a) at each n_shells level."""
+    print("  ⚠  Fig 3.3.7 requires backbone-shift joint-refit data.")
+    print("     Source: §3.3.7 production run on 102-galaxy Paper I-aligned sample.")
+    print("     Expected columns: Galaxy, n_shells, rho0, a_kpc (per-galaxy at n={0,1,2}).")
+    return None
+
+
+# ============================================================
+# Figure registry
+# ============================================================
+FIGURES = {
+    '3.1.1': ('Bulge correlation',                      fig_3_1_1),
+    '3.1.2': ('Scaling relations (M-r, σ-r, σ/r)',      fig_3_1_2),
+    '3.1.3': ('σ/r quartile gradient',                  fig_3_1_3),
+    '3.1.4': ('Inner-vs-outer (two-shell paired)',      fig_3_1_4),
+    '3.2.1': ('Scramble null distribution',             fig_3_2_1),
+    '3.2.2': ('Permute null distribution',              fig_3_2_2),
+    '3.3.1': ('Disk dynamical scale coincidence',       fig_3_3_1),
+    '3.3.2': ('Υ perturbation stability',               fig_3_3_2),
+    '3.3.3': ('Distance perturbation stability',        fig_3_3_3),
+    '3.3.4': ('Inclination perturbation stability',     fig_3_3_4),
+    '3.3.5': ('Anti-warp clean subsample',              fig_3_3_5),
+    '3.3.6': ('Einasto backbone comparison (STUB)',     fig_3_3_6),
+    '3.3.7': ('Backbone-shift test (STUB)',             fig_3_3_7),
+}
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Generate Paper II figures.')
+    parser.add_argument('--all', action='store_true',
+                        help='Generate all figures')
+    parser.add_argument('--figure', type=str,
+                        help='Comma-separated figure IDs (e.g. 3.1.1,3.1.2)')
+    parser.add_argument('--list', action='store_true',
+                        help='List available figures')
+    args = parser.parse_args()
+
+    if args.list:
+        print("Available figures:")
+        for fid, (desc, _) in FIGURES.items():
+            print(f"  {fid}  — {desc}")
+        return
+
+    _configure_style()
+
+    targets = []
+    if args.all:
+        targets = list(FIGURES.keys())
+    elif args.figure:
+        targets = [t.strip() for t in args.figure.split(',')]
+    else:
+        parser.print_help()
+        return
+
+    outdir = _output_dir()
+    print(f"Output directory: {outdir}")
+    print(f"Figures requested: {targets}")
+    print()
+
+    for fid in targets:
+        if fid not in FIGURES:
+            print(f"⚠  Unknown figure: {fid} (use --list)")
+            continue
+        desc, func = FIGURES[fid]
+        print(f"[{fid}] {desc}")
+        try:
+            result = func()
+            if result:
+                print(f"  ✓ saved: {os.path.basename(result)}")
+        except Exception as e:
+            print(f"  ✗ FAILED: {e.__class__.__name__}: {e}")
+            import traceback; traceback.print_exc()
+        print()
+
+
+if __name__ == '__main__':
+    main()
