@@ -73,11 +73,11 @@ warnings.filterwarnings('ignore')
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _PACKAGE_DATA = os.path.join(os.path.dirname(_HERE), 'Rotmod_LTG')
 _LOCAL_DATA = '../Rotmod_LTG'
-DATA_DIR = '/Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/Rotmod_LTG'
+DATA_DIR = _PACKAGE_DATA if os.path.isdir(_PACKAGE_DATA) else _LOCAL_DATA
 
 _PACKAGE_CSV = os.path.join(os.path.dirname(_HERE), 'data', 'sparc_T2-T9_canonical_fits.csv')
 _LOCAL_CSV = os.path.join(os.getcwd(), 'sparc_T2-T9_canonical_fits.csv')
-CANONICAL_CSV = '/Users/ronbibb/Library/CloudStorage/OneDrive-Personal(2)/Documents/Academic/paper2_package/data/sparc_T2-T9_canonical_fits.csv'
+CANONICAL_CSV = _PACKAGE_CSV if os.path.isfile(_PACKAGE_CSV) else _LOCAL_CSV
 
 OUTPUT_DIR = os.path.join(os.getcwd(), 'shell_reality_out')
 
