@@ -17,6 +17,8 @@ Data sources (resolved automatically from package layout or local fallback):
   ../upsilon_perturbation_per_galaxy.csv     (2040 rows: 102 galaxies × 20 realizations)
   ../distance_perturbation_per_galaxy.csv    (2040 rows)
   ../inclination_perturbation_per_galaxy.csv (1820 rows)
+  ../backbone_shift.csv                      (102 galaxies; §3.3.7 joint refit at n={0,1,2})
+  ../einasto_full_sample_results.csv         (102 galaxies; Paper I §3.7 — EXTERNAL, copy from sparc-halo-shells repo)
 
 Coverage:
   Fig 3.1.1   bulge correlation                    ✓ buildable
@@ -30,8 +32,8 @@ Coverage:
   Fig 3.3.3   distance perturbation stability      ✓ buildable
   Fig 3.3.4   inclination perturbation stability   ✓ buildable
   Fig 3.3.5   anti-warp clean subsample            ✓ buildable
-  Fig 3.3.6   Einasto backbone comparison          ✗ requires Paper I einasto_full_sample_results.csv
-  Fig 3.3.7   backbone-shift test                  ✗ requires joint-refit data (see §3.3.7 production run)
+  Fig 3.3.6   Einasto backbone comparison          ✓ buildable (requires data/einasto_full_sample_results.csv from Paper I)
+  Fig 3.3.7   backbone-shift test                  ✓ buildable (101-galaxy convention; uses data/backbone_shift.csv)
 
 Tested against project data; numerical outputs match manuscript values.
 """
@@ -892,19 +894,247 @@ def fig_3_3_5():
 # Stubs for figures requiring external data
 # ============================================================
 def fig_3_3_6():
-    """Stub — Einasto comparison needs Paper I einasto_full_sample_results.csv."""
-    print("  ⚠  Fig 3.3.6 requires Paper I `einasto_full_sample_results.csv`")
-    print("     Place this file in the package root or data/ directory and rerun.")
-    print("     Expected columns: Galaxy, T, einasto_best_n_shells, einasto_r_sh, ...")
-    return None
+    """
+    Burkert vs Einasto backbone-family comparison (§3.3.6).
+
+    Three panels:
+      (1) M-r scatter under both backbones, with linear fits
+      (2) σ-r scatter under both backbones, with linear fits showing attenuation
+      (3) σ/r distribution histograms under both backbones, with medians marked
+
+    Reads einasto_full_sample_results.csv (Paper I §3.7 output) and parses
+    fw_einasto_popt strings to extract per-shell parameters under the Einasto
+    backbone. Burkert shells come from the canonical antiwarp_per_shell.csv.
+
+    NGC 6674 excluded throughout for consistency with Paper II 101-galaxy
+    convention.
+    """
+    import ast
+
+    EXCLUDE = {'NGC6674'}
+
+    try:
+        ein_path = _resolve_data('einasto_full_sample_results.csv')
+    except FileNotFoundError:
+        print("  ⚠  Fig 3.3.6 requires Paper I `einasto_full_sample_results.csv`")
+        print("     Place this file in the package root or data/ directory and rerun.")
+        print("     Source: run_einasto_full_sample.py in the sparc-halo-shells (Paper I) repo.")
+        return None
+
+    einasto_df = pd.read_csv(ein_path)
+    einasto_df = einasto_df[~einasto_df['galaxy'].isin(EXCLUDE)].reset_index(drop=True)
+
+    # --- Parse Einasto shells from fw_einasto_popt (Paper I §3.7 schema:
+    #     3 backbone params [log_rho_s, log_r_s, alpha] then 3 per shell
+    #     [log_M, r_shell, sigma]) ---
+    def _parse_popt(popt_str, n):
+        arr = np.array(ast.literal_eval(popt_str))
+        return [(arr[3 + 3*i], arr[3 + 3*i + 1], arr[3 + 3*i + 2])
+                for i in range(n)]
+
+    ein_shells = []
+    for _, row in einasto_df.iterrows():
+        n = int(row['fw_einasto_n_shells'])
+        if n == 0:
+            continue
+        for log_M, r_sh, sigma in _parse_popt(row['fw_einasto_popt'], n):
+            ein_shells.append({
+                'Galaxy': row['galaxy'], 'T': row['T'],
+                'r_sh_kpc': r_sh, 'M_sh': 10 ** log_M,
+                'sigma_sh_kpc': sigma,
+                'sigma_over_r': sigma / r_sh,
+            })
+    ein = pd.DataFrame(ein_shells)
+    if len(ein) == 0:
+        print("  ⚠  Fig 3.3.6: no Einasto shells parsed — check CSV schema.")
+        return None
+
+    # --- Burkert shells from canonical Paper II per-shell catalog ---
+    burk = pd.read_csv(_resolve_data('antiwarp_per_shell.csv'))
+    burk = burk[~burk['Galaxy'].isin(EXCLUDE)]
+
+    fig, axes = plt.subplots(1, 3, figsize=(WIDTH_DOUBLE, 2.8))
+
+    # --- Panel 1: M-r scatter ---
+    ax = axes[0]
+    ax.loglog(burk['r_sh_kpc'], burk['M_sh'], 'o', ms=4,
+              mfc=COLORS['reference'], mec='black', mew=0.3, alpha=0.7,
+              label=f'Burkert (n={len(burk)})')
+    ax.loglog(ein['r_sh_kpc'], ein['M_sh'], 's', ms=4,
+              mfc=COLORS['highlight'], mec='black', mew=0.4, alpha=0.8,
+              label=f'Einasto (n={len(ein)})')
+
+    for data, color, lw in [(burk, COLORS['neutral'], 1.0),
+                            (ein, COLORS['secondary'], 1.3)]:
+        logr, logM = np.log10(data['r_sh_kpc']), np.log10(data['M_sh'])
+        slope, intercept = np.polyfit(logr, logM, 1)
+        r_line = np.logspace(np.log10(burk['r_sh_kpc'].min() * 0.9),
+                             np.log10(burk['r_sh_kpc'].max() * 1.1), 100)
+        ax.loglog(r_line, 10 ** (slope * np.log10(r_line) + intercept),
+                  '-', color=color, lw=lw, alpha=0.8)
+
+    slope_burk_M, _ = np.polyfit(np.log10(burk['r_sh_kpc']),
+                                  np.log10(burk['M_sh']), 1)
+    slope_ein_M, _ = np.polyfit(np.log10(ein['r_sh_kpc']),
+                                 np.log10(ein['M_sh']), 1)
+    rho_burk_M, _ = spearmanr(burk['r_sh_kpc'], burk['M_sh'])
+    rho_ein_M, _ = spearmanr(ein['r_sh_kpc'], ein['M_sh'])
+
+    ax.set_xlabel(r'$r_{\rm sh}$ (kpc)')
+    ax.set_ylabel(r'$M_{\rm sh}$ ($M_\odot$)')
+    ax.text(0.04, 0.96,
+            f'Burk: slope={slope_burk_M:.2f}, $\\rho={rho_burk_M:+.2f}$\n'
+            f'Ein:  slope={slope_ein_M:.2f}, $\\rho={rho_ein_M:+.2f}$',
+            transform=ax.transAxes, va='top', fontsize=7,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.25', alpha=0.9))
+    ax.legend(loc='lower right', fontsize=7)
+    ax.set_title(r'Mass-radius (preserved)')
+
+    # --- Panel 2: σ-r scatter ---
+    ax = axes[1]
+    ax.loglog(burk['r_sh_kpc'], burk['sigma_sh_kpc'], 'o', ms=4,
+              mfc=COLORS['reference'], mec='black', mew=0.3, alpha=0.7,
+              label=f'Burkert (n={len(burk)})')
+    ax.loglog(ein['r_sh_kpc'], ein['sigma_sh_kpc'], 's', ms=4,
+              mfc=COLORS['highlight'], mec='black', mew=0.4, alpha=0.8,
+              label=f'Einasto (n={len(ein)})')
+
+    for data, color, lw in [(burk, COLORS['neutral'], 1.0),
+                            (ein, COLORS['secondary'], 1.3)]:
+        logr = np.log10(data['r_sh_kpc'])
+        logs = np.log10(data['sigma_sh_kpc'])
+        slope, intercept = np.polyfit(logr, logs, 1)
+        r_line = np.logspace(np.log10(burk['r_sh_kpc'].min() * 0.9),
+                             np.log10(burk['r_sh_kpc'].max() * 1.1), 100)
+        ax.loglog(r_line, 10 ** (slope * np.log10(r_line) + intercept),
+                  '-', color=color, lw=lw, alpha=0.8)
+
+    slope_burk_s, _ = np.polyfit(np.log10(burk['r_sh_kpc']),
+                                  np.log10(burk['sigma_sh_kpc']), 1)
+    slope_ein_s, _ = np.polyfit(np.log10(ein['r_sh_kpc']),
+                                 np.log10(ein['sigma_sh_kpc']), 1)
+    rho_burk_s, _ = spearmanr(burk['r_sh_kpc'], burk['sigma_sh_kpc'])
+    rho_ein_s, _ = spearmanr(ein['r_sh_kpc'], ein['sigma_sh_kpc'])
+
+    ax.set_xlabel(r'$r_{\rm sh}$ (kpc)')
+    ax.set_ylabel(r'$\sigma_{\rm sh}$ (kpc)')
+    ax.text(0.04, 0.96,
+            f'Burk: slope={slope_burk_s:.2f}, $\\rho={rho_burk_s:+.2f}$\n'
+            f'Ein:  slope={slope_ein_s:.2f}, $\\rho={rho_ein_s:+.2f}$',
+            transform=ax.transAxes, va='top', fontsize=7,
+            bbox=dict(facecolor='white', edgecolor='gray',
+                      boxstyle='round,pad=0.25', alpha=0.9))
+    ax.legend(loc='lower right', fontsize=7)
+    ax.set_title(r'Width-radius (attenuated)')
+
+    # --- Panel 3: σ/r distribution histograms ---
+    ax = axes[2]
+    bins = np.linspace(0, 0.5, 22)
+    ax.hist(burk['sigma_over_r'], bins=bins, alpha=0.55,
+            color=COLORS['reference'], edgecolor='black', linewidth=0.5,
+            label=f'Burkert (n={len(burk)})')
+    ax.hist(ein['sigma_over_r'], bins=bins, alpha=0.55,
+            color=COLORS['highlight'], edgecolor='black', linewidth=0.5,
+            label=f'Einasto (n={len(ein)})')
+
+    med_burk = burk['sigma_over_r'].median()
+    med_ein = ein['sigma_over_r'].median()
+    ax.axvline(med_burk, color=COLORS['neutral'], lw=1.3, ls='--',
+               label=f'Burkert median {med_burk:.3f}')
+    ax.axvline(med_ein, color=COLORS['secondary'], lw=1.3, ls='--',
+               label=f'Einasto median {med_ein:.3f}')
+
+    ax.set_xlabel(r'$\sigma / r$')
+    ax.set_ylabel('Number of shells')
+    ax.legend(loc='upper right', fontsize=7)
+    ax.set_title(r'$\sigma/r$ distribution (median shifts)')
+
+    fig.tight_layout()
+    return _save_figure(fig, 'fig_3_3_6_einasto_comparison')
 
 
 def fig_3_3_7():
-    """Stub — Backbone-shift test needs joint-refit data (ρ₀, a) at each n_shells level."""
-    print("  ⚠  Fig 3.3.7 requires backbone-shift joint-refit data.")
-    print("     Source: §3.3.7 production run on 102-galaxy Paper I-aligned sample.")
-    print("     Expected columns: Galaxy, n_shells, rho0, a_kpc (per-galaxy at n={0,1,2}).")
-    return None
+    """
+    Backbone-shift test (§3.3.7).
+
+    Two-panel figure: (left) log10(ρ₀[BIC]/ρ₀[n=0]) overlaid histograms for
+    shell-bearing vs non-shell-bearing galaxies; (right) log10(a[BIC]/a[n=0])
+    overlaid histograms for the same. Vertical lines mark medians and the
+    zero-shift reference.
+
+    NGC 6674 excluded for 101-galaxy convention (per §2.3 retirement).
+    """
+    EXCLUDE = {'NGC6674'}
+
+    df = pd.read_csv(_resolve_data('backbone_shift.csv'))
+    df = df[~df['Galaxy'].isin(EXCLUDE)].copy()
+    df['log_ratio_a'] = np.log10(df['ratio_a'])
+
+    sb = df[df['v7_n_shells'] > 0]
+    nsb = df[df['v7_n_shells'] == 0]
+
+    fig, axes = plt.subplots(1, 2, figsize=(WIDTH_DOUBLE * 0.75, 2.8))
+
+    # --- Panel 1: log_ratio_rho0 ---
+    ax = axes[0]
+    span = max(abs(df['log_ratio_rho0'].min()),
+               abs(df['log_ratio_rho0'].max()))
+    bins = np.linspace(-span, span, 22)
+    ax.hist(nsb['log_ratio_rho0'], bins=bins, alpha=0.55,
+            color=COLORS['reference'], edgecolor='black', linewidth=0.5,
+            label=f'non-shell-bearing (n={len(nsb)})')
+    ax.hist(sb['log_ratio_rho0'], bins=bins, alpha=0.55,
+            color=COLORS['highlight'], edgecolor='black', linewidth=0.5,
+            label=f'shell-bearing (n={len(sb)})')
+
+    ax.axvline(0, color='black', lw=0.8, ls=':', alpha=0.6)
+    ax.axvline(nsb['log_ratio_rho0'].median(), color=COLORS['neutral'],
+               lw=1.3, ls='--',
+               label=f'NSB median {nsb["log_ratio_rho0"].median():+.2f}')
+    ax.axvline(sb['log_ratio_rho0'].median(), color=COLORS['secondary'],
+               lw=1.3, ls='--',
+               label=f'SB median {sb["log_ratio_rho0"].median():+.2f}')
+
+    ax.set_xlabel(r'$\log_{10}\,\rho_0[\mathrm{BIC}]/\rho_0[n{=}0]$')
+    ax.set_ylabel('Number of galaxies')
+    ax.legend(loc='upper left', fontsize=7)
+    ax.set_title(r'Backbone density shift')
+
+    # --- Panel 2: log_ratio_a ---
+    ax = axes[1]
+    span_a = max(abs(df['log_ratio_a'].min()),
+                 abs(df['log_ratio_a'].max()))
+    bins_a = np.linspace(-span_a, span_a, 22)
+    ax.hist(nsb['log_ratio_a'], bins=bins_a, alpha=0.55,
+            color=COLORS['reference'], edgecolor='black', linewidth=0.5,
+            label=f'non-shell-bearing (n={len(nsb)})')
+    ax.hist(sb['log_ratio_a'], bins=bins_a, alpha=0.55,
+            color=COLORS['highlight'], edgecolor='black', linewidth=0.5,
+            label=f'shell-bearing (n={len(sb)})')
+
+    ax.axvline(0, color='black', lw=0.8, ls=':', alpha=0.6)
+    ax.axvline(nsb['log_ratio_a'].median(), color=COLORS['neutral'],
+               lw=1.3, ls='--',
+               label=f'NSB median {nsb["log_ratio_a"].median():+.2f}')
+    ax.axvline(sb['log_ratio_a'].median(), color=COLORS['secondary'],
+               lw=1.3, ls='--',
+               label=f'SB median {sb["log_ratio_a"].median():+.2f}')
+
+    ax.set_xlabel(r'$\log_{10}\,a[\mathrm{BIC}]/a[n{=}0]$')
+    ax.set_ylabel('Number of galaxies')
+    ax.legend(loc='upper right', fontsize=7)
+    ax.set_title(r'Backbone scale-radius shift')
+
+    # Figure-level headline for the absorbing-pattern rate
+    absorbing = ((sb['log_ratio_rho0'] < 0) & (sb['ratio_a'] > 1)).sum()
+    fig.suptitle(f'Absorbing pattern (ρ₀ ↓ and a ↑): '
+                 f'{absorbing}/{len(sb)} = {100 * absorbing / len(sb):.1f}% '
+                 f'of shell-bearing galaxies',
+                 fontsize=9, y=1.02)
+
+    fig.tight_layout()
+    return _save_figure(fig, 'fig_3_3_7_backbone_shift')
 
 
 # ============================================================
@@ -922,8 +1152,8 @@ FIGURES = {
     '3.3.3': ('Distance perturbation stability',        fig_3_3_3),
     '3.3.4': ('Inclination perturbation stability',     fig_3_3_4),
     '3.3.5': ('Anti-warp clean subsample',              fig_3_3_5),
-    '3.3.6': ('Einasto backbone comparison (STUB)',     fig_3_3_6),
-    '3.3.7': ('Backbone-shift test (STUB)',             fig_3_3_7),
+    '3.3.6': ('Einasto backbone comparison',            fig_3_3_6),
+    '3.3.7': ('Backbone-shift test',                    fig_3_3_7),
 }
 
 
