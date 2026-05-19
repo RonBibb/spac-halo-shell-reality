@@ -1,6 +1,6 @@
 # Data Provenance — halo_shells_paper2 v1.0
 
-**Snapshot date:** 2026-05-12
+**Snapshot date:** 2026-05-19
 
 This file documents the provenance of every data file in this package: source script, input dependencies, output schema, and the manuscript section(s) that cite it.
 
@@ -77,26 +77,59 @@ This file documents the provenance of every data file in this package: source sc
 
 ### nulltest_per_realization.csv
 
-- **Producer:** `scripts/shell_reality_nulls.py`
+- **Producer:** `scripts/shell_reality_nulls.py` (N=20 baseline run)
+- **Status:** N=20 baseline; **superseded for manuscript §3.2 numerics by `shell_reality_out_n100/per_realization.csv` (N=100; documented below)**. Retained for historical reproducibility and for byte-for-byte comparison against the parallel runner's N=2 validation subset.
 - **Inputs:** SPARC Rotmod files, Paper I canonical CSV, Paper I production fitter
 - **Test design:** Two null types — *scramble* (within-galaxy permutation of dark-matter residuals around the canonical Burkert backbone) and *permute* (within-galaxy permutation of V_obs values across radii). 20 realizations per null type. Each realization fits all 102 galaxies and computes per-T-bin and per-galaxy Spearman ρ.
 - **Schema:** 40 rows × 24 cols (2 null types × 20 realizations). Columns: null_type, realization, rho_per_T, p_per_T, rho_per_gal, p_per_gal, n_shellbearing, n_total, plus per-T shell-bearing fractions (frac_T2 through frac_T9 with their counts).
 - **Sample convention:** NGC 6674 INCLUDED. §2.3 exception.
-- **Cited in:** §3.2, §3.3.8 (cross-reference), §3.3.9 channel (viii)
+- **Note on duplicate filename:** byte-identical copies also exist at `data/per_realization.csv` under legacy script-output naming. Either filename refers to the same N=20 baseline run.
 
 ### nulltest_per_galaxy.csv
 
-- **Producer:** `scripts/shell_reality_nulls.py`
+- **Producer:** `scripts/shell_reality_nulls.py` (N=20 baseline run)
+- **Status:** N=20 baseline; superseded for §3.2 numerics by N=100 (see below).
 - **Inputs:** Same as nulltest_per_realization.csv
 - **Schema:** 4,080 rows × 8 cols (2 null types × 20 realizations × 102 galaxies). Columns: null_type, realization, Galaxy, T, n_pts, n_shells, chi2, bic.
 - **Sample convention:** NGC 6674 INCLUDED.
-- **Cited in:** §3.2 (per-galaxy fit details available for stratification)
+- **Note on duplicate filename:** byte-identical copy at `data/per_galaxy.csv`.
 
 ### nulltest_summary.txt
 
-- **Producer:** `scripts/shell_reality_nulls.py` (formatted output)
+- **Producer:** `scripts/shell_reality_nulls.py` (N=20 baseline run; formatted output)
+- **Status:** N=20 baseline summary; superseded for §3.2 numerics by N=100 (see below).
 - **Schema:** Plain text formatted summary
-- **Cited in:** §3.2.1, §3.2.2, §3.2.3, §3.2.4
+- **Note on duplicate filename:** byte-identical copy at `data/summary.txt`.
+
+### shell_reality_out_n100/per_realization.csv  *(canonical for §3.2)*
+
+- **Producer:** `scripts/shell_reality_nulls_parallel.py` (100 realizations, 12 workers)
+- **Status:** **Canonical N=100 results for §3.2 numerics in the current manuscript.**
+- **Inputs:** SPARC Rotmod files, Paper I canonical CSV (sparc_T2-T9_canonical_fits.csv), Paper I production fitter
+- **Test design:** Same as nulltest_per_realization.csv but with 100 realizations per null type instead of 20. Parallelism granularity is the realization, with deterministic seeding such that the parallel run is byte-identical to a serial run of the same seed sequence.
+- **Schema:** 200 rows × 24 cols (2 null types × 100 realizations). Columns identical to nulltest_per_realization.csv.
+- **Sample convention:** NGC 6674 INCLUDED. §2.3 exception.
+- **Cited in:** §3.2, §3.3.8, §3.3.9 channel (viii)
+- **Headline results:**
+  - Scramble ρ_per_T: mean = -0.289, std = 0.229, z = -2.4σ vs real-data -0.762; empirical p = 2/100 (real-data ρ reached in 2 realizations).
+  - Permute ρ_per_T: mean = +0.350, std = 0.235, z = -5.0σ; empirical p = 0/100.
+  - Asymmetric failure direction (scramble under-detects; permute over-detects with reversed sign) preserved relative to N=20 baseline.
+
+### shell_reality_out_n100/per_galaxy.csv  *(canonical for §3.2)*
+
+- **Producer:** `scripts/shell_reality_nulls_parallel.py`
+- **Status:** Canonical N=100 per-galaxy fits.
+- **Inputs:** Same as shell_reality_out_n100/per_realization.csv.
+- **Schema:** 20,400 rows × 8 cols (2 null types × 100 realizations × 102 galaxies). Columns: null_type, realization, Galaxy, T, n_pts, n_shells, chi2, bic.
+- **Sample convention:** NGC 6674 INCLUDED.
+- **Cited in:** §3.2 (per-galaxy stratifications, when needed).
+
+### shell_reality_out_n100/summary.txt  *(canonical for §3.2)*
+
+- **Producer:** `scripts/shell_reality_nulls_parallel.py` (formatted output)
+- **Status:** Canonical N=100 summary. Use this for headline numbers, not `nulltest_summary.txt`.
+- **Schema:** Plain text formatted summary.
+- **Cited in:** §3.2.1, §3.2.2, §3.2.3, §3.2.4.
 
 ---
 
@@ -159,6 +192,42 @@ This file documents the provenance of every data file in this package: source sc
 
 ---
 
+## Scripts (additional entries; full producer details inline with each CSV above)
+
+### scripts/shell_reality_nulls_parallel.py
+
+- **Purpose:** Parallel runner for §3.2 null tests at arbitrary N (default 100). Replaces serial `shell_reality_nulls.py` for production runs at N ≥ 100.
+- **Parallelism granularity:** Per realization (not per galaxy). Deterministic seed sequence ensures output is byte-identical to a serial run of the same seed sequence; validated at N=2 against the serial runner.
+- **Default invocation:** `python3 shell_reality_nulls_parallel.py 100 12` (100 realizations × 2 null types, 12 worker processes).
+- **Wall time:** ~2 hr on Apple Silicon M1 Ultra at 12 workers (~7× speedup over serial; serial would take ~14-17 hr).
+- **Outputs:** `data/shell_reality_out_n100/{per_realization.csv,per_galaxy.csv,summary.txt}` (or `shell_reality_out_n{N}/` for other N values).
+- **Path resolution:** Same convention as other scripts — looks for `Rotmod_LTG/` in `../` from script directory or `./Rotmod_LTG/` as fallback; looks for canonical CSV in `../data/` or current working directory.
+
+### scripts/einasto_control.py
+
+- **Purpose:** Post-hoc analysis of Paper I's Einasto-backbone fits (§3.3.6). Compares shell-population organizational signatures (morphology gradient, bulge correlation, scaling slopes, σ/r distribution, inner-vs-outer) between Burkert-backbone (Paper I/II canonical) and Einasto-backbone (strictly more flexible, one additional free parameter).
+- **External input required:** `data/einasto_full_sample_results.csv` from Paper I repo at v7.1.0. The script searches `../data/`, `./data/`, current dir, and `../` for the file; will print an error and exit if not found.
+- **Outputs:** Prints comparison statistics to stdout, organized into 8 sections (shell-bearing classification agreement, morphology gradient under Einasto, bulge correlation under Einasto, scaling relations, inner-vs-outer in two-shell galaxies, classification agreement matrix, per-T classification changes).
+- **Sample convention:** NGC 6674 EXCLUDED (101-galaxy convention, matching Paper II primary).
+- **Cited in:** §3.3.6.
+- **Headline results (when run):** ρ_per_T strengthens to -0.87 (p = 0.005) under Einasto vs -0.762 (p = 0.028) under Burkert; bulge OR strengthens to 4.32 (p = 0.003); M-r slope preserved at 0.82 (Burkert 0.76); σ-r slope attenuates substantially to 0.38 (Burkert 1.04) — this attenuation is the headline backbone-dependence of width-related signatures reported in §3.3.6.
+
+### scripts/make_figures.py
+
+- **Purpose:** Generate all 11 manuscript figures from data in `data/`. Function-per-figure architecture; CLI selects individual figures or runs all.
+- **Inputs:** Reads from `data/` (paths resolved relative to script location).
+- **Outputs:** PDF + PNG to `figures/` for each figure. Figures currently generated: 3.1.1 (bulge correlation), 3.1.2 (scaling relations), 3.1.3 (σ/r quartile gradient), 3.1.4 (inner-vs-outer), 3.2.1 (scramble null N=100), 3.2.2 (permute null N=100), 3.3.1 (disk dynamical scales), 3.3.2 (Υ perturbation), 3.3.3 (distance perturbation), 3.3.4 (inclination perturbation), 3.3.5 (anti-warp clean).
+- **Pending figures (require external Paper I data):** 3.3.6 (Einasto comparison, needs `einasto_full_sample_results.csv`), 3.3.7 (backbone-shift, needs `backbone_shift.csv` already in repo — figure stub yet to be implemented).
+- **CLI:**
+  ```
+  python3 make_figures.py --all                # generate everything
+  python3 make_figures.py --figure 3.1.1       # one figure
+  python3 make_figures.py --figure 3.1.1,3.2.1 # multiple
+  python3 make_figures.py --list               # list available figures
+  ```
+
+---
+
 ## Section-to-data quick reference
 
 | Manuscript section | Primary data | Secondary data |
@@ -170,9 +239,9 @@ This file documents the provenance of every data file in this package: source sc
 | §3.1.3 σ/r quartile gradient | antiwarp_per_shell.csv | — |
 | §3.1.4 Inner-vs-outer | antiwarp_per_shell.csv + sparc_sample123.csv (r_vir) | — |
 | §3.1.5 Multiple-comparisons summary | (recomputed from above) | — |
-| §3.2.1 Scramble null | nulltest_per_realization.csv | nulltest_summary.txt |
-| §3.2.2 Permute null | nulltest_per_realization.csv | nulltest_summary.txt |
-| §3.2.3 Per-T fractions | nulltest_summary.txt | nulltest_per_galaxy.csv |
+| §3.2.1 Scramble null | shell_reality_out_n100/per_realization.csv | shell_reality_out_n100/summary.txt |
+| §3.2.2 Permute null | shell_reality_out_n100/per_realization.csv | shell_reality_out_n100/summary.txt |
+| §3.2.3 Per-T fractions | shell_reality_out_n100/summary.txt | shell_reality_out_n100/per_galaxy.csv |
 | §3.3.1 Disk dynamical scales | (analysis on Paper I canonical CSV) | — |
 | §3.3.2 Υ perturbation | upsilon_perturbation_per_galaxy.csv | logs/upsilon_perturbation_log.txt |
 | §3.3.3 Distance perturbation | distance_perturbation_per_galaxy.csv | logs/distance_perturbation_log.txt |
@@ -180,5 +249,5 @@ This file documents the provenance of every data file in this package: source sc
 | §3.3.5 Anti-warp clean subsample | antiwarp_summary.txt | antiwarp_per_shell.csv |
 | §3.3.6 Einasto backbone-family control | (Paper I einasto_full_sample_results.csv — external) | einasto_control.py output |
 | §3.3.7 Backbone-shift test | backbone_shift_summary.txt | backbone_shift.csv |
-| §3.3.8 Cross-ref to §3.2 | nulltest_summary.txt | — |
+| §3.3.8 Cross-ref to §3.2 | shell_reality_out_n100/summary.txt | — |
 | §3.3.9 Combined verdict | (citations above) | — |

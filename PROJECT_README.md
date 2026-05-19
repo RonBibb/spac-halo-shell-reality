@@ -1,6 +1,6 @@
 # Project Files Manifest
 
-**Last updated:** 2026-05-10
+**Last updated:** 2026-05-19
 **Maintainer:** Ron Bibb (ronbibb@gmail.com)
 **Purpose:** Document the data and code in this project's working set, with version provenance, so future Claude sessions can navigate without re-uploading or re-asking for context.
 
@@ -8,7 +8,7 @@
 
 ## Version alignment — read this first
 
-This project is aligned with **Paper I v7.1.0** (`https://github.com/RonBibb/sparc-halo-shells`, release tag `v7.1.0`, AJ submission 2026-05-10). All canonical fits, framework parameters, and headline numbers should be consistent with that release.
+This project is aligned with **Paper I v7.1.0** (`https://github.com/RonBibb/sparc-halo-shells`, release tag `v7.1.0`, PASP manuscript #PASP-102415, submitted 2026-05-18, awaiting referee reports as of 2026-05-19). All canonical fits, framework parameters, and headline numbers should be consistent with that release.
 
 **Specifically NOT in this project (deliberately pruned):**
 

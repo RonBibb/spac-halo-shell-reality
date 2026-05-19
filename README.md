@@ -4,14 +4,14 @@
 
 Author: Ron Bibb (<ronbibb@gmail.com>)
 ORCID: 0009-0004-1153-2464
-Version: v1.0-draft (2026-05-12 snapshot)
-Target journal: AJ
+Version: v1.0-draft (2026-05-19 snapshot)
+Target journal: PASP (companion to Paper I)
 
 ---
 
 ## What is this?
 
-This package contains the manuscript, data, producer scripts, and documentation for Paper II in the SPARC halo-shells program. Paper II is a companion to Paper I (Bibb 2026, AJ submission, repository at https://github.com/RonBibb/sparc-halo-shells, release tag v7.1.0).
+This package contains the manuscript, data, producer scripts, and documentation for Paper II in the SPARC halo-shells program. Paper II is a companion to Paper I (Bibb 2026, PASP manuscript #PASP-102415, awaiting referee reports as of 2026-05-19; repository at https://github.com/RonBibb/sparc-halo-shells, release tag v7.1.0).
 
 **Scope of Paper II.** Paper I established that a Burkert backbone augmented by zero, one, or two BIC-selected Gaussian shells improves rotation curve fits in 91/102 SPARC galaxies and that shell-bearing rate decreases monotonically with morphological lateness (ρ_per_T = -0.833, p = 0.010 on the Paper I-aligned 102-galaxy sample). Paper II asks whether the resulting shell population constitutes a coherent statistical phenomenon — internally organized, robust to artifact channels, and distinguishable from random fitting behavior — or whether it is a constellation of unrelated detections sharing a fitting framework.
 
@@ -26,9 +26,9 @@ Paper II's primary analyses use a **101-galaxy sample (NGC 6674 excluded)** due 
 
 2. **Width-related signatures are partially backbone-baseline-dependent.** Under an Einasto backbone (one extra free parameter, strictly more flexible than Burkert), the σ-r slope drops from 1.04 to 0.38 and the σ/r median from 0.275 to 0.173; mass-feature signatures and galaxy-level signatures are preserved or strengthened (§3.3.6).
 
-3. **Shells are dynamically coupled to the smooth backbone.** When the Paper I framework is constrained to n_shells = 0, the Burkert backbone systematically deforms (ρ₀ rises by a factor of ≈4.2; scale radius a contracts by a factor of ≈2.1) in 46 of 52 (88.5%) shell-bearing galaxies. The non-shell-bearing control population does not show this systematic deformation. This rules out the strong form of the basis-function alternative (§3.3.7).
+3. **The smooth profile cannot natively absorb the localized structure.** When the Paper I framework is constrained to n_shells = 0, the Burkert backbone systematically deforms (ρ₀ rises by a factor of ≈4.2; scale radius a contracts by a factor of ≈2.1) in 46 of 52 (88.5%) shell-bearing galaxies. The non-shell-bearing control population does not show this systematic deformation. This disfavors the strong form of the basis-function alternative, in which shells would be decoupled from backbone parameters (§3.3.7).
 
-4. **Two destructive nulls** (within-galaxy residual scrambling, cross-radius velocity permutation) fail to reproduce the morphology gradient with asymmetric failure modes, at z = -3.0 to -8.3 depending on statistic.
+4. **Two destructive nulls** (within-galaxy residual scrambling, cross-radius velocity permutation; 100 realizations each) fail to reproduce the morphology gradient with asymmetric failure modes: residual scrambling suppresses the gradient (the real-data ρ is reached or exceeded in 2/100 realizations, empirical *p* = 0.02), while cross-radius permutation over-produces detections and reverses the gradient sign (0/100 realizations reach the real-data value). The asymmetric failure direction is the strongest single piece of evidence against a generic-basis-function origin (§3.2).
 
 5. **Shell selections are stable** under realistic perturbations to mass-to-light ratio (95.1% per-galaxy mode-recovery), distance (94.1%), and inclination (98.9%).
 
@@ -85,19 +85,29 @@ halo_shells_paper2_v1.0/
 │   ├── distance_perturbation_per_galaxy.csv   §3.3.3 distance perturbation
 │   ├── inclination_perturbation_per_galaxy.csv §3.3.4 inclination perturbation
 │   │
-│   ├── nulltest_per_realization.csv   §3.2 per-realization summary (40 rows)
-│   ├── nulltest_per_galaxy.csv        §3.2 per-galaxy fits (4080 rows)
-│   └── nulltest_summary.txt           §3.2 formatted summary
+│   ├── nulltest_per_realization.csv   §3.2 N=20 baseline per-realization (40 rows)
+│   ├── nulltest_per_galaxy.csv        §3.2 N=20 baseline per-galaxy fits (4080 rows)
+│   ├── nulltest_summary.txt           §3.2 N=20 baseline summary
+│   ├── per_realization.csv            duplicate of nulltest_per_realization.csv (legacy naming)
+│   ├── per_galaxy.csv                 duplicate of nulltest_per_galaxy.csv (legacy naming)
+│   ├── summary.txt                    duplicate of nulltest_summary.txt (legacy naming)
+│   │
+│   └── shell_reality_out_n100/        §3.2 N=100 outputs (canonical for §3.2 numerics)
+│       ├── per_realization.csv        200 rows (100 scramble + 100 permute)
+│       ├── per_galaxy.csv             20,400 rows
+│       └── summary.txt                empirical p = 2/100 scramble, 0/100 permute
 │
 ├── scripts/
-│   ├── antiwarp_subsample.py          §3.3.5 analysis
-│   ├── backbone_shift_test.py         §3.3.7 backbone-shift production runner
-│   ├── shell_reality_nulls.py         §3.2 null test runner + shared Paper I fitter
-│   ├── upsilon_perturbation.py        §3.3.2 perturbation runner
-│   ├── distance_perturbation.py       §3.3.3 perturbation runner
-│   ├── inclination_perturbation.py    §3.3.4 perturbation runner
-│   ├── run_canonical_fits.py          Paper I production fitter (copied from Paper I)
-│   └── einasto_control.py             §3.3.6 post-hoc analysis on Paper I Einasto fits
+│   ├── antiwarp_subsample.py            §3.3.5 analysis
+│   ├── backbone_shift_test.py           §3.3.7 backbone-shift production runner
+│   ├── shell_reality_nulls.py           §3.2 null test runner (serial)
+│   ├── shell_reality_nulls_parallel.py  §3.2 null test runner (parallel; byte-identical to serial)
+│   ├── upsilon_perturbation.py          §3.3.2 perturbation runner
+│   ├── distance_perturbation.py         §3.3.3 perturbation runner
+│   ├── inclination_perturbation.py      §3.3.4 perturbation runner
+│   ├── run_canonical_fits.py            Paper I production fitter (copied from Paper I)
+│   ├── einasto_control.py               §3.3.6 post-hoc analysis on Paper I Einasto fits
+│   └── make_figures.py                  generates all 11 manuscript figures from data/
 │
 ├── logs/
 │   ├── antiwarp_log.txt
@@ -105,7 +115,11 @@ halo_shells_paper2_v1.0/
 │   ├── distance_perturbation_log.txt
 │   └── inclination_perturbation_log.txt
 │
-└── figures/                            (placeholder; figure scripts pending)
+└── figures/                            (11 PDFs: 9 generated, 2 stubs pending Paper I data)
+    ├── fig_3_1_*.pdf                   4 figures: §3.1 organized structure
+    ├── fig_3_2_*.pdf                   2 figures: §3.2 null distributions (N=100)
+    ├── fig_3_3_1..5_*.pdf              5 figures: §3.3 robustness tests
+    └── (fig_3_3_6, fig_3_3_7 require Paper I einasto + backbone-shift data; stubs in make_figures.py)
 ```
 
 ## Reproducing the Paper II results
@@ -147,11 +161,17 @@ python3 antiwarp_subsample.py      # data/antiwarp_per_shell.csv, antiwarp_summa
 python3 einasto_control.py         # post-hoc analysis on Paper I Einasto fits
 
 # Production runs (with fitting; longer)
-python3 shell_reality_nulls.py     # ~30-60 min; 20 realizations × 2 null types
-python3 backbone_shift_test.py     # ~5-15 min; 102 galaxies × 3 n_shells levels
-python3 upsilon_perturbation.py    # ~10-15 min; 102 × 20 realizations
-python3 distance_perturbation.py   # ~10-15 min
-python3 inclination_perturbation.py # ~10-15 min
+python3 shell_reality_nulls.py 100              # serial, ~17 hr; 100 realizations × 2 null types
+python3 shell_reality_nulls_parallel.py 100 12  # parallel, ~2 hr; byte-identical to serial
+python3 backbone_shift_test.py                  # ~5-15 min; 102 galaxies × 3 n_shells levels
+python3 upsilon_perturbation.py                 # ~10-15 min; 102 × 20 realizations
+python3 distance_perturbation.py                # ~10-15 min
+python3 inclination_perturbation.py             # ~10-15 min
+
+# Figure generation (seconds; no fitting)
+python3 make_figures.py --all                   # all 11 figures to ../figures/
+python3 make_figures.py --figure 3.1.1,3.2.1    # selective regeneration
+python3 make_figures.py --list                  # show all figures
 ```
 
 Outputs are written to `data/` with the canonical filenames listed above.
@@ -166,24 +186,24 @@ Each script prints a summary of the headline statistics on completion. Cross-che
 
 ## Status
 
-This package is **release v1.0-draft**, suitable for internal review and figure generation. AJ submission pending Paper I publication and completion of items in `STATUS.md`.
+This package is **release v1.0-draft**, suitable for internal review and figure generation. PASP submission pending completion of items in `STATUS.md`.
 
 | Component | Status |
 | --- | --- |
-| Manuscript text | ✅ Drafted; ~12,000 words |
+| Manuscript text | ✅ Drafted; ~12,900 words |
 | Markdown source | ✅ Canonical; ongoing edits |
-| Data CSVs (Paper II outputs) | ✅ DONE (10 CSVs in `data/`) |
+| Data CSVs (Paper II outputs) | ✅ DONE (10 CSVs in `data/` plus `shell_reality_out_n100/`) |
 | SPARC inputs | ✅ DONE (Rotmod_LTG/, classifications, sparc_sample123) |
-| Producer scripts | ✅ DONE (all 8 scripts in `scripts/`) |
-| Logs | ✅ Captured for all four perturbation/antiwarp runs |
-| Figures | ⏳ 11 placeholders; generation scripts to be written |
+| Producer scripts | ✅ DONE (10 scripts in `scripts/`) |
+| Logs | ✅ Captured for all perturbation/antiwarp runs |
+| Figures | ✅ 9 of 11 PDFs in `figures/` (fig_3_3_6 Einasto and fig_3_3_7 backbone-shift await Paper I data) |
 | Bibliography | ⏳ Skeleton entries; full DOIs at submission |
 | Paper I canonical CSV | ❌ EXTERNAL — see "Relationship to Paper I" |
 | Paper I Einasto CSV | ❌ EXTERNAL — see "Relationship to Paper I" |
-| Mac-side NGC 6674 reruns of §3.2/§3.3.2-4/§3.3.7 | ⏳ Pending (disclosed in §2.3) |
+| Mac-side NGC 6674 reruns of §3.3.2-4/§3.3.7 | ⏳ Pending (disclosed in §2.3) |
 | Tier 2 discrepancy resolution | ⏳ Pending (documented in VALIDATION_STATUS.md) |
-| Zenodo deposit | ⏳ Pending Paper I publication |
-| AJ submission | ⏳ Pending |
+| Zenodo deposit | ⏳ Pending |
+| PASP submission | ⏳ Pending |
 
 ## Citation
 
@@ -195,5 +215,5 @@ Ron Bibb — <ronbibb@gmail.com> — ORCID 0009-0004-1153-2464
 
 ## License
 
-Manuscript: under journal preparation (license per AJ policy upon acceptance).
+Manuscript: under journal preparation (license per PASP policy upon acceptance).
 Data and code: MIT License (see `LICENSE`).

@@ -1,7 +1,7 @@
 # Package Sync Status — halo_shells_paper2
 
-**Snapshot date:** 2026-05-12
-**Package version:** v1.0-draft (post-NGC 6674 exclusion + Einasto + backbone-shift additions)
+**Snapshot date:** 2026-05-19
+**Package version:** v1.0-draft (post-NGC 6674 exclusion + Einasto + backbone-shift + N=100 nulls + framing-softening pass)
 **Purpose of this file:** Single-source-of-truth for what's in this package at this snapshot, what's complete, and what's pending. Read first.
 
 ---
@@ -10,17 +10,17 @@
 
 | Section | State | Notes |
 | --- | --- | --- |
-| Abstract | First draft, revised | ~250 words; NGC 6674-excluded primary sample; backbone-conditional σ/r flagged |
+| Abstract | Revised 2026-05-19 | ~277 words; NGC 6674-excluded primary sample; backbone-conditional σ/r flagged; bulge-morphology entanglement disclosure added (mirrors §3.1.1) |
 | §1 Introduction | First draft | Concession-then-reframe framing for ¶4; literature context preserved |
-| §2 Data and methods | First draft | 2.1 sample, 2.2 fitting framework, 2.3 partitions (101-galaxy primary + §3.2/§3.3.2-4/§3.3.7 exception list), 2.4 methods, 2.5 stats conventions |
-| §3.1 Statistical organization | First draft | 3.1.1 bulge (with morphology-entanglement quantification), 3.1.2 scaling (with slope intercepts + mass-bound rationale), 3.1.3 σ/r quartile gradient (softened), 3.1.4 inner-vs-outer, 3.1.5 summary (primary/secondary/soft tiers, multiple-comparisons disclosure) |
-| §3.2 Spatial-coherence nulls | First draft (uses 102-galaxy production run; §2.3 exception) | 3.2.1 scramble, 3.2.2 permute, 3.2.3 per-T fractions, 3.2.4 joint |
-| §3.3 Robustness against artifacts | First draft | 3.3.1 disk scales, 3.3.2-3.3.4 Υ/D/i perturbations (102-galaxy; §2.3 exception), 3.3.5 anti-warp clean (NGC 6674-excluded), 3.3.6 Einasto backbone-family control, 3.3.7 backbone-shift test (102-galaxy; §2.3 exception), 3.3.8 nulls cross-ref, 3.3.9 combined verdict (8 tests) |
-| §4 Discussion | First draft | Backbone-family caveat with both Einasto + backbone-shift citations; basis-function defense via destructive-nulls + backbone-shift |
-| §5 Conclusions | First draft | "Statistical rather than ontological"; Einasto + backbone-shift load-bearing controls cited |
+| §2 Data and methods | First draft | 2.1 sample, 2.2 fitting framework, 2.3 partitions (101-galaxy primary + §3.2/§3.3.2-4/§3.3.7 exception list), 2.4 methods (updated 2026-05-19: p-floor split 0.01 for §3.2, 0.05 for §3.3 perturbations), 2.5 stats conventions |
+| §3.1 Statistical organization | Revised 2026-05-19 | 3.1.1 bulge (with morphology-entanglement quantification), 3.1.2 scaling (with slope intercepts + mass-bound rationale), 3.1.3 σ/r quartile gradient (softened), 3.1.4 inner-vs-outer, 3.1.5 summary (primary/secondary/soft tiers, multiple-comparisons disclosure; NGC 6674 sensitivity now disclosed inline for the morphology gradient) |
+| §3.2 Spatial-coherence nulls | Revised 2026-05-19 (N=100) | 3.2.1 scramble (empirical p = 2/100), 3.2.2 permute (0/100), 3.2.3 per-T fractions, 3.2.4 joint. Numbers updated from N=20 baseline; data in `shell_reality_out_n100/`. |
+| §3.3 Robustness against artifacts | First draft | 3.3.1 disk scales, 3.3.2-3.3.4 Υ/D/i perturbations (102-galaxy; §2.3 exception), 3.3.5 anti-warp clean (NGC 6674-excluded), 3.3.6 Einasto backbone-family control, 3.3.7 backbone-shift test (102-galaxy; §2.3 exception), 3.3.8 nulls cross-ref, 3.3.9 combined verdict (8 tests; item 7 narrowed 2026-05-19 to "smooth profile cannot natively absorb the structure without measurable parameter shift") |
+| §4 Discussion | Revised 2026-05-19 | Backbone-family caveat with both Einasto + backbone-shift citations; basis-function-alternative framing softened to align with §3.3.9 item 7 (acknowledges 2/100 reproduction rather than asserting non-reproduction) |
+| §5 Conclusions | Revised 2026-05-19 | "Statistical rather than ontological"; Einasto + backbone-shift load-bearing controls cited; null-test wording softened to empirical-p framing |
 | Acknowledgments | Pending | Stub only |
 | Bibliography | Pending | Citation hooks in place; full entries needed |
-| Figures (11 total) | Pending | Placeholders annotated in §3 with data sources |
+| Figures (11 total) | 9 of 11 generated (2026-05-19) | PDFs in `figures/`: 3.1.1–3.1.4, 3.2.1–3.2.2, 3.3.1–3.3.5. Pending: 3.3.6 (Einasto) and 3.3.7 (backbone-shift) require Paper I external data. |
 
 **Canonical manuscript source:** `source/paper2.md`
 
@@ -53,9 +53,13 @@ All files in `data/` are present. Status:
 | `data/upsilon_perturbation_per_galaxy.csv` | Present (2,040 rows: 102 galaxies × 20 realizations) |
 | `data/distance_perturbation_per_galaxy.csv` | Present (2,040 rows) |
 | `data/inclination_perturbation_per_galaxy.csv` | Present (1,820 rows; 11 edge-on excluded by `0 < Inc < 90`) |
-| `data/nulltest_per_realization.csv` | Present (40 rows: 2 null types × 20 reps) |
-| `data/nulltest_per_galaxy.csv` | Present (4,080 rows: 2 × 20 × 102) |
-| `data/nulltest_summary.txt` | Present |
+| `data/nulltest_per_realization.csv` | Present (40 rows: 2 null types × 20 reps) — **N=20 baseline; superseded for §3.2 numerics by N=100 (see below)** |
+| `data/nulltest_per_galaxy.csv` | Present (4,080 rows: 2 × 20 × 102) — N=20 baseline |
+| `data/nulltest_summary.txt` | Present — N=20 baseline |
+| `data/per_realization.csv`, `data/per_galaxy.csv`, `data/summary.txt` | Byte-identical duplicates of the `nulltest_*` files above under legacy script-output naming |
+| `data/shell_reality_out_n100/per_realization.csv` | **Canonical N=100 for §3.2 (200 rows: 2 × 100 reps)** |
+| `data/shell_reality_out_n100/per_galaxy.csv` | **Canonical N=100 (20,400 rows: 2 × 100 × 102)** |
+| `data/shell_reality_out_n100/summary.txt` | **Canonical N=100 summary** |
 | `data/sparc_sample123.csv` | Present (SPARC catalog metadata, 123 rows) |
 | `data/galaxy_classifications.csv` | Present (with bulge/dwarf/MW-like flags, 123 rows) |
 | `data/nfw_fixedc_fits.csv` | Present (NFW reference fits) |
@@ -82,12 +86,14 @@ All four production-run logs are present in `logs/`:
 | --- | --- | --- |
 | `scripts/antiwarp_subsample.py` | Present (canonical Mac-side version) | §3.3.5 analysis |
 | `scripts/backbone_shift_test.py` | Present | §3.3.7 backbone-shift test; depends on shell_reality_nulls.py for shared fitter |
-| `scripts/shell_reality_nulls.py` | Present (519 lines) | §3.2 null tests; implements scramble/permute nulls; shared fitter used by backbone_shift_test.py |
+| `scripts/shell_reality_nulls.py` | Present (519 lines) | §3.2 null tests (serial); implements scramble/permute nulls; shared fitter used by backbone_shift_test.py |
+| `scripts/shell_reality_nulls_parallel.py` | Present (added 2026-05-19) | §3.2 parallel runner; produces byte-identical output to serial; ~2 hr on M1 Ultra at 12 workers for N=100 |
 | `scripts/upsilon_perturbation.py` | Present (514 lines) | §3.3.2 producer |
 | `scripts/distance_perturbation.py` | Present (570 lines) | §3.3.3 producer |
 | `scripts/inclination_perturbation.py` | Present (570 lines) | §3.3.4 producer |
 | `scripts/run_canonical_fits.py` | Present (548 lines, copied from Paper I) | Paper I production fitter underlying all perturbation/null scripts |
 | `scripts/einasto_control.py` | Present | §3.3.6 backbone-family Einasto comparison (post-hoc analysis on Paper I's Einasto fits) |
+| `scripts/make_figures.py` | Present (added 2026-05-19) | Generates the 11 manuscript figures from `data/` (9 working; 3.3.6 and 3.3.7 require Paper I external data) |
 
 All scripts depend on Paper I's `run_canonical_fits.py` or its components for the Paper I fitting framework. The Paper I canonical fits CSV must be supplied externally (see "Data files" note above).
 
@@ -108,22 +114,24 @@ All scripts depend on Paper I's `run_canonical_fits.py` or its components for th
 
 ---
 
-## What's needed before AJ submission
+## What's needed before PASP submission
 
 In rough priority order:
 
-1. **Mac-side NGC 6674 reruns** of §3.2 null tests and §3.3.2-3.3.4 perturbation tests (and §3.3.7 backbone-shift if time permits) to reconcile to 101-galaxy primary sample. The §2.3 disclosure currently bounds the impact but does not close the asymmetry.
+1. **Mac-side NGC 6674 reruns** of §3.3.2-3.3.4 perturbation tests (and §3.3.7 backbone-shift if time permits) to reconcile to 101-galaxy primary sample. §3.2 nulls now run at N=100 with the parallel runner; §2.3 disclosure currently bounds the impact of NGC 6674 inclusion in other production batches but does not close the asymmetry.
 2. **Resolve Tier 2 discrepancies** between manuscript-reported and recomputed values:
    - Wilcoxon p-values in §3.1.4 (manuscript 0.017/0.049 historical vs recompute 0.0001/0.0008)
-   - σ outer>inner count (manuscript 12/17 historical vs recompute 14/17)
+   - σ outer>inner count (manuscript 12/17 historical vs recompute 14/17; Fig 3.1.4 currently shows 13/16 — a third value to reconcile)
    - KS D-statistic for r/r_vir (manuscript 0.47 vs recompute 0.688 — likely r_vir source difference)
    - Bulge OR Fisher p (manuscript 0.003 vs scipy default 0.0064; matches Boschloo/Barnard/mid-p at 0.0038)
 3. **Finish manuscript text:** acknowledgments paragraph, full bibliography entries with DOIs.
-4. **Generate the 11 figures** from the annotated placeholders in §3. Data is present in `data/` or in Paper I repo (Einasto).
+4. **Generate Figs 3.3.6 (Einasto) and 3.3.7 (backbone-shift):** require Paper I external data (`einasto_full_sample_results.csv`) and `backbone_shift.csv` to be referenced by `make_figures.py` stubs.
 5. **Optional gNFW backbone test** as natural follow-on to Einasto (§3.3.6) and backbone-shift (§3.3.7). Not required for submission but strengthens the backbone-family robustness argument.
-6. **Citation hooks → entries:** the §1 references (Lelli/McGaugh/Schombert, Vegetti, Hezaveh, Gilman, Di Cintio, etc.) need to resolve to actual bibliography entries.
-7. **LaTeX conversion:** convert `paper2.md` to AASTeX 6.3+ source for submission.
-8. **Update Paper I citation** from "in press" to final volume/page/DOI once Paper I is published.
+6. **σ/r cap-relaxation test** (flagged 2026-05-19): cheap to run; removes a known referee question about whether the σ/r ≤ 0.4 strict cap is determining the fractional-width signatures.
+7. **Reines dwarf-AGN cross-match** (flagged 2026-05-19; optional strategic addition).
+8. **Citation hooks → entries:** the §1 references (Lelli/McGaugh/Schombert, Vegetti, Hezaveh, Gilman, Di Cintio, etc.) need to resolve to actual bibliography entries.
+9. **LaTeX conversion:** convert `paper2.md` to AASTeX 7.0.1 source for PASP submission.
+10. **Update Paper I citation** once Paper I (currently PASP-102415, awaiting referee reports as of 2026-05-19) has a decision and final volume/page/DOI.
 
 ---
 
@@ -131,7 +139,6 @@ In rough priority order:
 
 - Paper I canonical fits CSV (`sparc_T2-T9_canonical_fits.csv`) — external, see Paper I repo
 - Paper I Einasto fits CSV (`einasto_full_sample_results.csv`) — external, see Paper I repo
-- Generated figure files (PDFs/PNGs) — to be produced from data + scripts
 - LaTeX manuscript source — to be generated from markdown at submission
 - BibTeX file — to be created at submission
 
@@ -139,9 +146,25 @@ In rough priority order:
 
 ## Change log since v1.0-draft initial
 
+### 2026-05-19 revisions
+
+- **§3.2 N=100 null test rerun** completed via new `shell_reality_nulls_parallel.py` (12-worker parallel runner, byte-identical to serial). Headline numbers updated from N=20 baseline:
+  - Scramble: ρ_per_T mean = -0.289 ± 0.229, z = -2.4σ (was -4.4σ at N=20), empirical p = 2/100
+  - Permute: ρ_per_T mean = +0.350 ± 0.235, z = -5.0σ (was -5.2σ at N=20), empirical p = 0/100
+  - Asymmetric failure direction preserved.
+- **Abstract revised** to disclose bulge-morphology entanglement (mirrors §3.1.1 disclosure that the two are statistical projections of a single underlying contrast).
+- **§3.1.5 morphology gradient bullet** now discloses NGC 6674 sensitivity inline (Paper I's p = 0.010 → Paper II's p = 0.028 reflects single-galaxy removal alone).
+- **§3.3.9 item 7** narrowed from "Shells are dynamically coupled to the backbone, not decoupled basis functions" to "The smooth profile cannot natively absorb the structure without measurable parameter shift" — same evidence, narrower defensible claim.
+- **§4 and §5 framing** softened to align with N=100 data and the §3.3.9 item 7 narrowing.
+- **Figures:** 9 of 11 PDFs generated by `make_figures.py` and committed to `figures/`. Stubs for 3.3.6 and 3.3.7 pending external Paper I data.
+- **`scripts/einasto_control.py`** added with portable path resolution (replaced earlier hardcoded `/tmp/sparc-halo-shells/data` path).
+- **Target journal change:** AJ → PASP, following Paper I's PASP submission as #PASP-102415 (currently awaiting referee reports).
+
+### Earlier (v1.0-draft initial)
+
 - **NGC 6674 systematic exclusion** from primary analysis (§1, §2.3, §3.1, §3.3.5, §3.3.6, §4, §5, sample-conventions appendix). Exception list disclosed in §2.3.
 - **§3.3.6 Einasto backbone-family control** added with Paper I Einasto fits as input. Headline: 88% classification agreement, morphology + bulge + mass-feature signatures strengthen under Einasto; width-related signatures attenuate (backbone-baseline-dependent).
-- **§3.3.7 backbone-shift test** added (NEW Mac-side production run). Headline: 46/52 (88.5%) of SB galaxies show systematic backbone deformation when shells are removed; rules out decoupled-basis-function interpretation.
+- **§3.3.7 backbone-shift test** added (NEW Mac-side production run). Headline: 46/52 (88.5%) of SB galaxies show systematic backbone deformation when shells are removed.
 - **§3.1.5 restructured** into primary (Bonferroni-robust) / secondary (BH-FDR pass, Bonferroni fail) / soft tiers with explicit multiple-comparisons disclosure.
 - **§3.1 introduction** acknowledges exploratory-population-diagnostic nature; not corrected for multiple comparisons; not pre-registered.
 - **§3.1.1 bulge/morphology entanglement** quantified — 19/24 bulged at T=2,3; bulge correlation and morphology gradient are "two projections of one underlying contrast" rather than independent dimensions.

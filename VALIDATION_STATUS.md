@@ -1,7 +1,7 @@
 # Validation Status — halo_shells_paper2 v1.0
 
 **Package version:** v1.0-draft
-**Snapshot date:** 2026-05-12
+**Snapshot date:** 2026-05-19
 **Manuscript file:** `source/paper2.md` (markdown source; canonical)
 **Parent paper alignment:** Paper I v7.1.0 (https://github.com/RonBibb/sparc-halo-shells/releases/tag/v7.1.0)
 
@@ -70,10 +70,10 @@ The 91-galaxy / 1,820-fit inclination perturbation sample further excludes 11 ed
 | --- | --- | --- | --- |
 | Per-T morphology gradient (Paper I) | ρ = -0.833, p = 0.010 | derived; matches Paper I Table 4 | §3.1 (cross-ref), §3.2 baseline |
 | Per-galaxy permutation ρ (Paper I) | -0.296, p = 0.002 | from Paper I VALIDATION_STATUS | §1, §3.2 |
-| Scramble z (ρ_per_T) | -4.36 | nulltest_summary.txt | §3.2.1 |
-| Scramble z (ρ_per_galaxy) | -3.04 | nulltest_summary.txt | §3.2.1 |
-| Permute z (ρ_per_T) | -5.21 | nulltest_summary.txt | §3.2.2 |
-| Permute z (ρ_per_galaxy) | -8.33 | nulltest_summary.txt | §3.2.2 |
+| Scramble z (ρ_per_T) | -2.4 (N=100, empirical p = 2/100) | shell_reality_out_n100/summary.txt | §3.2.1 |
+| Scramble z (ρ_per_galaxy) | -2.1 (N=100, empirical p = 2/100) | shell_reality_out_n100/summary.txt | §3.2.1 |
+| Permute z (ρ_per_T) | -5.0 (N=100, empirical p = 0/100) | shell_reality_out_n100/summary.txt | §3.2.2 |
+| Permute z (ρ_per_galaxy) | -6.9 (N=100, empirical p = 0/100) | shell_reality_out_n100/summary.txt | §3.2.2 |
 | Υ perturbation per-galaxy match | 95.1% | upsilon_perturbation_per_galaxy.csv | §3.3.2 |
 | Distance perturbation per-galaxy match | 94.1% | distance_perturbation_per_galaxy.csv | §3.3.3 |
 | Inclination perturbation per-galaxy match | 98.9% | inclination_perturbation_per_galaxy.csv | §3.3.4 |
@@ -151,7 +151,8 @@ To verify the v1.0 outputs are reproducible from the inputs:
 cd halo_shells_paper2/scripts
 python3 antiwarp_subsample.py     # produces data/antiwarp_per_shell.csv, antiwarp_summary.txt
 python3 einasto_control.py        # post-hoc on Paper I Einasto CSV (no fitting)
-python3 shell_reality_nulls.py    # produces data/nulltest_*.csv, nulltest_summary.txt (~30-60 min)
+python3 shell_reality_nulls_parallel.py 100 12  # canonical N=100 → data/shell_reality_out_n100/ (~2 hr on M1 Ultra)
+# Alternative (slower): python3 shell_reality_nulls.py 100  # serial; same output, ~14-17 hr
 python3 backbone_shift_test.py    # produces data/backbone_shift*.* (~5-15 min)
 python3 upsilon_perturbation.py   # produces data/upsilon_perturbation_per_galaxy.csv (~10-15 min)
 python3 distance_perturbation.py  # produces data/distance_perturbation_per_galaxy.csv (~10-15 min)
