@@ -32,7 +32,7 @@ This file documents the provenance of every data file in this package: source sc
 - **Schema:** 102 rows × ~25 cols. Columns: Galaxy, T, V_flat, v7_n_shells, v7_burk_rho0, v7_burk_a, n_pts, n0_rho0, n0_a, n0_chi2, n0_bic, n1_rho0, n1_a, n1_chi2, n1_bic, n2_rho0, n2_a, n2_chi2, n2_bic, n_selected, delta_rho0_select, delta_a_select, log_ratio_rho0, ratio_a
 - **Sample convention:** NGC 6674 INCLUDED (102-galaxy Paper I-aligned). §2.3 exception. Headline conclusions bounded against NGC 6674 exclusion (88.5% → 85.7–90.2% range).
 - **Cited in:** §3.3.7, §3.3.9 (combined verdict channel)
-- **Headline result:** Median log₁₀(ρ₀[BIC]/ρ₀[n=0]) = -0.624 dex; median log₁₀(a[BIC]/a[n=0]) = +0.318 dex; 46/52 (88.5%) shell-bearing galaxies show the "absorbing pattern" of ρ₀ down + a up when shells allowed. Wilcoxon p < 10⁻⁴ for both shifts. Shift correlates with T-type (Spearman ρ = +0.44, p = 0.001).
+- **Headline result:** Median log₁₀(ρ₀[BIC]/ρ₀[n=0]) = -0.624 dex; median log₁₀(a[BIC]/a[n=0]) = +0.318 dex; 46/52 (88.5%) shell-bearing galaxies show the "absorbing pattern" of ρ₀ down + a up when shells allowed (102-galaxy raw aggregation; 101-galaxy version after NGC 6674 exclusion: 45/51 = 88.2%, see `ngc6674_exclusion_summary.txt`). Wilcoxon p < 10⁻⁴ for both shifts. Shift correlates with T-type (Spearman ρ = +0.44, p = 0.001).
 
 ### backbone_shift_summary.txt
 
@@ -133,6 +133,18 @@ This file documents the provenance of every data file in this package: source sc
 
 ---
 
+### ngc6674_exclusion_summary.txt
+
+- **Producer:** `scripts/ngc6674_exclusion_reanalysis.py`
+- **Inputs:** `data/upsilon_perturbation_per_galaxy.csv`, `data/distance_perturbation_per_galaxy.csv`, `data/inclination_perturbation_per_galaxy.csv`, `data/backbone_shift.csv`, `data/sparc_T2-T9_canonical_fits.csv` (for canonical n_shells per galaxy)
+- **Test design:** Re-aggregate the four §3.3 production-batch CSVs (Υ/D/i perturbations + backbone-shift) with NGC 6674 excluded from the per-galaxy population, producing 101-galaxy headline statistics parallel to the 102-galaxy as-run statistics. No refitting required — fits exist in the per-galaxy CSVs for all 102 galaxies; only the aggregation step is redone.
+- **Schema:** Plain text formatted report. Two tables: (1) §3.3.2-4 perturbation tests with per-fit and per-galaxy modal match rates under both conventions; (2) §3.3.7 backbone-shift with absorbing-pattern percentage, medians, Wilcoxon p-values, and Spearman T-correlation under both conventions.
+- **Headline result:** Maximum shift across all four tests = 0.25 percentage points. §3.3.7 absorbing pattern: 46/52 = 88.5% (102-gal) → 45/51 = 88.2% (101-gal); binomial p = 1.0×10⁻⁸ → 1.8×10⁻⁸. Per-galaxy modal match rates shift by ≤0.06 pp in §3.3.2-4. The §2.3 exception list can be retired for §3.3.2-4 and §3.3.7 (§3.2 remains as the sole outstanding 102-galaxy partition).
+- **Cited in:** §2.3 (sample-partition retirement note); §3.3.2, §3.3.3, §3.3.4, §3.3.7 (101-galaxy headline numbers).
+- **Sample convention:** Reports BOTH 102-galaxy and 101-galaxy versions side-by-side. The manuscript adopts the 101-galaxy numbers throughout §3.3.
+
+---
+
 ## Inputs from external sources (in `data/`)
 
 ### sparc_sample123.csv
@@ -225,6 +237,15 @@ This file documents the provenance of every data file in this package: source sc
   python3 make_figures.py --figure 3.1.1,3.2.1 # multiple
   python3 make_figures.py --list               # list available figures
   ```
+
+### scripts/ngc6674_exclusion_reanalysis.py
+
+- **Purpose:** Re-aggregate the four §3.3 production-batch CSVs with NGC 6674 excluded from the per-galaxy population, producing 101-galaxy headline statistics parallel to the 102-galaxy as-run statistics. Permits retirement of the §2.3 exception list for §3.3.2-4 and §3.3.7 without requiring expensive Mac-side reruns.
+- **Inputs:** All four §3.3 per-galaxy CSVs plus the Paper I canonical CSV (for canonical n_shells per galaxy).
+- **Outputs:** `data/ngc6674_exclusion_summary.txt` (plain text comparison report) plus stdout.
+- **Run time:** ~5 seconds on a modern Mac (pure post-processing; no refitting).
+- **CLI:** `python3 ngc6674_exclusion_reanalysis.py` (no arguments).
+- **Headline result:** Maximum perturbation-test headline shift = 0.16 pp; backbone-shift absorbing-pattern shift = -0.23 pp. All four §3.3 tests retain qualitative direction and significance under the 101-galaxy convention.
 
 ---
 

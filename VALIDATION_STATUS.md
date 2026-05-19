@@ -31,10 +31,9 @@ The manuscript uses two sample conventions, disclosed explicitly in §2.3:
 
 - **Paper I-aligned (NGC 6674-included, 102 galaxies):**
   - 52 shell-bearing galaxies, 69 shells, 17 two-shell galaxies
-  - Used in: §3.2 (null tests), §3.3.2-3.3.4 (Υ/D/i perturbations), §3.3.7 (backbone-shift test)
-  - These analyses ran as coordinated production batches and require Mac-side reruns to reconcile to the 101-galaxy primary sample.
+  - Used in: §3.2 (null tests) only as of 2026-05-19. §3.3.2-3.3.4 (Υ/D/i perturbations) and §3.3.7 (backbone-shift test) production batches retain their 102-galaxy as-run fits but the manuscript reports 101-galaxy aggregations via `scripts/ngc6674_exclusion_reanalysis.py` (max shift 0.25 pp; see `data/ngc6674_exclusion_summary.txt`).
 
-NGC 6674's fit is degenerate: r₁ = r₂ = 3.12 kpc with both shell masses pegged at the upper bound 5×10¹⁰ M☉. Its exclusion from per-shell analyses is methodologically justified; its retention in production-batch analyses is a packaging artifact awaiting Mac-side reruns.
+NGC 6674's fit is degenerate: r₁ = r₂ = 3.12 kpc with both shell masses pegged at the upper bound 5×10¹⁰ M☉. Its exclusion from per-shell analyses is methodologically justified; as of 2026-05-19, its retention in the §3.3.2-4 and §3.3.7 production-batch CSVs is corrected at the aggregation step (`scripts/ngc6674_exclusion_reanalysis.py`). Only §3.2 production data still includes NGC 6674 at the raw-fit level; the §2.3 disclosure notes this as the sole remaining 102-galaxy partition.
 
 The 91-galaxy / 1,820-fit inclination perturbation sample further excludes 11 edge-on galaxies (Inc = 90°) by the script's `0 < Inc < 90` check.
 
@@ -79,7 +78,7 @@ The 91-galaxy / 1,820-fit inclination perturbation sample further excludes 11 ed
 | Inclination perturbation per-galaxy match | 98.9% | inclination_perturbation_per_galaxy.csv | §3.3.4 |
 | Backbone shift: SB ρ₀ shift median | -0.624 dex (Wilcoxon p < 10⁻⁴) | backbone_shift.csv | §3.3.7 |
 | Backbone shift: SB a shift median | +0.318 dex (Wilcoxon p < 10⁻⁴) | backbone_shift.csv | §3.3.7 |
-| Backbone shift: "absorbing pattern" rate | 46/52 (88.5%) of SB galaxies | backbone_shift.csv | §3.3.7 |
+| Backbone shift: "absorbing pattern" rate | 45/51 (88.2%) of SB galaxies, 101-gal (was 46/52, 88.5% on 102-gal; see data/ngc6674_exclusion_summary.txt) | backbone_shift.csv (aggregated by ngc6674_exclusion_reanalysis.py) | §3.3.7 |
 | Backbone shift vs T-type correlation | Spearman ρ = +0.44, p = 0.001 | backbone_shift.csv | §3.3.7 |
 
 ### Anti-warp subsample (§3.3.5; NGC 6674-excluded)
@@ -131,13 +130,13 @@ Tier classification in §3.1.5 derives directly from this stratification.
 
 ## Known minor issues
 
-1. **NGC 6674-included production batches** (§3.2, §3.3.2-3.3.4, §3.3.7) await Mac-side reruns to reconcile to the 101-galaxy primary sample. Disclosed in §2.3 with quantitative bound on impact (NGC 6674 contributes ≤1% of any production batch).
+1. **NGC 6674-included production batches** — partially resolved 2026-05-19. §3.3.2-4 and §3.3.7 now report 101-galaxy values via post-aggregation through `scripts/ngc6674_exclusion_reanalysis.py` (see `data/ngc6674_exclusion_summary.txt`; max shift 0.25 pp). §3.2 (N=100 nulls) remains on the 102-galaxy sample; an analogous re-aggregation is feasible but not yet performed.
 
 2. **Inclination perturbation excludes 11 edge-on galaxies** (`Inc == 90°`). The exclusion is conservative (sin 89° = 0.9998 ≈ sin 90° = 1.000) and including the 11 galaxies would only increase the apparent stability rate. A future revision could change `< 90` to `<= 90` in the script and rerun for cosmetic completeness.
 
 3. **§3.3.6 Einasto control depends on external Paper I CSV** (`einasto_full_sample_results.csv`) that is not duplicated in this package.
 
-4. **Backbone shift test sample convention.** Run on the 102-galaxy Paper I-aligned sample, not the 101-galaxy primary. The §2.3 disclosure bounds the impact on the 88.5% absorbing-pattern rate to the range 85.7–90.2% under NGC 6674 exclusion (one galaxy of 52, depending on its classification).
+4. **Backbone shift test sample convention.** Production run used the 102-galaxy Paper I-aligned sample. As of 2026-05-19 the manuscript reports 101-galaxy numbers (NGC 6674 excluded) by post-aggregation of `backbone_shift.csv` via `scripts/ngc6674_exclusion_reanalysis.py`. The 102→101 shift is 88.5% → 88.2% (absorbing-pattern rate), 46/52 → 45/51, binomial p 1.0×10⁻⁸ → 1.8×10⁻⁸ — qualitatively unchanged.
 
 5. **Tier 2 discrepancies above** should be resolved before submission (variant specification or value update).
 

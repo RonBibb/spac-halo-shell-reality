@@ -12,10 +12,10 @@
 | --- | --- | --- |
 | Abstract | Revised 2026-05-19 | ~277 words; NGC 6674-excluded primary sample; backbone-conditional σ/r flagged; bulge-morphology entanglement disclosure added (mirrors §3.1.1) |
 | §1 Introduction | First draft | Concession-then-reframe framing for ¶4; literature context preserved |
-| §2 Data and methods | First draft | 2.1 sample, 2.2 fitting framework, 2.3 partitions (101-galaxy primary + §3.2/§3.3.2-4/§3.3.7 exception list), 2.4 methods (updated 2026-05-19: p-floor split 0.01 for §3.2, 0.05 for §3.3 perturbations), 2.5 stats conventions |
+| §2 Data and methods | Revised 2026-05-19 | 2.1 sample, 2.2 fitting framework, 2.3 partitions (§2.3 exception list retired for §3.3.2-4 and §3.3.7 via post-aggregation; §3.2 remains sole 102-galaxy partition), 2.4 methods (updated 2026-05-19: p-floor split 0.01 for §3.2, 0.05 for §3.3 perturbations), 2.5 stats conventions |
 | §3.1 Statistical organization | Revised 2026-05-19 | 3.1.1 bulge (with morphology-entanglement quantification), 3.1.2 scaling (with slope intercepts + mass-bound rationale), 3.1.3 σ/r quartile gradient (softened), 3.1.4 inner-vs-outer, 3.1.5 summary (primary/secondary/soft tiers, multiple-comparisons disclosure; NGC 6674 sensitivity now disclosed inline for the morphology gradient) |
 | §3.2 Spatial-coherence nulls | Revised 2026-05-19 (N=100) | 3.2.1 scramble (empirical p = 2/100), 3.2.2 permute (0/100), 3.2.3 per-T fractions, 3.2.4 joint. Numbers updated from N=20 baseline; data in `shell_reality_out_n100/`. |
-| §3.3 Robustness against artifacts | First draft | 3.3.1 disk scales, 3.3.2-3.3.4 Υ/D/i perturbations (102-galaxy; §2.3 exception), 3.3.5 anti-warp clean (NGC 6674-excluded), 3.3.6 Einasto backbone-family control, 3.3.7 backbone-shift test (102-galaxy; §2.3 exception), 3.3.8 nulls cross-ref, 3.3.9 combined verdict (8 tests; item 7 narrowed 2026-05-19 to "smooth profile cannot natively absorb the structure without measurable parameter shift") |
+| §3.3 Robustness against artifacts | Revised 2026-05-19 | 3.3.1 disk scales, 3.3.2-3.3.4 Υ/D/i perturbations (101-galaxy via post-aggregation; max shift 0.11 pp), 3.3.5 anti-warp clean (NGC 6674-excluded), 3.3.6 Einasto backbone-family control, 3.3.7 backbone-shift test (101-galaxy: 45/51 absorbing, 88.2%, p ≈ 1.8×10⁻⁸), 3.3.8 nulls cross-ref, 3.3.9 combined verdict (8 tests; item 7 narrowed 2026-05-19 to "smooth profile cannot natively absorb the structure without measurable parameter shift") |
 | §4 Discussion | Revised 2026-05-19 | Backbone-family caveat with both Einasto + backbone-shift citations; basis-function-alternative framing softened to align with §3.3.9 item 7 (acknowledges 2/100 reproduction rather than asserting non-reproduction) |
 | §5 Conclusions | Revised 2026-05-19 | "Statistical rather than ontological"; Einasto + backbone-shift load-bearing controls cited; null-test wording softened to empirical-p framing |
 | Acknowledgments | Pending | Stub only |
@@ -34,7 +34,7 @@ The manuscript uses two sample conventions, disclosed in §2.3:
 
 - **Primary (NGC 6674-excluded, 101 galaxies):** §1, §2, §3.1, §3.3.1, §3.3.5, §3.3.6, §4, §5. Headline numbers: 51 shell-bearing (50.5%), 67 shells, 16 two-shell galaxies, 25 anti-warp clean shells. Morphology gradient ρ_per_T = -0.762 (p = 0.028). Bulge OR = 3.67. M-r slope 0.76, σ-r slope 1.04, σ/r median 0.275.
 
-- **Paper I-aligned (NGC 6674-included, 102 galaxies):** §3.2 (null tests), §3.3.2-3.3.4 (Υ/D/i perturbations), §3.3.7 (backbone-shift test). These analyses ran as coordinated production batches against the 102-galaxy canonical fits; reconciliation to the 101-galaxy primary sample requires Mac-side reruns. The §2.3 disclosure quantifies why qualitative conclusions hold (NGC 6674 contributes ≤1% of any batch, ≤1/9 to any per-T bin, etc.).
+- **Paper I-aligned (NGC 6674-included, 102 galaxies):** §3.2 (null tests) only as of 2026-05-19. §3.3.2-3.3.4 (Υ/D/i perturbations) and §3.3.7 (backbone-shift test) production batches were originally run against the 102-galaxy canonical fits but have been re-aggregated on the 101-galaxy sample via `scripts/ngc6674_exclusion_reanalysis.py`; manuscript reports 101-galaxy numbers for those tests. §3.2 N=100 nulls remain on the 102-galaxy sample; the §2.3 disclosure quantifies why qualitative conclusions hold (NGC 6674 contributes ≤1% of any §3.2 realization).
 
 NGC 6674 has a degenerate two-shell fit (r₁ = r₂ = 3.12 kpc with both masses pegged at the upper bound 5×10¹⁰ M☉). Its exclusion from per-shell analyses is methodologically justified; its retention in the production-batch analyses is a packaging artifact awaiting future rerun.
 
@@ -60,6 +60,7 @@ All files in `data/` are present. Status:
 | `data/shell_reality_out_n100/per_realization.csv` | **Canonical N=100 for §3.2 (200 rows: 2 × 100 reps)** |
 | `data/shell_reality_out_n100/per_galaxy.csv` | **Canonical N=100 (20,400 rows: 2 × 100 × 102)** |
 | `data/shell_reality_out_n100/summary.txt` | **Canonical N=100 summary** |
+| `data/ngc6674_exclusion_summary.txt` | Present (added 2026-05-19): §2.3 retirement comparison — 102-gal vs 101-gal headlines for §3.3.2-4 and §3.3.7 |
 | `data/sparc_sample123.csv` | Present (SPARC catalog metadata, 123 rows) |
 | `data/galaxy_classifications.csv` | Present (with bulge/dwarf/MW-like flags, 123 rows) |
 | `data/nfw_fixedc_fits.csv` | Present (NFW reference fits) |
@@ -94,6 +95,7 @@ All four production-run logs are present in `logs/`:
 | `scripts/run_canonical_fits.py` | Present (548 lines, copied from Paper I) | Paper I production fitter underlying all perturbation/null scripts |
 | `scripts/einasto_control.py` | Present | §3.3.6 backbone-family Einasto comparison (post-hoc analysis on Paper I's Einasto fits) |
 | `scripts/make_figures.py` | Present (added 2026-05-19) | Generates the 11 manuscript figures from `data/` (9 working; 3.3.6 and 3.3.7 require Paper I external data) |
+| `scripts/ngc6674_exclusion_reanalysis.py` | Present (added 2026-05-19) | §2.3 retirement: re-aggregates §3.3.2-4 + §3.3.7 with NGC 6674 excluded; ~5 sec runtime; writes `data/ngc6674_exclusion_summary.txt` |
 
 All scripts depend on Paper I's `run_canonical_fits.py` or its components for the Paper I fitting framework. The Paper I canonical fits CSV must be supplied externally (see "Data files" note above).
 
@@ -118,7 +120,7 @@ All scripts depend on Paper I's `run_canonical_fits.py` or its components for th
 
 In rough priority order:
 
-1. **Mac-side NGC 6674 reruns** of §3.3.2-3.3.4 perturbation tests (and §3.3.7 backbone-shift if time permits) to reconcile to 101-galaxy primary sample. §3.2 nulls now run at N=100 with the parallel runner; §2.3 disclosure currently bounds the impact of NGC 6674 inclusion in other production batches but does not close the asymmetry.
+1. ~~**Mac-side NGC 6674 reruns** of §3.3.2-3.3.4 and §3.3.7~~ — **DONE 2026-05-19 via post-aggregation** (`scripts/ngc6674_exclusion_reanalysis.py`, `data/ngc6674_exclusion_summary.txt`). Maximum headline shift = 0.25 pp; §3.3.2-4 and §3.3.7 now report 101-galaxy values; §2.3 exception list retired for these tests. §3.2 remains the sole 102-galaxy partition (parallel re-aggregation of N=100 nulls is a future computational consistency check, not blocking).
 2. **Resolve Tier 2 discrepancies** between manuscript-reported and recomputed values:
    - Wilcoxon p-values in §3.1.4 (manuscript 0.017/0.049 historical vs recompute 0.0001/0.0008)
    - σ outer>inner count (manuscript 12/17 historical vs recompute 14/17; Fig 3.1.4 currently shows 13/16 — a third value to reconcile)
@@ -147,6 +149,11 @@ In rough priority order:
 ## Change log since v1.0-draft initial
 
 ### 2026-05-19 revisions
+
+- **§2.3 exception list retired for §3.3.2-4 and §3.3.7** via post-aggregation through new `scripts/ngc6674_exclusion_reanalysis.py`. Re-running the per-galaxy aggregation on the 101-galaxy sample (NGC 6674 excluded) produces shifts ≤ 0.25 pp on every §3.3 headline number. Detailed comparison in `data/ngc6674_exclusion_summary.txt`. Manuscript updated:
+  - §2.3: exception list narrowed to §3.2 only; §3.3.2-4 and §3.3.7 now use 101-galaxy numbers
+  - §3.3.7 body: 46/52 (88.5%) → 45/51 (88.2%); binomial p shifts from 1.0×10⁻⁸ to 1.8×10⁻⁸ (still vanishing)
+  - §3.3.9 item 7, §4 backbone paragraph, §4 nulls paragraph, §5 Conclusions: four sibling 88.5% references updated to 88.2%
 
 - **§3.2 N=100 null test rerun** completed via new `shell_reality_nulls_parallel.py` (12-worker parallel runner, byte-identical to serial). Headline numbers updated from N=20 baseline:
   - Scramble: ρ_per_T mean = -0.289 ± 0.229, z = -2.4σ (was -4.4σ at N=20), empirical p = 2/100

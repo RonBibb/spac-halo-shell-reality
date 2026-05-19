@@ -26,7 +26,7 @@ Paper II's primary analyses use a **101-galaxy sample (NGC 6674 excluded)** due 
 
 2. **Width-related signatures are partially backbone-baseline-dependent.** Under an Einasto backbone (one extra free parameter, strictly more flexible than Burkert), the σ-r slope drops from 1.04 to 0.38 and the σ/r median from 0.275 to 0.173; mass-feature signatures and galaxy-level signatures are preserved or strengthened (§3.3.6).
 
-3. **The smooth profile cannot natively absorb the localized structure.** When the Paper I framework is constrained to n_shells = 0, the Burkert backbone systematically deforms (ρ₀ rises by a factor of ≈4.2; scale radius a contracts by a factor of ≈2.1) in 46 of 52 (88.5%) shell-bearing galaxies. The non-shell-bearing control population does not show this systematic deformation. This disfavors the strong form of the basis-function alternative, in which shells would be decoupled from backbone parameters (§3.3.7).
+3. **The smooth profile cannot natively absorb the localized structure.** When the Paper I framework is constrained to n_shells = 0, the Burkert backbone systematically deforms (ρ₀ rises by a factor of ≈4.2; scale radius a contracts by a factor of ≈2.1) in 45 of 51 (88.2%) shell-bearing galaxies (101-galaxy convention, via post-aggregation of the 102-galaxy production run). The non-shell-bearing control population does not show this systematic deformation. This disfavors the strong form of the basis-function alternative, in which shells would be decoupled from backbone parameters (§3.3.7).
 
 4. **Two destructive nulls** (within-galaxy residual scrambling, cross-radius velocity permutation; 100 realizations each) fail to reproduce the morphology gradient with asymmetric failure modes: residual scrambling suppresses the gradient (the real-data ρ is reached or exceeded in 2/100 realizations, empirical *p* = 0.02), while cross-radius permutation over-produces detections and reverses the gradient sign (0/100 realizations reach the real-data value). The asymmetric failure direction is the strongest single piece of evidence against a generic-basis-function origin (§3.2).
 
@@ -97,6 +97,8 @@ halo_shells_paper2_v1.0/
 │       ├── per_galaxy.csv             20,400 rows
 │       └── summary.txt                empirical p = 2/100 scramble, 0/100 permute
 │
+│   ngc6674_exclusion_summary.txt      §2.3 retirement: 102-galaxy vs 101-galaxy headline comparison for §3.3.2-4 and §3.3.7 (max shift 0.25 pp)
+│
 ├── scripts/
 │   ├── antiwarp_subsample.py            §3.3.5 analysis
 │   ├── backbone_shift_test.py           §3.3.7 backbone-shift production runner
@@ -107,7 +109,8 @@ halo_shells_paper2_v1.0/
 │   ├── inclination_perturbation.py      §3.3.4 perturbation runner
 │   ├── run_canonical_fits.py            Paper I production fitter (copied from Paper I)
 │   ├── einasto_control.py               §3.3.6 post-hoc analysis on Paper I Einasto fits
-│   └── make_figures.py                  generates all 11 manuscript figures from data/
+│   ├── make_figures.py                  generates all 11 manuscript figures from data/
+│   └── ngc6674_exclusion_reanalysis.py  §2.3 retirement: re-aggregates §3.3.2-4 + §3.3.7 with NGC 6674 excluded
 │
 ├── logs/
 │   ├── antiwarp_log.txt
@@ -194,13 +197,13 @@ This package is **release v1.0-draft**, suitable for internal review and figure 
 | Markdown source | ✅ Canonical; ongoing edits |
 | Data CSVs (Paper II outputs) | ✅ DONE (10 CSVs in `data/` plus `shell_reality_out_n100/`) |
 | SPARC inputs | ✅ DONE (Rotmod_LTG/, classifications, sparc_sample123) |
-| Producer scripts | ✅ DONE (10 scripts in `scripts/`) |
+| Producer scripts | ✅ DONE (11 scripts in `scripts/`) |
 | Logs | ✅ Captured for all perturbation/antiwarp runs |
 | Figures | ✅ 9 of 11 PDFs in `figures/` (fig_3_3_6 Einasto and fig_3_3_7 backbone-shift await Paper I data) |
 | Bibliography | ⏳ Skeleton entries; full DOIs at submission |
 | Paper I canonical CSV | ❌ EXTERNAL — see "Relationship to Paper I" |
 | Paper I Einasto CSV | ❌ EXTERNAL — see "Relationship to Paper I" |
-| Mac-side NGC 6674 reruns of §3.3.2-4/§3.3.7 | ⏳ Pending (disclosed in §2.3) |
+| NGC 6674 reruns of §3.3.2-4/§3.3.7 | ✅ DONE 2026-05-19 via aggregation (§2.3 exception list mostly retired; data/ngc6674_exclusion_summary.txt) |
 | Tier 2 discrepancy resolution | ⏳ Pending (documented in VALIDATION_STATUS.md) |
 | Zenodo deposit | ⏳ Pending |
 | PASP submission | ⏳ Pending |

@@ -1,0 +1,54 @@
+==============================================================================
+§2.3 EXCEPTION LIST RETIREMENT — NGC 6674 EXCLUSION RE-ANALYSIS
+==============================================================================
+
+Production-batch CSVs aggregated under two sample conventions:
+  102-galaxy: NGC 6674 INCLUDED (as currently reported in manuscript §3.3)
+  101-galaxy: NGC 6674 EXCLUDED (matches §3.1/§3.3.5 primary convention)
+
+If the 102 vs 101 numbers are qualitatively identical, the §2.3 exception
+list can be retired: NGC 6674's inclusion in §3.3.2-4/§3.3.7 is
+demonstrably packaging artifact, not a conclusion-affecting choice.
+
+------------------------------------------------------------------------------
+PERTURBATION TESTS (§3.3.2 / §3.3.3 / §3.3.4)
+------------------------------------------------------------------------------
+
+Test         Sec       N_full  N_excl   Pfit_102   Pfit_101   Pgal_102   Pgal_101
+------------------------------------------------------------------------------
+Upsilon      §3.3.2       102     101     86.21%     86.12%     95.10%     95.05%
+Distance     §3.3.3       102     101     89.64%     89.53%     94.12%     94.06%
+Inclination  §3.3.4        91      90     95.66%     95.61%     98.90%     98.89%
+
+Pfit = per-fit match rate (each realization × galaxy)
+Pgal = per-galaxy modal-match rate
+Shifts of <1 percentage point indicate NGC 6674 has negligible effect.
+
+------------------------------------------------------------------------------
+BACKBONE-SHIFT TEST (§3.3.7)
+------------------------------------------------------------------------------
+
+Statistic                                102-galaxy      101-galaxy          Δ
+------------------------------------------------------------------------------
+Shell-bearing galaxies                           52              51         -1
+With absorbing pattern                           46              45         -1
+Absorbing pattern (%)                          88.5            88.2     -0.226
+Median Δlog₁₀(ρ₀[BIC]/ρ₀[n=0])               -0.624          -0.608    +0.0155
+Median Δlog₁₀(a[BIC]/a[n=0])                 +0.318          +0.318  -0.000124
+Wilcoxon p (ρ₀ shift)                     3.785e-08       5.723e-08  +1.94e-08
+Wilcoxon p (a shift)                      1.897e-07       2.797e-07     +9e-08
+Spearman ρ vs T-type                         +0.441          +0.439   -0.00243
+Spearman p vs T-type                      1.059e-03       1.276e-03  +0.000218
+
+==============================================================================
+VERDICT
+==============================================================================
+
+Maximum perturbation-test headline shift: 0.16 percentage points
+Backbone-shift absorbing-pattern shift: -0.23 percentage points
+
+§2.3 exception list IS RETIREABLE: all headline shifts < 2 percentage points.
+Manuscript can quote 101-galaxy convention throughout §3.3 with a single
+methodological note acknowledging that production CSVs included NGC 6674
+but aggregation has been recomputed on the 101-galaxy sample.
+
