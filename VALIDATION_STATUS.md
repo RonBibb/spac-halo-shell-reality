@@ -75,7 +75,7 @@ Added in commit `a86a0e5` (2026-05-21). The framework imposes an upper bound on 
 | Morphology gradient ρ_per_T | -0.762 (p = 0.028) | derived from Paper I canonical | §3.1, §3.2 baseline |
 | σ/r median (under Burkert) | 0.275 | antiwarp_per_shell.csv | §3.1.2, §3.1.3 |
 | σ/r quartile gradient | modest tendency Q1 → Q4 (0.339 → 0.185) | derived from antiwarp_per_shell.csv | §3.1.3 |
-| Two-pop r/r_vir KS | D = 0.47, p = 0.045 (manuscript value; see Tier 2 discrepancies) | derived from antiwarp_per_shell + r_vir | §3.1.4 |
+| Two-pop r/r_vir KS | D = 0.6875, p = 0.0007 under Burkert (D = 0.11, p ≈ 1.0 under Einasto) | derived from antiwarp_per_shell (radial ordering) + sparc_sample123 r_vir | §3.1.4, §3.3.6 |
 
 ### Paper I-aligned analyses (102-galaxy sample)
 
@@ -125,7 +125,7 @@ Values that appear in the manuscript text vs. straightforward recomputation agai
 | Wilcoxon p = 0.0001 (inner-vs-outer mass) | p = 0.0001 | ✅ **Resolved.** Manuscript adopts recompute (historical 0.017 retired). |
 | Wilcoxon p = 0.0008 (inner-vs-outer σ) | p = 0.0008 | ✅ **Resolved.** Manuscript adopts recompute (historical 0.049 retired). |
 | 14/16 σ outer > inner (NGC 6674-excluded) | 14/16 outer > inner | ✅ **Resolved.** Manuscript adopts NGC 6674-excluded basis (historical 12/17 retired). |
-| KS D = 0.47, p = 0.045 | D = 0.688 | ⏳ **Open.** Likely r_vir source difference (abundance-matching variant). Manuscript retains 0.47. Pick one and lock before submission. |
+| KS D = 0.6875, p = 0.0007 under Burkert | radial-ordering recompute on canonical sparc_sample123 r_vir | ✅ **Resolved 2026-05-21.** The original manuscript value (D = 0.47, p = 0.045) used the `position` column from `antiwarp_per_shell.csv` as the inner/outer partition. That column is a fit-slot label (sh1 vs sh2) and disagrees with radial ordering for 3 of 16 two-shell galaxies (ESO563-G021, NGC2841, UGC02953). All other §3.1.4 statistics (median outer/inner mass ratio 2.62, 14/16 outer-heavier, 14/16 outer-wider) match radial ordering perfectly under recompute, so radial ordering is the manuscript's intended partition. Corrected values: D = 0.6875, p = 0.0007 on the canonical r_vir source. Inner median r/r_vir = 0.012 [0.006, 0.017], outer = 0.027 [0.022, 0.035]. The previously-flagged "recompute D = 0.688" matches the corrected radial-ordering computation. Bonus check: under Einasto the KS attenuates to D = 0.11, p ≈ 1.0 (added to §3.3.6 table and prose); the signature is therefore Burkert-baseline-dependent and stays in secondary tier despite crossing Bonferroni under Burkert. |
 | Bulge OR Fisher p = 0.0064 | scipy default adopted | ✅ **Resolved 2026-05-21.** Adopted Fisher scipy default 0.0064. Classified as secondary signature alongside the morphology gradient by entanglement framing (§3.1.1 disclosure: bulge correlation and morphology gradient are two projections of a single underlying contrast); the raw p formally crosses Bonferroni but is not treated as an independent fifth primary signal. See §3.1.5 multi-comparisons paragraph for the explicit demotion reasoning. BH-adjusted p updated 0.014 → 0.009. |
 
 ---
@@ -134,7 +134,7 @@ Values that appear in the manuscript text vs. straightforward recomputation agai
 
 §3.1 presents seven dependent population tests as exploratory diagnostics, not pre-registered hypotheses. The manuscript reports both Bonferroni and Benjamini-Hochberg FDR results in §3.1.5:
 
-- **Bonferroni at α = 0.05** (threshold p < 0.00714): five raw p-values cross the threshold (M-r and σ-r scaling Spearman, both inner-vs-outer Wilcoxon tests, and the bulge Fisher test at p = 0.0064). However, the bulge correlation is classified as secondary alongside the morphology gradient under the §3.1.1 entanglement framing (two projections of a single underlying contrast), so the effective set of independent primary signatures remains four.
+- **Bonferroni at α = 0.05** (threshold p < 0.00714): six raw p-values cross the threshold (M-r and σ-r scaling Spearman, both inner-vs-outer Wilcoxon tests, the bulge Fisher test at p = 0.0064, and the KS r/r_vir at p = 0.0007). Three of these are classified as secondary by criteria distinct from the Bonferroni threshold: the bulge correlation is entanglement-demoted (§3.1.1: two projections of a single underlying contrast with the morphology gradient); the σ inner-vs-outer Wilcoxon attenuates to p = 0.10 under Einasto-backbone substitution (§3.3.6); the KS r/r_vir attenuates to D = 0.11, p ≈ 1.0 under Einasto. The effective set of independent, backbone-invariant, non-entangled primary signatures therefore remains three: M-r scaling, σ-r scaling under Burkert, and inner-vs-outer mass ordering.
 - **BH-FDR at α = 0.05**: all seven §3.1 tests pass.
 
 Tier classification in §3.1.5 derives directly from this stratification.
@@ -151,7 +151,7 @@ Tier classification in §3.1.5 derives directly from this stratification.
 
 4. **Backbone shift test sample convention.** Production run used the 102-galaxy Paper I-aligned sample. Manuscript reports 101-galaxy numbers (NGC 6674 excluded) by post-aggregation of `backbone_shift.csv` via `scripts/ngc6674_exclusion_reanalysis.py`. The 102→101 shift is 88.5% → 88.2% (absorbing-pattern rate), 46/52 → 45/51 — qualitatively unchanged.
 
-5. **One Tier 2 discrepancy remains** — the KS D-statistic for r/r_vir (manuscript 0.47 vs recompute 0.688; see table above). Resolve before submission. The Bulge OR p-value discrepancy was resolved 2026-05-21 in favor of Fisher scipy default 0.0064 with entanglement-based secondary classification.
+5. **All Tier 2 discrepancies resolved as of 2026-05-21** (see table above). Two reconciliations took place this date: the Bulge OR p-value (in favor of Fisher scipy default 0.0064 with entanglement-based secondary classification), and the KS D-statistic for r/r_vir (in favor of D = 0.6875 from radial-ordering recompute on the canonical r_vir source, with bonus Einasto-attenuation check added to §3.3.6).
 
 ---
 
