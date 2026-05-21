@@ -75,7 +75,7 @@ Added in commit `a86a0e5` (2026-05-21). The framework imposes an upper bound on 
 | Morphology gradient ρ_per_T | -0.762 (p = 0.028) | derived from Paper I canonical | §3.1, §3.2 baseline |
 | σ/r median (under Burkert) | 0.275 | antiwarp_per_shell.csv | §3.1.2, §3.1.3 |
 | σ/r quartile gradient | modest tendency Q1 → Q4 (0.339 → 0.185) | derived from antiwarp_per_shell.csv | §3.1.3 |
-| Two-pop r/r_vir KS | D = 0.6875, p = 0.0007 under Burkert (D = 0.11, p ≈ 1.0 under Einasto) | derived from antiwarp_per_shell (radial ordering) + sparc_sample123 r_vir | §3.1.4, §3.3.6 |
+| Two-pop r/r_vir KS | D = 0.6875, p = 0.0007 under Burkert (D = 0.11, p ≈ 1.0 under Einasto; D = 0.89, p = 7×10⁻⁴ under gNFW) | derived from antiwarp_per_shell (radial ordering) + sparc_sample123 r_vir | §3.1.4, §3.3.6 |
 
 ### Paper I-aligned analyses (102-galaxy sample)
 
@@ -134,7 +134,7 @@ Values that appear in the manuscript text vs. straightforward recomputation agai
 
 §3.1 presents seven dependent population tests as exploratory diagnostics, not pre-registered hypotheses. The manuscript reports both Bonferroni and Benjamini-Hochberg FDR results in §3.1.5:
 
-- **Bonferroni at α = 0.05** (threshold p < 0.00714): six raw p-values cross the threshold (M-r and σ-r scaling Spearman, both inner-vs-outer Wilcoxon tests, the bulge Fisher test at p = 0.0064, and the KS r/r_vir at p = 0.0007). Three of these are classified as secondary by criteria distinct from the Bonferroni threshold: the bulge correlation is entanglement-demoted (§3.1.1: two projections of a single underlying contrast with the morphology gradient); the σ inner-vs-outer Wilcoxon attenuates to p = 0.10 under Einasto-backbone substitution (§3.3.6); the KS r/r_vir attenuates to D = 0.11, p ≈ 1.0 under Einasto. The effective set of independent, backbone-invariant, non-entangled primary signatures therefore remains three: M-r scaling, σ-r scaling under Burkert, and inner-vs-outer mass ordering.
+- **Bonferroni at α = 0.05** (threshold p < 0.00714): six raw p-values cross the threshold (M-r and σ-r scaling Spearman, both inner-vs-outer Wilcoxon tests, the bulge Fisher test at p = 0.0064, and the KS r/r_vir at p = 0.0007). Three of these are classified as secondary by criteria distinct from the Bonferroni threshold: the bulge correlation is entanglement-demoted (§3.1.1: two projections of a single underlying contrast with the morphology gradient); the σ inner-vs-outer Wilcoxon attenuates to p = 0.10 under Einasto-backbone substitution but strengthens to 9/9, p = 0.002 under gNFW (§3.3.6); the KS r/r_vir attenuates to D = 0.11, p ≈ 1.0 under Einasto but strengthens to D = 0.89, p = 7×10⁻⁴ under gNFW (§3.3.6) — both attenuations are therefore Einasto-α-curvature-specific rather than generic backbone-family-sensitive. The effective set of independent, control-invariant, non-entangled primary signatures under the strict criterion of preservation across ALL backbone-family controls remains three: M-r scaling, σ-r scaling under Burkert, and inner-vs-outer mass ordering. The σ Wilcoxon and KS r/r_vir would promote to primary under a relaxed criterion of "preservation under at least one strict-superset backbone family" (Option 2 of the gNFW addition); the current §3.1.5 tier classification adopts the strict criterion for conservatism.
 - **BH-FDR at α = 0.05**: all seven §3.1 tests pass.
 
 Tier classification in §3.1.5 derives directly from this stratification.
