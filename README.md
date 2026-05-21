@@ -30,7 +30,7 @@ Paper II's primary analyses use a **101-galaxy sample (NGC 6674 excluded)** due 
 
 4. **Two destructive nulls** (within-galaxy residual scrambling, cross-radius velocity permutation; 100 realizations each) fail to reproduce the morphology gradient with asymmetric failure modes: residual scrambling suppresses the gradient (empirical p = 2/100), while cross-radius permutation over-produces detections and reverses the gradient sign (0/100). The asymmetric failure direction is the strongest single piece of evidence against a generic-basis-function origin (§3.2).
 
-5. **Shell selections are stable** under realistic perturbations to mass-to-light ratio (95.1% per-galaxy mode-recovery), distance (94.1%), and inclination (98.9%).
+5. **Shell selections are stable** under realistic perturbations to mass-to-light ratio (95.1% per-galaxy mode-recovery), distance (94.1%), and inclination (98.0%).
 
 6. **A conservative anti-warp clean subsample** preserves all five headline patterns in direction.
 

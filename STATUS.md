@@ -1,8 +1,8 @@
 # Package Sync Status — halo_shells_paper2
 
 **Snapshot date:** 2026-05-21
-**Package version:** v1.0-draft (post-NGC 6674 exclusion + Einasto + backbone-shift + N=100 nulls + framing-softening pass + mass-cap acknowledgment)
-**Latest commit at snapshot:** `6aba87f` (figure placement); preceded by `a86a0e5` (§3.1.2 mass-cap acknowledgment) and 2026-05-19 batch.
+**Package version:** v1.0-draft (post-NGC 6674 exclusion + Einasto + backbone-shift + N=100 nulls + framing-softening pass + mass-cap acknowledgment + Bulge OR resolution + inclination edge-on reflection treatment)
+**Latest pushed commit at snapshot:** `326f47a` (documentation resync); subsequent uncommitted changes covered by this snapshot include the Bulge OR p-value resolution and the inclination perturbation rerun with edge-on reflection treatment (see Change log).
 **Purpose of this file:** Single-source-of-truth for what's in this package at this snapshot, what's complete, and what's pending. Read first.
 
 ---
@@ -14,9 +14,9 @@
 | Abstract | Revised 2026-05-19 | ~290 words; NGC 6674-excluded primary sample; backbone-conditional σ/r flagged; bulge-morphology entanglement disclosure added (mirrors §3.1.1) |
 | §1 Introduction | First draft | Concession-then-reframe framing for ¶4; literature context preserved |
 | §2 Data and methods | Revised 2026-05-19 | 2.1 sample, 2.2 fitting framework, 2.3 partitions (§2.3 exception list retired for §3.3.2-4 and §3.3.7 via post-aggregation; §3.2 remains sole 102-galaxy partition), 2.4 methods (p-floor split 0.01 for §3.2, 0.05 for §3.3 perturbations), 2.5 stats conventions |
-| §3.1 Statistical organization | Revised 2026-05-21 | 3.1.1 bulge (with morphology-entanglement quantification), 3.1.2 scaling (with slope intercepts, mass-bound rationale, and **mass-cap acknowledgment paragraph added 2026-05-21**), 3.1.3 σ/r quartile gradient (softened), 3.1.4 inner-vs-outer (Wilcoxon and σ counts reconciled to recompute), 3.1.5 summary (primary/secondary/soft tiers, multiple-comparisons disclosure; NGC 6674 sensitivity disclosed inline for the morphology gradient) |
+| §3.1 Statistical organization | Revised 2026-05-21 | 3.1.1 bulge (with morphology-entanglement quantification; Bulge OR p-value resolved to Fisher 0.0064 with explicit entanglement-based secondary-tier classification, 2026-05-21), 3.1.2 scaling (with slope intercepts, mass-bound rationale, and **mass-cap acknowledgment paragraph added 2026-05-21**), 3.1.3 σ/r quartile gradient (softened), 3.1.4 inner-vs-outer (Wilcoxon and σ counts reconciled to recompute), 3.1.5 summary (primary/secondary/soft tiers, multiple-comparisons disclosure; NGC 6674 sensitivity disclosed inline for the morphology gradient; effective primary count remains four after bulge entanglement demotion) |
 | §3.2 Spatial-coherence nulls | Revised 2026-05-19 (N=100) | 3.2.1 scramble (empirical p = 2/100), 3.2.2 permute (0/100), 3.2.3 per-T fractions, 3.2.4 joint. Data in `shell_reality_out_n100/`. |
-| §3.3 Robustness against artifacts | Revised 2026-05-19 | 3.3.1 disk scales, 3.3.2-3.3.4 Υ/D/i perturbations (101-galaxy via post-aggregation; max shift 0.11 pp), 3.3.5 anti-warp clean (NGC 6674-excluded), 3.3.6 Einasto backbone-family control, 3.3.7 backbone-shift test (101-galaxy: 45/51 absorbing, 88.2%, p ≈ 1.8×10⁻⁸), 3.3.8 nulls cross-ref, 3.3.9 combined verdict (8 tests; item 7 narrowed 2026-05-19) |
+| §3.3 Robustness against artifacts | Revised 2026-05-21 | 3.3.1 disk scales, 3.3.2-3.3.3 Υ/D perturbations (101-galaxy via post-aggregation), 3.3.4 inclination perturbation (re-run 2026-05-21 with edge-on reflection treatment; now 102-galaxy/2,040 fits raw; 98.0% per-galaxy modal match), 3.3.5 anti-warp clean (NGC 6674-excluded; bulge OR p updated to 0.0064), 3.3.6 Einasto backbone-family control (bulge OR p updated to 0.0064 in table + prose), 3.3.7 backbone-shift test (101-galaxy: 45/51 absorbing, 88.2%, p ≈ 1.8×10⁻⁸), 3.3.8 nulls cross-ref, 3.3.9 combined verdict (8 tests; item 7 narrowed 2026-05-19) |
 | §4 Discussion | Revised 2026-05-19 | Backbone-family caveat with both Einasto + backbone-shift citations; basis-function-alternative framing softened |
 | §5 Conclusions | Revised 2026-05-19 | "Statistical rather than ontological"; Einasto + backbone-shift load-bearing controls cited; null-test wording softened to empirical-p framing |
 | Acknowledgments | **Drafted** | Funding statement, software stack (NumPy/SciPy/pandas/Matplotlib), AI assistance disclosure per AAS 2024-25 policy, personal acknowledgment. Zenodo DOI placeholder. |
@@ -39,7 +39,7 @@ The manuscript uses two sample conventions, disclosed in §2.3:
 
 NGC 6674 has a degenerate two-shell fit (r₁ = r₂ = 3.12 kpc with both masses pegged at the upper bound 5×10¹⁰ M☉). Its exclusion from per-shell analyses is methodologically justified.
 
-The 91-galaxy / 1,820-fit inclination perturbation sample further excludes 11 edge-on galaxies (Inc = 90°) by the script's `0 < Inc < 90` check.
+The inclination perturbation now includes all 11 SPARC galaxies catalogued at $i = 90°$ (edge-on) via a reflection treatment that folds any post-perturbation $i' > 90°$ to $180° - i'$ on the opposite side of edge-on, preserving a symmetric Gaussian perturbation around the nominal inclination. Sample: 102 galaxies × 20 realizations = 2,040 fits (raw); 2,020 fits (101-galaxy aggregation, NGC 6674-excluded).
 
 ---
 
@@ -66,7 +66,7 @@ All files in `data/` are present. Status:
 | `data/backbone_shift_summary.txt` | Present |
 | `data/upsilon_perturbation_per_galaxy.csv` | Present (2,040 rows: 102 galaxies × 20 realizations) |
 | `data/distance_perturbation_per_galaxy.csv` | Present (2,040 rows) |
-| `data/inclination_perturbation_per_galaxy.csv` | Present (1,820 rows; 11 edge-on excluded) |
+| `data/inclination_perturbation_per_galaxy.csv` | Present (2,040 rows: 102 galaxies × 20 realizations; edge-on included via reflection treatment as of 2026-05-21) |
 | `data/nulltest_per_realization.csv` | Present (40 rows) — **N=20 baseline; superseded by N=100** |
 | `data/nulltest_per_galaxy.csv` | Present (4,080 rows) — N=20 baseline |
 | `data/nulltest_summary.txt` | Present — N=20 baseline |
@@ -188,6 +188,8 @@ In rough priority order:
 
 - **§3.1.2 mass-cap acknowledgment paragraph added** (commit `a86a0e5`). Discloses 8 of 67 shells (11.9%) lie within 0.05 dex of the 5×10¹⁰ M☉ upper bound; cap-clear subset (n=59) gives essentially unchanged slopes. Cap framed as definitional. Bound-relaxation deferred to Paper 3.
 - **Figure 3.3.6 placed in `figures/`** (commit `6aba87f`). All 13 manuscript figures now in canonical location.
+- **Bulge OR p-value resolved.** Adopted Fisher scipy default $p = 0.0064$; abstract, §3.1.1, §3.1.5, §3.3.5 table, and §3.3.6 table/prose updated. Although the raw p formally crosses the Bonferroni threshold for seven tests ($p < 0.0071$), the bulge correlation is classified as a secondary signature alongside the morphology gradient under the §3.1.1 entanglement framing (two projections of a single underlying contrast). The §3.1.5 multiple-comparisons paragraph reflects this with explicit demotion reasoning; BH-adjusted p for bulge updated from 0.014 to 0.009.
+- **Inclination perturbation edge-on cleanup.** Script updated from `0 < Inc < 90` to `0 < Inc <= 90` with reflection treatment (post-perturbation $i' > 90°$ folds to $180° - i'$). The 11 edge-on SPARC galaxies are now included symmetrically. New sample: 102 galaxies × 20 realizations = 2,040 fits (raw); 2,020 (101-galaxy aggregation). Headline shifts: per-galaxy modal match 98.9% (90/91) → 98.0% (99/101); per-fit 95.7% → 95.9%; median $|\Delta \log r_1|$ tightens 0.005 → 0.0022 dex. Edge-on subset matches canonical in 220/220 fits. §3.3.4 prose, §2.3 partition table (i: 98.04% → 98.02%), and Figure 3.3.4 caption updated.
 
 ### 2026-05-19 revisions
 

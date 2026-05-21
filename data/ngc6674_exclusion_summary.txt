@@ -18,7 +18,7 @@ Test         Sec       N_full  N_excl   Pfit_102   Pfit_101   Pgal_102   Pgal_10
 ------------------------------------------------------------------------------
 Upsilon      §3.3.2       102     101     86.21%     86.12%     95.10%     95.05%
 Distance     §3.3.3       102     101     89.64%     89.53%     94.12%     94.06%
-Inclination  §3.3.4        91      90     95.66%     95.61%     98.90%     98.89%
+Inclination  §3.3.4       102     101     95.93%     95.89%     98.04%     98.02%
 
 Pfit = per-fit match rate (each realization × galaxy)
 Pgal = per-galaxy modal-match rate

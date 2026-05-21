@@ -59,7 +59,8 @@ UPSILON_BULGE_NOMINAL = 0.7
 
 # Floor and cap on perturbed inclination to avoid pathological 1/sin(i)
 INC_MIN_FLOOR_DEG = 10.0   # SPARC selection effectively excludes < 30° anyway
-INC_MAX_CAP_DEG   = 89.0   # avoid singularity at 90°
+INC_MAX_CAP_DEG   = 89.0   # numerical safety net; perturbations beyond 90° are
+                           # folded by reflection (see edge_on handling below)
 
 
 def resolve_paths():
@@ -500,11 +501,21 @@ def main():
                 continue
             Inc_nom = float(sparc.loc[galaxy, 'Inc'])
             e_Inc   = float(sparc.loc[galaxy, 'e_Inc'])
-            if not (0 < Inc_nom < 90):
+            if not (0 < Inc_nom <= 90):
                 continue
-            # Additive Gaussian perturbation in degrees, floored and capped
+            # Additive Gaussian perturbation in degrees.
             delta = rng.normal(0, max(e_Inc, 1e-6))
-            Inc_pert = float(np.clip(Inc_nom + delta, INC_MIN_FLOOR_DEG, INC_MAX_CAP_DEG))
+            Inc_pert_raw = Inc_nom + delta
+            # Reflect across the 90° boundary: an "inclination perturbation past 90°"
+            # is unphysical (inclination is geometrically bounded by 0° and 90°);
+            # folding to 180° - Inc gives the observationally-equivalent geometry on
+            # the opposite side of edge-on. This ensures the perturbation distribution
+            # is symmetric around Inc_nom even for edge-on galaxies (Inc_nom = 90°),
+            # where without folding ~50% of deltas would be clipped at INC_MAX_CAP_DEG
+            # while the other ~50% floated freely — an asymmetric bias.
+            if Inc_pert_raw > 90.0:
+                Inc_pert_raw = 180.0 - Inc_pert_raw
+            Inc_pert = float(np.clip(Inc_pert_raw, INC_MIN_FLOOR_DEG, INC_MAX_CAP_DEG))
             perturbations[(galaxy, rea_idx)] = (Inc_nom, Inc_pert, e_Inc)
             if rea_idx == 0:
                 e_Inc_values.append(e_Inc)

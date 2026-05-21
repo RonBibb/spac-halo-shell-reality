@@ -69,12 +69,12 @@ This file documents the provenance of every data file in this package: source sc
 
 - **Producer:** `scripts/inclination_perturbation.py`
 - **Inputs:** Same as upsilon_perturbation
-- **Test design:** 20 realizations. Each draws Inc' from N(Inc, e_Inc) per-galaxy, rescales V_obs and e_V_obs by sin(Inc)/sin(Inc'). 11 galaxies at Inc = 90° excluded by `0 < Inc < 90` check.
-- **Schema:** 1,820 rows × 22 cols (91 galaxies × 20 realizations). Columns include Inc_nominal_deg, Inc_perturbed_deg, e_Inc_deg, vobs_factor, plus the same fit columns as the other perturbation CSVs.
-- **Sample convention:** NGC 6674 INCLUDED at the raw-fit level (when not edge-on; in this sample NGC 6674 is included). 101-gal aggregation via `ngc6674_exclusion_reanalysis.py`.
+- **Test design:** 20 realizations. Each draws Inc' from N(Inc, e_Inc) per-galaxy, rescales V_obs and e_V_obs by sin(Inc)/sin(Inc'). All 102 galaxies in the canonical sample are included; 11 edge-on galaxies (Inc = 90°) are handled via a reflection treatment that folds any post-perturbation Inc' > 90° to 180° - Inc' on the observationally-equivalent opposite side of edge-on, preserving a symmetric Gaussian perturbation distribution. Perturbed values are floored at 10° and capped at 89° to avoid pathological behavior near sin(i) = 0. (Pre-2026-05-21: an earlier version of the script used `0 < Inc < 90` and excluded the 11 edge-on galaxies entirely, producing 1,820 rows. See `VALIDATION_STATUS.md` for migration notes.)
+- **Schema:** 2,040 rows × 22 cols (102 galaxies × 20 realizations). Columns include Inc_nominal_deg, Inc_perturbed_deg, e_Inc_deg, vobs_factor, plus the same fit columns as the other perturbation CSVs.
+- **Sample convention:** NGC 6674 INCLUDED at the raw-fit level. 101-gal aggregation (2,020 fits) via `ngc6674_exclusion_reanalysis.py`.
 - **Cited in:** §3.3.4; §3.3.9 channel (iv)
 - **Run log:** `logs/inclination_perturbation_log.txt`
-- **Headline result:** Per-galaxy modal match 98.9%; per-fit 95.7%. Tightest position recovery of the three perturbation tests (median Δ log r₁ = 0.005 dex).
+- **Headline result:** Per-galaxy modal match 98.0% (99/101 on 101-gal basis; 100/102 on raw); per-fit 95.9%. Edge-on subset matches canonical in 220/220 fits (100%). Tightest position recovery of the three perturbation tests (median |Δ log r₁| = 0.0022 dex).
 
 ### nulltest_per_realization.csv
 

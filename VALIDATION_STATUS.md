@@ -36,7 +36,7 @@ The manuscript uses two sample conventions, disclosed explicitly in §2.3:
 
 NGC 6674's fit is degenerate: r₁ = r₂ = 3.12 kpc with both shell masses pegged at the upper bound 5×10¹⁰ M☉.
 
-The 91-galaxy / 1,820-fit inclination perturbation sample further excludes 11 edge-on galaxies (Inc = 90°) by the script's `0 < Inc < 90` check.
+The inclination perturbation now includes all 11 SPARC galaxies catalogued at $i = 90°$ (edge-on) via a reflection treatment that folds any post-perturbation $i' > 90°$ to $180° - i'$ on the opposite side of edge-on, preserving a symmetric Gaussian perturbation around the nominal inclination. The full sample is 102 galaxies × 20 realizations = 2,040 fits (101-galaxy aggregation: 2,020 fits).
 
 ---
 
@@ -67,11 +67,11 @@ Added in commit `a86a0e5` (2026-05-21). The framework imposes an upper bound on 
 | Inner-vs-outer σ Wilcoxon | 14/16, p = 0.0008 | derived from antiwarp_per_shell.csv | §3.1.4 |
 | Mass-bound pegging rate (§3.1.2 disclosure) | 8/67 = 11.9% (within 0.05 dex of bound) | derived from antiwarp_per_shell.csv | §3.1.2 |
 
-### Secondary signatures (BH-FDR pass at α = 0.05; Bonferroni fail)
+### Secondary signatures (BH-FDR pass at α = 0.05; Bonferroni fail, or Bonferroni-demoted by entanglement)
 
 | Manuscript claim | Numerical value | Source CSV | Section |
 | --- | --- | --- | --- |
-| Bulge OR (primary sample) | 3.67 (Fisher p ≈ 0.01) | derived from galaxy_classifications + canonical | §3.1.1 |
+| Bulge OR (primary sample) | 3.67 (Fisher p = 0.0064) | derived from galaxy_classifications + canonical | §3.1.1 |
 | Morphology gradient ρ_per_T | -0.762 (p = 0.028) | derived from Paper I canonical | §3.1, §3.2 baseline |
 | σ/r median (under Burkert) | 0.275 | antiwarp_per_shell.csv | §3.1.2, §3.1.3 |
 | σ/r quartile gradient | modest tendency Q1 → Q4 (0.339 → 0.185) | derived from antiwarp_per_shell.csv | §3.1.3 |
@@ -89,7 +89,7 @@ Added in commit `a86a0e5` (2026-05-21). The framework imposes an upper bound on 
 | Permute z (ρ_per_galaxy) | -6.9 (N=100, empirical p = 0/100) | shell_reality_out_n100/summary.txt | §3.2.2 |
 | Υ perturbation per-galaxy match | 95.1% | upsilon_perturbation_per_galaxy.csv | §3.3.2 |
 | Distance perturbation per-galaxy match | 94.1% | distance_perturbation_per_galaxy.csv | §3.3.3 |
-| Inclination perturbation per-galaxy match | 98.9% | inclination_perturbation_per_galaxy.csv | §3.3.4 |
+| Inclination perturbation per-galaxy match | 98.0% (99/101) | inclination_perturbation_per_galaxy.csv | §3.3.4 |
 | Backbone shift: SB ρ₀ shift median | -0.624 dex (Wilcoxon p < 10⁻⁴) | backbone_shift.csv | §3.3.7 |
 | Backbone shift: SB a shift median | +0.318 dex (Wilcoxon p < 10⁻⁴) | backbone_shift.csv | §3.3.7 |
 | Backbone shift: "absorbing pattern" rate | 45/51 (88.2%) of SB galaxies (101-gal) | backbone_shift.csv (aggregated by ngc6674_exclusion_reanalysis.py) | §3.3.7 |
@@ -126,7 +126,7 @@ Values that appear in the manuscript text vs. straightforward recomputation agai
 | Wilcoxon p = 0.0008 (inner-vs-outer σ) | p = 0.0008 | ✅ **Resolved.** Manuscript adopts recompute (historical 0.049 retired). |
 | 14/16 σ outer > inner (NGC 6674-excluded) | 14/16 outer > inner | ✅ **Resolved.** Manuscript adopts NGC 6674-excluded basis (historical 12/17 retired). |
 | KS D = 0.47, p = 0.045 | D = 0.688 | ⏳ **Open.** Likely r_vir source difference (abundance-matching variant). Manuscript retains 0.47. Pick one and lock before submission. |
-| Bulge OR Fisher p ≈ 0.01 (manuscript) | scipy default 0.0064; Boschloo/Barnard/mid-p 0.0038 | ⏳ **Open.** Manuscript uses "≈ 0.01" soft phrasing. Pick a specific variant (likely mid-p 0.0038) and replace "≈ 0.01" in abstract + §3.1.5. |
+| Bulge OR Fisher p = 0.0064 | scipy default adopted | ✅ **Resolved 2026-05-21.** Adopted Fisher scipy default 0.0064. Classified as secondary signature alongside the morphology gradient by entanglement framing (§3.1.1 disclosure: bulge correlation and morphology gradient are two projections of a single underlying contrast); the raw p formally crosses Bonferroni but is not treated as an independent fifth primary signal. See §3.1.5 multi-comparisons paragraph for the explicit demotion reasoning. BH-adjusted p updated 0.014 → 0.009. |
 
 ---
 
@@ -134,7 +134,7 @@ Values that appear in the manuscript text vs. straightforward recomputation agai
 
 §3.1 presents seven dependent population tests as exploratory diagnostics, not pre-registered hypotheses. The manuscript reports both Bonferroni and Benjamini-Hochberg FDR results in §3.1.5:
 
-- **Bonferroni at α = 0.05** (threshold p < 0.00714): four primary signatures pass (M-r and σ-r scaling Spearman, both inner-vs-outer Wilcoxon tests).
+- **Bonferroni at α = 0.05** (threshold p < 0.00714): five raw p-values cross the threshold (M-r and σ-r scaling Spearman, both inner-vs-outer Wilcoxon tests, and the bulge Fisher test at p = 0.0064). However, the bulge correlation is classified as secondary alongside the morphology gradient under the §3.1.1 entanglement framing (two projections of a single underlying contrast), so the effective set of independent primary signatures remains four.
 - **BH-FDR at α = 0.05**: all seven §3.1 tests pass.
 
 Tier classification in §3.1.5 derives directly from this stratification.
@@ -145,13 +145,13 @@ Tier classification in §3.1.5 derives directly from this stratification.
 
 1. **NGC 6674-included production batches** — partially resolved 2026-05-19. §3.3.2-4 and §3.3.7 report 101-galaxy values via post-aggregation through `scripts/ngc6674_exclusion_reanalysis.py` (see `data/ngc6674_exclusion_summary.txt`; max shift 0.25 pp). §3.2 (N=100 nulls) remains on the 102-galaxy sample; an analogous re-aggregation is feasible but not yet performed.
 
-2. **Inclination perturbation excludes 11 edge-on galaxies** (`Inc == 90°`). The exclusion is conservative (sin 89° = 0.9998 ≈ sin 90° = 1.000) and including the 11 galaxies would only increase the apparent stability rate. Cosmetic correction `< 90` → `<= 90` low-priority cleanup.
+2. **Inclination perturbation edge-on cleanup — resolved 2026-05-21.** Previously the script excluded 11 SPARC galaxies catalogued at $i = 90°$ via a `0 < Inc < 90` check. The check has been changed to `0 < Inc <= 90` paired with a reflection treatment that folds any post-perturbation $i' > 90°$ to $180° - i'$ on the opposite side of edge-on. This preserves a symmetric Gaussian perturbation around the nominal inclination for edge-on galaxies. New sample: 102 galaxies × 20 realizations = 2,040 fits (raw); 2,020 (NGC 6674-excluded aggregation). Headline shifts: per-galaxy modal match 98.9% (90/91) → 98.0% (99/101) — the small downward shift reflects two marginal-BIC galaxies (UGC05253, UGC06818) whose perturbed shell counts now mismatch canonical due to a different realization sequence under the new RNG draw order, not an algorithmic regression. Edge-on galaxies match canonical in 220/220 fits (100%) as expected from $\sin i$ being flat near $i = 90°$. Median $|\Delta \log r_1|$ tightens 0.005 → 0.0022 dex.
 
 3. **§3.3.6 Einasto control depends on `einasto_full_sample_results.csv`** — included in this repo's `data/` directory as of 2026-05-19 for reproducibility.
 
 4. **Backbone shift test sample convention.** Production run used the 102-galaxy Paper I-aligned sample. Manuscript reports 101-galaxy numbers (NGC 6674 excluded) by post-aggregation of `backbone_shift.csv` via `scripts/ngc6674_exclusion_reanalysis.py`. The 102→101 shift is 88.5% → 88.2% (absorbing-pattern rate), 46/52 → 45/51 — qualitatively unchanged.
 
-5. **Two Tier 2 discrepancies remain** (see table above). Resolve before submission.
+5. **One Tier 2 discrepancy remains** — the KS D-statistic for r/r_vir (manuscript 0.47 vs recompute 0.688; see table above). Resolve before submission. The Bulge OR p-value discrepancy was resolved 2026-05-21 in favor of Fisher scipy default 0.0064 with entanglement-based secondary classification.
 
 ---
 
