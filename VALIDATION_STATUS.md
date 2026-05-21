@@ -1,7 +1,8 @@
-# Validation Status — halo_shells_paper2 v1.0
+# Validation Status — halo_shells_paper2
 
 **Package version:** v1.0-draft
-**Snapshot date:** 2026-05-19
+**Snapshot date:** 2026-05-21
+**Latest commit at snapshot:** `6aba87f`
 **Manuscript file:** `source/paper2.md` (markdown source; canonical)
 **Parent paper alignment:** Paper I v7.1.0 (https://github.com/RonBibb/sparc-halo-shells/releases/tag/v7.1.0)
 
@@ -11,7 +12,7 @@
 
 This package is built against Paper I v7.1.0. All canonical fits, framework parameters, and reference numbers are aligned with that release. Specifically:
 
-- **Paper I canonical sample**: 102 SPARC galaxies, T = 2-9, after Paper I quality cuts (matches Paper I §2.1)
+- **Paper I canonical sample**: 102 SPARC galaxies, T = 2–9, after Paper I quality cuts (matches Paper I §2.1)
 - **Framework**: Burkert backbone of the Paper I framework + 0/1/2 BIC-selected Gaussian shells, σ/r ≤ 0.4 strict reparameterization, mass bound 5×10¹⁰ M☉ (matches Paper I §2.2)
 - **Paper I shell-bearing classification**: 52 of 102 galaxies (including NGC 6674)
 - **Paper I morphology gradient**: ρ_per_T = -0.833, p = 0.010 (matches Paper I Table 4)
@@ -31,11 +32,22 @@ The manuscript uses two sample conventions, disclosed explicitly in §2.3:
 
 - **Paper I-aligned (NGC 6674-included, 102 galaxies):**
   - 52 shell-bearing galaxies, 69 shells, 17 two-shell galaxies
-  - Used in: §3.2 (null tests) only as of 2026-05-19. §3.3.2-3.3.4 (Υ/D/i perturbations) and §3.3.7 (backbone-shift test) production batches retain their 102-galaxy as-run fits but the manuscript reports 101-galaxy aggregations via `scripts/ngc6674_exclusion_reanalysis.py` (max shift 0.25 pp; see `data/ngc6674_exclusion_summary.txt`).
+  - Used in: §3.2 (null tests) only. §3.3.2-3.3.4 (Υ/D/i perturbations) and §3.3.7 (backbone-shift test) production batches retain their 102-galaxy as-run fits but the manuscript reports 101-galaxy aggregations via `scripts/ngc6674_exclusion_reanalysis.py` (max shift 0.25 pp; see `data/ngc6674_exclusion_summary.txt`).
 
-NGC 6674's fit is degenerate: r₁ = r₂ = 3.12 kpc with both shell masses pegged at the upper bound 5×10¹⁰ M☉. Its exclusion from per-shell analyses is methodologically justified; as of 2026-05-19, its retention in the §3.3.2-4 and §3.3.7 production-batch CSVs is corrected at the aggregation step (`scripts/ngc6674_exclusion_reanalysis.py`). Only §3.2 production data still includes NGC 6674 at the raw-fit level; the §2.3 disclosure notes this as the sole remaining 102-galaxy partition.
+NGC 6674's fit is degenerate: r₁ = r₂ = 3.12 kpc with both shell masses pegged at the upper bound 5×10¹⁰ M☉.
 
 The 91-galaxy / 1,820-fit inclination perturbation sample further excludes 11 edge-on galaxies (Inc = 90°) by the script's `0 < Inc < 90` check.
+
+---
+
+## Cap acknowledgment (§3.1.2)
+
+Added in commit `a86a0e5` (2026-05-21). The framework imposes an upper bound on shell mass at 5×10¹⁰ M☉ and a width cap at σ/r ≤ 0.4, both adopted from Paper I to preserve the "localized" regime. Manuscript §3.1.2 discloses:
+
+- **8 of 67 shells (11.9%)** lie within 0.05 dex of the mass bound
+- **Cap-clear subset (n = 59):** M-r slope = 0.67 ± 0.15 (vs. full-sample 0.76), σ-r slope = 1.02 ± 0.11 (vs. 1.04), σ/r median = 0.275 (unchanged)
+- Cap is treated as **definitional**, not as fit pathology — preserves the "localized" regime distinct from smooth-halo descriptions
+- Bound-relaxation effects flagged as future work; **deferred to Paper 3** (model refinement: cap relaxation paired with hierarchical Υ marginalization)
 
 ---
 
@@ -47,11 +59,13 @@ The 91-galaxy / 1,820-fit inclination perturbation sample further excludes 11 ed
 | --- | --- | --- | --- |
 | Sample size (primary) | 101 galaxies, T = 2-9 | sparc_sample123.csv (filtered) | §2.3 |
 | Shell-bearing rate (primary) | 51/101 = 50.5% | derived from Paper I canonical CSV | §3.1 |
-| M-r slope | 0.76 ± 0.14, intercept +9.632 | antiwarp_per_shell.csv (full sample, NGC 6674-excluded) | §3.1.2 |
+| M-r slope | 0.76 ± 0.14, intercept +9.632 | antiwarp_per_shell.csv (NGC 6674-excluded) | §3.1.2 |
 | M-r Spearman ρ | +0.64 (p < 10⁻⁴) | derived from antiwarp_per_shell.csv | §3.1.2 |
 | σ-r slope (under Burkert) | 1.04 ± 0.10, intercept -0.698 | antiwarp_per_shell.csv | §3.1.2 |
 | σ-r Spearman ρ | +0.78 (p < 10⁻⁴) | derived from antiwarp_per_shell.csv | §3.1.2 |
-| Inner-vs-outer mass Wilcoxon | 14/16, p = 0.0001 | derived from antiwarp_per_shell.csv (n=2 paired) | §3.1.4 |
+| Inner-vs-outer mass Wilcoxon | 14/16, p = 0.0001 | derived from antiwarp_per_shell.csv | §3.1.4 |
+| Inner-vs-outer σ Wilcoxon | 14/16, p = 0.0008 | derived from antiwarp_per_shell.csv | §3.1.4 |
+| Mass-bound pegging rate (§3.1.2 disclosure) | 8/67 = 11.9% (within 0.05 dex of bound) | derived from antiwarp_per_shell.csv | §3.1.2 |
 
 ### Secondary signatures (BH-FDR pass at α = 0.05; Bonferroni fail)
 
@@ -60,8 +74,8 @@ The 91-galaxy / 1,820-fit inclination perturbation sample further excludes 11 ed
 | Bulge OR (primary sample) | 3.67 (Fisher p ≈ 0.01) | derived from galaxy_classifications + canonical | §3.1.1 |
 | Morphology gradient ρ_per_T | -0.762 (p = 0.028) | derived from Paper I canonical | §3.1, §3.2 baseline |
 | σ/r median (under Burkert) | 0.275 | antiwarp_per_shell.csv | §3.1.2, §3.1.3 |
-| σ/r quartile gradient | modest tendency Q1 → Q4 | derived from antiwarp_per_shell.csv | §3.1.3 |
-| Two-pop r/r_vir KS | (Tier 2 discrepancy; see below) | derived from antiwarp_per_shell + r_vir | §3.1.4 |
+| σ/r quartile gradient | modest tendency Q1 → Q4 (0.339 → 0.185) | derived from antiwarp_per_shell.csv | §3.1.3 |
+| Two-pop r/r_vir KS | D = 0.47, p = 0.045 (manuscript value; see Tier 2 discrepancies) | derived from antiwarp_per_shell + r_vir | §3.1.4 |
 
 ### Paper I-aligned analyses (102-galaxy sample)
 
@@ -78,7 +92,7 @@ The 91-galaxy / 1,820-fit inclination perturbation sample further excludes 11 ed
 | Inclination perturbation per-galaxy match | 98.9% | inclination_perturbation_per_galaxy.csv | §3.3.4 |
 | Backbone shift: SB ρ₀ shift median | -0.624 dex (Wilcoxon p < 10⁻⁴) | backbone_shift.csv | §3.3.7 |
 | Backbone shift: SB a shift median | +0.318 dex (Wilcoxon p < 10⁻⁴) | backbone_shift.csv | §3.3.7 |
-| Backbone shift: "absorbing pattern" rate | 45/51 (88.2%) of SB galaxies, 101-gal (was 46/52, 88.5% on 102-gal; see data/ngc6674_exclusion_summary.txt) | backbone_shift.csv (aggregated by ngc6674_exclusion_reanalysis.py) | §3.3.7 |
+| Backbone shift: "absorbing pattern" rate | 45/51 (88.2%) of SB galaxies (101-gal) | backbone_shift.csv (aggregated by ngc6674_exclusion_reanalysis.py) | §3.3.7 |
 | Backbone shift vs T-type correlation | Spearman ρ = +0.44, p = 0.001 | backbone_shift.csv | §3.3.7 |
 
 ### Anti-warp subsample (§3.3.5; NGC 6674-excluded)
@@ -86,7 +100,6 @@ The 91-galaxy / 1,820-fit inclination perturbation sample further excludes 11 ed
 | Manuscript claim | Numerical value | Source CSV | Section |
 | --- | --- | --- | --- |
 | Anti-warp clean subsample size | 25 of 67 shells | antiwarp_summary.txt | §3.3.5 |
-| Mass-bound pegging rate | 14.5% (consistent with full sample) | derived from antiwarp_per_shell.csv | §3.1.2 |
 
 ### Einasto backbone-family control (§3.3.6)
 
@@ -105,15 +118,15 @@ The 91-galaxy / 1,820-fit inclination perturbation sample further excludes 11 ed
 
 ## Tier 2 numerical discrepancies (manuscript vs recompute)
 
-These are values that appear in the manuscript text but differ from straightforward recomputation against the canonical CSV. Each is documented for transparency; none invalidates a primary or secondary finding under multiple-comparisons correction, but the manuscript should be reconciled to its underlying data before submission.
+Values that appear in the manuscript text vs. straightforward recomputation against the canonical CSV. The manuscript adopted the recompute values for two of the original four discrepancies; two remain open.
 
-| Manuscript value | Recomputed value | Notes |
+| Manuscript value | Recomputed value | Status as of snapshot |
 | --- | --- | --- |
-| Wilcoxon p = 0.017 (inner-vs-outer mass) | p = 0.0001 | Likely different Wilcoxon variant (e.g., signed-rank vs paired-Wilcoxon, zero-handling). Manuscript should switch to recompute value, or the variant should be specified explicitly. |
-| Wilcoxon p = 0.049 (inner-vs-outer σ) | p = 0.0008 | Same likely cause. |
-| 12/17 σ outer > inner | 14/17 outer > inner (post NGC 6674 excl.: 14/16) | Counting/data-version discrepancy. |
-| KS D = 0.47, p = 0.045 | D = 0.688 | Different r_vir source (abundance-matching variant). |
-| Bulge OR Fisher p = 0.003 | scipy default 0.0064; Boschloo/Barnard/mid-p 0.0038 | scipy default uses different one-sided convention; the manuscript value matches a mid-p or Barnard variant. Adopt scipy default or specify variant explicitly. |
+| Wilcoxon p = 0.0001 (inner-vs-outer mass) | p = 0.0001 | ✅ **Resolved.** Manuscript adopts recompute (historical 0.017 retired). |
+| Wilcoxon p = 0.0008 (inner-vs-outer σ) | p = 0.0008 | ✅ **Resolved.** Manuscript adopts recompute (historical 0.049 retired). |
+| 14/16 σ outer > inner (NGC 6674-excluded) | 14/16 outer > inner | ✅ **Resolved.** Manuscript adopts NGC 6674-excluded basis (historical 12/17 retired). |
+| KS D = 0.47, p = 0.045 | D = 0.688 | ⏳ **Open.** Likely r_vir source difference (abundance-matching variant). Manuscript retains 0.47. Pick one and lock before submission. |
+| Bulge OR Fisher p ≈ 0.01 (manuscript) | scipy default 0.0064; Boschloo/Barnard/mid-p 0.0038 | ⏳ **Open.** Manuscript uses "≈ 0.01" soft phrasing. Pick a specific variant (likely mid-p 0.0038) and replace "≈ 0.01" in abstract + §3.1.5. |
 
 ---
 
@@ -121,7 +134,7 @@ These are values that appear in the manuscript text but differ from straightforw
 
 §3.1 presents seven dependent population tests as exploratory diagnostics, not pre-registered hypotheses. The manuscript reports both Bonferroni and Benjamini-Hochberg FDR results in §3.1.5:
 
-- **Bonferroni at α = 0.05** (threshold p < 0.00714): three primary signatures pass (M-r and σ-r scaling Spearman, inner-vs-outer M Wilcoxon — using recomputed p = 0.0001).
+- **Bonferroni at α = 0.05** (threshold p < 0.00714): four primary signatures pass (M-r and σ-r scaling Spearman, both inner-vs-outer Wilcoxon tests).
 - **BH-FDR at α = 0.05**: all seven §3.1 tests pass.
 
 Tier classification in §3.1.5 derives directly from this stratification.
@@ -130,15 +143,15 @@ Tier classification in §3.1.5 derives directly from this stratification.
 
 ## Known minor issues
 
-1. **NGC 6674-included production batches** — partially resolved 2026-05-19. §3.3.2-4 and §3.3.7 now report 101-galaxy values via post-aggregation through `scripts/ngc6674_exclusion_reanalysis.py` (see `data/ngc6674_exclusion_summary.txt`; max shift 0.25 pp). §3.2 (N=100 nulls) remains on the 102-galaxy sample; an analogous re-aggregation is feasible but not yet performed.
+1. **NGC 6674-included production batches** — partially resolved 2026-05-19. §3.3.2-4 and §3.3.7 report 101-galaxy values via post-aggregation through `scripts/ngc6674_exclusion_reanalysis.py` (see `data/ngc6674_exclusion_summary.txt`; max shift 0.25 pp). §3.2 (N=100 nulls) remains on the 102-galaxy sample; an analogous re-aggregation is feasible but not yet performed.
 
-2. **Inclination perturbation excludes 11 edge-on galaxies** (`Inc == 90°`). The exclusion is conservative (sin 89° = 0.9998 ≈ sin 90° = 1.000) and including the 11 galaxies would only increase the apparent stability rate. A future revision could change `< 90` to `<= 90` in the script and rerun for cosmetic completeness.
+2. **Inclination perturbation excludes 11 edge-on galaxies** (`Inc == 90°`). The exclusion is conservative (sin 89° = 0.9998 ≈ sin 90° = 1.000) and including the 11 galaxies would only increase the apparent stability rate. Cosmetic correction `< 90` → `<= 90` low-priority cleanup.
 
-3. **§3.3.6 Einasto control depends on external Paper I CSV** (`einasto_full_sample_results.csv`) that is not duplicated in this package.
+3. **§3.3.6 Einasto control depends on `einasto_full_sample_results.csv`** — included in this repo's `data/` directory as of 2026-05-19 for reproducibility.
 
-4. **Backbone shift test sample convention.** Production run used the 102-galaxy Paper I-aligned sample. As of 2026-05-19 the manuscript reports 101-galaxy numbers (NGC 6674 excluded) by post-aggregation of `backbone_shift.csv` via `scripts/ngc6674_exclusion_reanalysis.py`. The 102→101 shift is 88.5% → 88.2% (absorbing-pattern rate), 46/52 → 45/51, binomial p 1.0×10⁻⁸ → 1.8×10⁻⁸ — qualitatively unchanged.
+4. **Backbone shift test sample convention.** Production run used the 102-galaxy Paper I-aligned sample. Manuscript reports 101-galaxy numbers (NGC 6674 excluded) by post-aggregation of `backbone_shift.csv` via `scripts/ngc6674_exclusion_reanalysis.py`. The 102→101 shift is 88.5% → 88.2% (absorbing-pattern rate), 46/52 → 45/51 — qualitatively unchanged.
 
-5. **Tier 2 discrepancies above** should be resolved before submission (variant specification or value update).
+5. **Two Tier 2 discrepancies remain** (see table above). Resolve before submission.
 
 ---
 
@@ -147,7 +160,7 @@ Tier classification in §3.1.5 derives directly from this stratification.
 To verify the v1.0 outputs are reproducible from the inputs:
 
 ```bash
-cd halo_shells_paper2/scripts
+cd sparc-halo-shell-reality/scripts
 python3 antiwarp_subsample.py     # produces data/antiwarp_per_shell.csv, antiwarp_summary.txt
 python3 einasto_control.py        # post-hoc on Paper I Einasto CSV (no fitting)
 python3 shell_reality_nulls_parallel.py 100 12  # canonical N=100 → data/shell_reality_out_n100/ (~2 hr on M1 Ultra)

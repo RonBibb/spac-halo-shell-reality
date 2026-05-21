@@ -1,137 +1,165 @@
-# Project Files Manifest
+# Repository File Manifest — sparc-halo-shell-reality
 
-**Last updated:** 2026-05-19
-**Maintainer:** Ron Bibb (ronbibb@gmail.com)
-**Purpose:** Document the data and code in this project's working set, with version provenance, so future Claude sessions can navigate without re-uploading or re-asking for context.
+**Last updated:** 2026-05-21
+**Latest commit at snapshot:** `6aba87f`
+**Maintainer:** Ron Bibb (<ronbibb@gmail.com>)
+**Purpose:** Authoritative manifest of files in this repository, with provenance and version alignment, so future sessions can navigate without re-discovery.
 
 ---
 
 ## Version alignment — read this first
 
-This project is aligned with **Paper I v7.1.0** (`https://github.com/RonBibb/sparc-halo-shells`, release tag `v7.1.0`, PASP manuscript #PASP-102415, submitted 2026-05-18, awaiting referee reports as of 2026-05-19). All canonical fits, framework parameters, and headline numbers should be consistent with that release.
+This repository is aligned with **Paper I v7.1.0** (`https://github.com/RonBibb/sparc-halo-shells`, release tag `v7.1.0`, PASP manuscript #PASP-102415, submitted 2026-05-18, awaiting referee reports as of snapshot). All canonical fits, framework parameters, and headline numbers are consistent with that release.
 
-**Specifically NOT in this project (deliberately pruned):**
+**This repo's role:** The Paper II working package. Companion manuscript to Paper I; statistical organization of the localized residual structures established in Paper I.
 
-- Outputs from v6.5 or earlier framework versions
-- The reproduced ceiling-pegging analysis (separate session, separate Claude). Its 36% pegging / 1.25 slope numbers do **not** transfer to actual v7.0 fits — verified in this session as 12% pegging / 0.28 slope on r/r_vir. Treat as out-of-scope unless re-verified.
-- Earlier Paper 2 drafts that referenced backbone-invariance from v6.3.6
-- Manuscript prose drafts (these live in the working repo, not project files)
+**Not in scope:**
 
-If a file or claim references "shells at 10^11 M☉" or "median r/r_vir ≈ 0.186" or any pre-v7.0 framework, treat as legacy and ignore.
+- Paper A, B, C, D framework / k_SMBH coupling / two-component decomposition work (discontinued upstream of v7).
+- Paper 3 cap-relaxation and hierarchical Υ marginalization (separate package, in preparation; data and partial code on local Mac, not yet pushed).
+- Pre-v7 framework outputs.
 
----
-
-## File inventory
-
-### Core SPARC inputs (canonical, do not modify)
-
-- **`Rotmod_LTG/*_rotmod.dat`** (140 files) — SPARC per-galaxy rotation curve files from Lelli, McGaugh & Schombert 2016. Columns: r [kpc], V_obs [km/s], e_V_obs, V_gas, V_disk, V_bulge, SB_disk, SB_bulge.
-- **`sparc_sample123.csv`** — SPARC sample catalog. 123 rows × 25 cols. Columns: Galaxy, T, D, e_D, f_D, Inc, e_Inc, L36, e_L36, Reff, SBeff, Rdisk, SBdisk, MHI, RHI, Vflat, e_Vflat, Q, Ref, M_star, r_vir, M_halo, plus log-versions.
-- **`galaxy_classifications.csv`** — `sparc_sample123.csv` augmented with 7 classification flags (`is_dwarf`, `is_mw_like`, `is_bulge_dom`, `is_bulgeless`, `is_transitional`, `max_bulge_frac`, `has_bulge_col`). 123 rows × 32 cols. **Use this rather than `sparc_sample123.csv`** when bulge or dwarf flags are needed.
-- **`PROJECT_README.md`** — this file
-- **`sparc_shells.pdf`** — Paper I v7.1.0 manuscript
-
-### Paper I v7.1.0 canonical fit outputs
-
-- **`framework_fits.csv`** — Older two-component fits (cored-iso + Hernquist). Reference only; not used for current Paper II analysis.
-- **`nfw_freec_fits.csv`** — NFW free-concentration fits, 123 rows × 14 cols. Reference comparison.
-- **`nfw_fixedc_fits.csv`** — NFW fixed-concentration fits (DM14 prior), 123 rows × 12 cols. Reference comparison.
-- **`sparc_shells_paper.pdf`** — Paper I v7.1.0 manuscript
-
-(The v7.0 canonical fits CSV `sparc_T2-T9_canonical_fits.csv` is in the parent `sparc-halo-shells` repo, not duplicated here.)
-
-### Paper II §3.3 perturbation tests (this session, v7.0-clean)
-
-All three runs use the v7.0 production fitter (`run_canonical_fits.py`) with strict σ/r ≤ 0.4 enforcement. 20 realizations per channel.
-
-- **`upsilon_perturbation_per_galaxy.csv`** — M*/L systematic test. 2,040 rows (102 galaxies × 20 realizations, 39 fits failed on V_obs² > V_bar² mask after Υ rescaling). Per-galaxy modal n_shells matches canonical in 95.1% of galaxies. Per-fit n_shells matches in 86.2%.
-- **`upsilon_perturbation_log.txt`** — Run log: parameters, seed (20260510), per-realization Υ values drawn, progress trace. Documents that the fitter was the v7.0 production code at `sparc-halo-shells/scripts/run_canonical_fits.py`.
-- **`distance_perturbation_per_galaxy.csv`** — Distance systematic test. 2,040 rows. Each galaxy draws D' from N(D, e_D) using SPARC catalog uncertainties. Per-galaxy mode-match: 94.1%. Per-fit match: 89.6%.
-- **`distance_perturbation_log.txt`** — Run log including per-galaxy fractional uncertainty distribution: median 8.7%, mean 13.8%, max 132% (one dwarf with e_D > D).
-- **`inclination_perturbation_per_galaxy.csv`** — Inclination systematic test. 1,820 rows (91 galaxies × 20 realizations; 11 edge-on galaxies at Inc=90° excluded by `0 < Inc < 90` check). Per-galaxy mode-match: 98.9%. Per-fit match: 95.7%.
-- **`inclination_perturbation_log.txt`** — Run log including per-galaxy e_Inc distribution (median 3.0°, mean 3.85°, max 10°) and Inc range (30-89°).
-
-### Paper II §3.3.5 anti-warp clean subsample (this session, v7.0-clean)
-
-- **`antiwarp_per_shell.csv`** — Per-shell catalog with all classification flags. 67 shells across 51 galaxies (NGC6674 excluded as degenerate, both shells collapsed to r₁=r₂=3.12 kpc with both masses pegged at the upper bound). Columns: Galaxy, T, Q, n_total, position (inner/outer), r_sh_kpc, M_sh, sigma_sh_kpc, sigma_over_r, r_over_RHI, V_gas_at_kms, V_disk_at_kms, V_bulge_at_kms, is_disk_dominated, is_inner, is_bulge_dom, is_bulgeless.
-- **`antiwarp_summary.txt`** — Formatted comparison of full sample (67 shells) vs clean anti-warp subsample (25 shells). Headline patterns survive: M ∝ r^0.66 vs full 0.76; σ ∝ r^0.93 vs 1.04; σ/r 0.316 vs 0.275; ρ_per_T -0.667 vs -0.762; bulge OR 2.49 vs 3.67.
-- **`antiwarp_log.txt`** — Run log documenting paths used (canonical CSV, classifications, SPARC catalog, rotmod dir) and successful run completion. Also captures earlier failed runs against wrong rotmod paths — useful as a reminder that the working directory must contain the SPARC rotmod files.
-
-### Paper II §3.2 null tests (this session, v7.0-clean)
-
-Two null channels: scramble (within-galaxy DM-residual permutation, preserves Burkert backbone) and permute (cross-radius V_obs permutation within galaxy, destroys backbone). 20 realizations each.
-
-- **`nulltest_per_realization.csv`** — Per-realization summary. 40 rows (2 null types × 20 realizations). Columns include null_type, real_idx, rho_per_T, rho_per_galaxy, n_shell_bearing, plus per-T shell-bearing fractions.
-- **`nulltest_per_galaxy.csv`** — Per-galaxy fits across all realizations. 4,080 rows (2 null types × 20 realizations × 102 galaxies). Columns: null_type, real_idx, Galaxy, T, n_shells, n_shells_BIC, plus chi²/BIC values.
-- **`nulltest_summary.txt`** — Formatted summary. Headline: scramble null ρ_per_T = -0.197 ± 0.146 (real = -0.833, z = -4.36); permute null ρ_per_T = +0.375 ± 0.232 (real = -0.833, z = -5.21). Both reject random-structure hypothesis at 0/20 realizations.
-
-### Paper I v7.0/v7.1.0 framework comparison (this session)
-
-- **`backbone_shift.csv`** — Burkert vs Einasto backbone-invariance comparison from Paper I §3.6. 102 galaxies. Used to verify Paper I's claim that morphology gradient survives backbone change (90/102 classification agreement).
-- **`backbone_shift_summary.txt`** — Formatted summary of the backbone comparison.
+If a file or claim references "shells at 10¹¹ M☉," "median r/r_vir ≈ 0.186," or any pre-v7.0 framework, treat as legacy and ignore.
 
 ---
 
-## Sample size conventions
+## Root-level documentation
 
-These conventions appear in different places and need to be tracked consistently:
-
-- **102 galaxies** = the v7.0 canonical sample (T = 2–9, after SPARC-quality cuts in Paper I)
-- **52 galaxies** = shell-bearing fraction in Paper I and §3.2 null tests (NGC6674 included as shell-bearing)
-- **51 galaxies / 67 shells** = the per-shell working set in `antiwarp_per_shell.csv` (NGC6674 excluded as degenerate)
-- **91 galaxies × 20 reps = 1,820 rows** = inclination perturbation (edge-on Inc=90° galaxies excluded)
-
-If recomputing the morphology gradient ρ_per_T:
-- With NGC6674 included (Paper I convention): ρ_per_T = -0.833
-- Without NGC6674 (antiwarp convention): ρ_per_T = -0.762
-
-Both are valid v7.0 numbers. **Paper II should use the Paper I convention (include NGC6674) for the morphology gradient** to align headline numbers with the parent paper.
-
----
-
-## Quick-reference headline numbers
-
-For Paper II writing, these v7.0/v7.1.0-clean numbers are the canonical reference:
-
-| Quantity | Value | Source file |
-|---|---|---|
-| Total sample | 102 galaxies | `galaxy_classifications.csv` (T=2-9 subset) |
-| Shell-bearing rate | 52/102 = 51.0% | `nulltest_summary.txt` |
-| 1-shell galaxies | 26 (Paper I) / 35 (antiwarp, NGC6674 excl.) | derived |
-| 2-shell galaxies | 26 (Paper I) / 16 (antiwarp, NGC6674 excl.) | derived |
-| ρ_per_T (Paper I convention) | -0.833 | `nulltest_summary.txt` |
-| ρ_per_galaxy | -0.296 | `nulltest_summary.txt` |
-| M slope (vs r/kpc) | 0.76 | `antiwarp_summary.txt` |
-| σ slope (vs r/kpc) | 1.04 | `antiwarp_summary.txt` |
-| σ/r median | 0.275 | `antiwarp_summary.txt` |
-| Bulge OR | 3.67 | `antiwarp_summary.txt` |
-| Scramble null z (ρ_per_T) | -4.36 | computed from `nulltest_summary.txt` |
-| Permute null z (ρ_per_T) | -5.21 | computed from `nulltest_summary.txt` |
-| M*/L perturbation per-galaxy match | 95.1% | `upsilon_perturbation_per_galaxy.csv` |
-| Distance perturbation per-galaxy match | 94.1% | `distance_perturbation_per_galaxy.csv` |
-| Inclination perturbation per-galaxy match | 98.9% | `inclination_perturbation_per_galaxy.csv` |
+| File | Purpose |
+| --- | --- |
+| `README.md` | Package overview, structure, reproduction guide |
+| `STATUS.md` | Single-source-of-truth for package state; submission checklist |
+| `VALIDATION_STATUS.md` | Numerical-claims-to-source mapping; Tier 2 discrepancy tracking |
+| `DATA_PROVENANCE.md` | Per-CSV producer/inputs/schema/citation trail |
+| `ALIGNMENT_AUDIT.md` | Paper I ↔ Paper II numerical alignment audit |
+| `PROJECT_README.md` | This file — repository file manifest |
+| `LICENSE` | MIT License (data and code) |
+| `requirements.txt` | Python dependencies |
+| `shell_reality_nulls_parallel.py` | Root-level convenience copy of `scripts/shell_reality_nulls_parallel.py` |
 
 ---
 
-## Known caveats
+## Manuscript (`source/`)
 
-1. **Mass ceiling at 5×10¹⁰ M☉ is binding for ~12% of v7.0 shells** (8/67 in the antiwarp set, within 0.05 dex of the upper bound). The kpc M-r slope changes from 0.76 to 0.67 when these are removed. Acknowledge in §2 (methods) or §4 (limitations); do not treat as a major artifact since binary classification and morphology gradient are unaffected.
+| File | Description |
+| --- | --- |
+| `source/paper2.md` | Canonical Markdown manuscript source (~13,300 words drafted). Latest edit: 2026-05-21 (§3.1.2 mass-cap acknowledgment paragraph added in commit `a86a0e5`). |
+| `source/paper2_consolidated.pdf` | Compiled reading PDF (~221 KB). Reflects current state of `paper2.md`. |
+| `source/paper1_v7.1.0.pdf` | Paper I v7.1.0 manuscript PDF (reference). |
 
-2. **Inclination perturbation excludes 11 edge-on galaxies** (Inc=90° exactly). Caveat is minor (sin(89°)/sin(90°) ≈ 1.000) but should be mentioned in §3.3.4. To include these, change `< 90` to `<= 90` in `inclination_perturbation.py` and rerun (~9 minutes).
-
-3. **NGC6674 has a degenerate v7.0 fit** (both shells at r=3.12 kpc, both masses pegged at upper bound). Paper I includes it as shell-bearing in the binary classification; Paper II's per-shell analyses (antiwarp, scaling relations) exclude it. Document this convention explicitly in any new analysis script.
-
-4. **Null tests use 20 realizations**, giving an empirical p-floor of 1/20 = 0.05. Effective significance comes from z-scores (-4.36, -5.21), not empirical p-values. If the journal asks for tighter p-values, more realizations would be needed (each takes ~10 min wall clock per realization).
+LaTeX conversion to AASTeX 7.0.1 for PASP submission is pending.
 
 ---
 
-## Adding to this manifest
+## Data files (`data/`)
 
-When adding new files to the project, update this manifest with:
-- File name
-- Source (script/session that produced it, with date)
-- Row × column count
-- One-sentence description
-- Any version/convention caveats
+### Paper II output CSVs (this repo's analyses)
 
-Files added without manifest updates will be hard for future Claude sessions to interpret.
+| File | Rows | Description |
+| --- | --- | --- |
+| `antiwarp_per_shell.csv` | 67 | §3.3.5 per-shell catalog, NGC 6674-excluded |
+| `antiwarp_summary.txt` | — | §3.3.5 formatted summary |
+| `backbone_shift.csv` | 102 | §3.3.7 backbone parameters at n=0/1/2 per galaxy |
+| `backbone_shift_summary.txt` | — | §3.3.7 population-level summary |
+| `upsilon_perturbation_per_galaxy.csv` | 2,040 | §3.3.2 Υ perturbation (102 × 20 realizations) |
+| `distance_perturbation_per_galaxy.csv` | 2,040 | §3.3.3 distance perturbation |
+| `inclination_perturbation_per_galaxy.csv` | 1,820 | §3.3.4 inclination perturbation (91 × 20; 11 edge-on excluded) |
+| `nulltest_per_realization.csv` | 40 | §3.2 N=20 baseline (superseded by N=100) |
+| `nulltest_per_galaxy.csv` | 4,080 | §3.2 N=20 baseline per-galaxy |
+| `nulltest_summary.txt` | — | §3.2 N=20 baseline summary |
+| `per_realization.csv`, `per_galaxy.csv`, `summary.txt` | — | Byte-identical duplicates of `nulltest_*` under legacy naming |
+| `shell_reality_out_n100/per_realization.csv` | 200 | **Canonical N=100 for §3.2** |
+| `shell_reality_out_n100/per_galaxy.csv` | 20,400 | **Canonical N=100 per-galaxy** |
+| `shell_reality_out_n100/summary.txt` | — | **Canonical N=100 summary** |
+| `ngc6674_exclusion_summary.txt` | — | §2.3 retirement: 102-gal vs 101-gal headlines for §3.3.2-4 and §3.3.7 |
+
+### SPARC and Paper I inputs (sourced; not produced here)
+
+| File | Description |
+| --- | --- |
+| `sparc_sample123.csv` | SPARC catalog metadata, 123 rows |
+| `galaxy_classifications.csv` | SPARC + bulge/dwarf/MW-like classification flags, 123 rows |
+| `nfw_fixedc_fits.csv` | NFW fixed-c reference fits |
+| `einasto_full_sample_results.csv` | Paper I Einasto fits (copied for §3.3.6 reproducibility, 2026-05-19) |
+| `einasto_robustness_results.csv` | Paper I Einasto robustness fits |
+| `fig_3_3_6_einasto_comparison.pdf` (in `data/`) | *Historical placeholder; canonical copy is in `figures/` as of 2026-05-21* |
+| `Rotmod_LTG/*_rotmod.dat` | 175 SPARC per-galaxy rotation curve files (Lelli, McGaugh & Schombert 2016) |
+
+### Externally supplied (not in repo)
+
+- `sparc_T2-T9_canonical_fits.csv` — Paper I canonical fits CSV; must be copied from the Paper I repository at v7.1.0 into `data/` before running scripts. See `DATA_PROVENANCE.md` for details.
+
+---
+
+## Scripts (`scripts/`)
+
+All scripts depend on Paper I's `run_canonical_fits.py` or its components for the framework. The Paper I canonical fits CSV must be supplied externally.
+
+| File | Section | Purpose |
+| --- | --- | --- |
+| `antiwarp_subsample.py` | §3.3.5, §3.1.2-4 | Anti-warp clean subsample analysis; produces `antiwarp_per_shell.csv` |
+| `backbone_shift_test.py` | §3.3.7 | Backbone-shift production runner |
+| `shell_reality_nulls.py` | §3.2 | Null test runner (serial), 519 lines |
+| `shell_reality_nulls_parallel.py` | §3.2 | Null test runner (parallel), byte-identical to serial |
+| `upsilon_perturbation.py` | §3.3.2 | M*/L perturbation runner, 514 lines |
+| `distance_perturbation.py` | §3.3.3 | Distance perturbation runner, 570 lines |
+| `inclination_perturbation.py` | §3.3.4 | Inclination perturbation runner, 570 lines |
+| `run_canonical_fits.py` | (framework) | Paper I production fitter, copied from Paper I; 548 lines |
+| `einasto_control.py` | §3.3.6 | Post-hoc analysis on Paper I's Einasto fits |
+| `make_figures.py` | (all figures) | Generates all 13 manuscript figures from `data/` |
+| `ngc6674_exclusion_reanalysis.py` | §2.3 | §2.3 retirement: re-aggregates §3.3.2-4 + §3.3.7 with NGC 6674 excluded |
+
+---
+
+## Logs (`logs/`)
+
+| File | Purpose |
+| --- | --- |
+| `antiwarp_log.txt` | Run log for `antiwarp_subsample.py` |
+| `upsilon_perturbation_log.txt` | Run log for `upsilon_perturbation.py` |
+| `distance_perturbation_log.txt` | Run log for `distance_perturbation.py` |
+| `inclination_perturbation_log.txt` | Run log for `inclination_perturbation.py` |
+
+---
+
+## Figures (`figures/`)
+
+All 13 manuscript figures generated. Naming convention: `fig_<section>_<title>.pdf`.
+
+| Figure | File | Cited |
+| --- | --- | --- |
+| 3.1.1 | `fig_3_1_1_bulge_correlation.pdf` | §3.1.1 |
+| 3.1.2 | `fig_3_1_2_scaling_relations.pdf` | §3.1.2 |
+| 3.1.3 | `fig_3_1_3_sigma_over_r_quartile.pdf` | §3.1.3 |
+| 3.1.4 | `fig_3_1_4_inner_vs_outer.pdf` | §3.1.4 |
+| 3.2.1 | `fig_3_2_1_scramble_null.pdf` | §3.2.1 |
+| 3.2.2 | `fig_3_2_2_permute_null.pdf` | §3.2.2 |
+| 3.3.1 | `fig_3_3_1_disk_dynamical_scales.pdf` | §3.3.1 |
+| 3.3.2 | `fig_3_3_2_upsilon_perturbation.pdf` | §3.3.2 |
+| 3.3.3 | `fig_3_3_3_distance_perturbation.pdf` | §3.3.3 |
+| 3.3.4 | `fig_3_3_4_inclination_perturbation.pdf` | §3.3.4 |
+| 3.3.5 | `fig_3_3_5_antiwarp_clean.pdf` | §3.3.5 |
+| 3.3.6 | `fig_3_3_6_einasto_comparison.pdf` | §3.3.6 (placed 2026-05-21) |
+| 3.3.7 | `fig_3_3_7_backbone_shift.pdf` | §3.3.7 |
+
+---
+
+## What's externally referenced but not in repo
+
+- **Paper I canonical fits CSV** (`sparc_T2-T9_canonical_fits.csv`): from `RonBibb/sparc-halo-shells` at v7.1.0. Required by all scripts.
+- **Paper 3 cap-relaxation code and outputs:** in preparation on local Mac. Not yet pushed to any repo. Will live in its own repository when ready.
+- **LaTeX manuscript source** (`paper2.tex` and `references.bib`): to be generated from `paper2.md` at submission time.
+
+---
+
+## Notes for future-Claude on session start
+
+1. **Read `STATUS.md` first.** It is the single source of truth for package state and current open items.
+2. **The 102 vs 101 distinction matters.** §2.3 of the manuscript discloses two conventions; cross-check which one applies when discussing headline numbers.
+3. **For numerical claims about the paper itself, check `source/paper2.md` directly** rather than reasoning from earlier values in conversation. The manuscript is canonical; intermediate documents (including these .md files) can lag.
+4. **Cap acknowledgment is in §3.1.2.** Mass cap (5×10¹⁰ M☉) is treated as definitional in Paper II; bound-relaxation deferred to Paper 3 (model refinement: cap relaxation paired with hierarchical Υ marginalization).
+5. **Excluded work.** Do not invoke Paper A/B/C/D, framework / k_SMBH coupling, or two-component decomposition content. That work is dead-end and shouldn't appear in current analyses or recommendations.
+
+---
+
+*If the file list at the top of a session disagrees with this README, the file list wins for what's loaded — but flag the discrepancy so the README can be updated.*

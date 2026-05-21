@@ -1,17 +1,17 @@
-# halo_shells_paper2 v1.0
+# halo_shells_paper2
 
 **Statistical Organization of Localized Residual Structure in SPARC Rotation Curves**
 
 Author: Ron Bibb (<ronbibb@gmail.com>)
 ORCID: 0009-0004-1153-2464
-Version: v1.0-draft (2026-05-19 snapshot)
+Version: v1.0-draft (2026-05-21 snapshot)
 Target journal: PASP (companion to Paper I)
 
 ---
 
 ## What is this?
 
-This package contains the manuscript, data, producer scripts, and documentation for Paper II in the SPARC halo-shells program. Paper II is a companion to Paper I (Bibb 2026, PASP manuscript #PASP-102415, awaiting referee reports as of 2026-05-19; repository at https://github.com/RonBibb/sparc-halo-shells, release tag v7.1.0).
+This package contains the manuscript, data, producer scripts, and documentation for Paper II in the SPARC halo-shells program. Paper II is a companion to Paper I (Bibb 2026, PASP manuscript #PASP-102415, awaiting referee reports as of 2026-05-21; repository at https://github.com/RonBibb/sparc-halo-shells, release tag v7.1.0).
 
 **Scope of Paper II.** Paper I established that a Burkert backbone augmented by zero, one, or two BIC-selected Gaussian shells improves rotation curve fits in 91/102 SPARC galaxies and that shell-bearing rate decreases monotonically with morphological lateness (ρ_per_T = -0.833, p = 0.010 on the Paper I-aligned 102-galaxy sample). Paper II asks whether the resulting shell population constitutes a coherent statistical phenomenon — internally organized, robust to artifact channels, and distinguishable from random fitting behavior — or whether it is a constellation of unrelated detections sharing a fitting framework.
 
@@ -28,7 +28,7 @@ Paper II's primary analyses use a **101-galaxy sample (NGC 6674 excluded)** due 
 
 3. **The smooth profile cannot natively absorb the localized structure.** When the Paper I framework is constrained to n_shells = 0, the Burkert backbone systematically deforms (ρ₀ rises by a factor of ≈4.2; scale radius a contracts by a factor of ≈2.1) in 45 of 51 (88.2%) shell-bearing galaxies (101-galaxy convention, via post-aggregation of the 102-galaxy production run). The non-shell-bearing control population does not show this systematic deformation. This disfavors the strong form of the basis-function alternative, in which shells would be decoupled from backbone parameters (§3.3.7).
 
-4. **Two destructive nulls** (within-galaxy residual scrambling, cross-radius velocity permutation; 100 realizations each) fail to reproduce the morphology gradient with asymmetric failure modes: residual scrambling suppresses the gradient (the real-data ρ is reached or exceeded in 2/100 realizations, empirical *p* = 0.02), while cross-radius permutation over-produces detections and reverses the gradient sign (0/100 realizations reach the real-data value). The asymmetric failure direction is the strongest single piece of evidence against a generic-basis-function origin (§3.2).
+4. **Two destructive nulls** (within-galaxy residual scrambling, cross-radius velocity permutation; 100 realizations each) fail to reproduce the morphology gradient with asymmetric failure modes: residual scrambling suppresses the gradient (empirical p = 2/100), while cross-radius permutation over-produces detections and reverses the gradient sign (0/100). The asymmetric failure direction is the strongest single piece of evidence against a generic-basis-function origin (§3.2).
 
 5. **Shell selections are stable** under realistic perturbations to mass-to-light ratio (95.1% per-galaxy mode-recovery), distance (94.1%), and inclination (98.9%).
 
@@ -36,47 +36,58 @@ Paper II's primary analyses use a **101-galaxy sample (NGC 6674 excluded)** due 
 
 The shell population is not consistent with random fitting behavior, baryonic input mismodeling, disk dynamical coincidence, warp-related velocity-field artifacts, or single-backbone-family flexibility as primary drivers within the channels and amplitudes tested. Whether the structures correspond to genuine localized halo mass features or to other forms of organized galactic dynamics remains an open physical question.
 
+---
+
+## Cap acknowledgment
+
+Paper II treats both the σ/r ≤ 0.4 cap and the mass cap at 5×10¹⁰ M☉ as **definitional constraints** that preserve the "localized" regime distinct from smooth-halo descriptions. §3.1.2 discloses that 8 of 67 shells (11.9%) lie within 0.05 dex of the mass bound, and that the cap-clear subset (n = 59) shows essentially unchanged scaling slopes — the cap is binding for a subset of fits but does not drive the population-level scaling relations. Cap-relaxation effects are deferred to Paper 3, which refines the model by relaxing both caps and re-fitting under hierarchical Υ marginalization in the same pass.
+
+---
+
 ## Relationship to Paper I
 
-This package is **not standalone** with respect to Paper I's canonical fits or Einasto comparison fits. Paper II uses:
+This package is **not standalone** with respect to Paper I's canonical fits. Paper II uses:
 
-- Paper I's Paper I (v7.1.0) canonical fit catalog (`sparc_T2-T9_canonical_fits.csv`) as the primary input to all per-shell analyses.
-- Paper I's Einasto-backbone fit catalog (`einasto_full_sample_results.csv`) as the input to §3.3.6.
+- Paper I's canonical fit catalog (`sparc_T2-T9_canonical_fits.csv`) as the primary input to all per-shell analyses. **Not duplicated here**; lives in the Paper I repository at https://github.com/RonBibb/sparc-halo-shells/releases/tag/v7.1.0.
+- Paper I's Einasto-backbone fit catalog (`einasto_full_sample_results.csv`) as the input to §3.3.6. **Copied into this repo's `data/` directory** for reproducibility convenience (added 2026-05-19).
 
-Both catalogs live in the Paper I repository (`https://github.com/RonBibb/sparc-halo-shells/releases/tag/v7.1.0`, in `data/`) and are not duplicated here to avoid drift between the two papers. Reproducing Paper II's analyses requires:
+Reproducing Paper II's analyses requires:
 
 1. Cloning the Paper I package at tag `v7.1.0`
-2. Placing `data/sparc_T2-T9_canonical_fits.csv` and `data/einasto_full_sample_results.csv` from Paper I into this package's `data/` directory (or symlinking)
+2. Placing `data/sparc_T2-T9_canonical_fits.csv` from Paper I into this package's `data/` directory
 3. Then running the Paper II scripts
 
 The Paper I PDF (`source/paper1_v7.1.0.pdf`) is included for reference.
 
+---
+
 ## What this package contains
 
 ```
-halo_shells_paper2_v1.0/
+sparc-halo-shell-reality/
 ├── README.md                          (this file)
 ├── STATUS.md                          single-source-of-truth for package state (read first)
 ├── VALIDATION_STATUS.md               version alignment, validation tracking
 ├── DATA_PROVENANCE.md                 CSV-to-script-to-section traceability
 ├── ALIGNMENT_AUDIT.md                 audit of Paper I ↔ Paper II numerical alignment
-├── PROJECT_README.md                  project file manifest (preserved)
+├── PROJECT_README.md                  repo file manifest
 ├── LICENSE                            MIT License
 ├── requirements.txt                   Python dependencies
+├── shell_reality_nulls_parallel.py    (root-level convenience copy of parallel runner)
 │
 ├── source/
-│   ├── paper2.md                      Markdown manuscript source (canonical)
-│   ├── paper2_consolidated.pdf        Consolidated reading PDF (manuscript + appendices)
+│   ├── paper2.md                      Markdown manuscript source (canonical, ~13,300 words)
+│   ├── paper2_consolidated.pdf        Consolidated reading PDF
 │   └── paper1_v7.1.0.pdf              Paper I reference PDF
 │
 ├── data/
 │   ├── Rotmod_LTG/                    SPARC rotmod files (175 galaxies; 102 in T=2-9 sample)
 │   ├── sparc_sample123.csv            SPARC catalog metadata
 │   ├── galaxy_classifications.csv     Augmented catalog with bulge/dwarf/MW-like flags
-│   ├── nfw_fixedc_fits.csv            NFW fixed-concentration reference fits (Paper II §1 context)
+│   ├── nfw_fixedc_fits.csv            NFW fixed-concentration reference fits
 │   │
 │   ├── antiwarp_per_shell.csv         §3.3.5 per-shell catalog (67 shells; NGC 6674-excluded)
-│   ├── antiwarp_summary.txt           §3.3.5 statistical comparison (NGC 6674-excluded)
+│   ├── antiwarp_summary.txt           §3.3.5 statistical comparison
 │   │
 │   ├── backbone_shift.csv             §3.3.7 backbone parameters at n=0/1/2 per galaxy
 │   ├── backbone_shift_summary.txt     §3.3.7 population-level summary
@@ -85,19 +96,22 @@ halo_shells_paper2_v1.0/
 │   ├── distance_perturbation_per_galaxy.csv   §3.3.3 distance perturbation
 │   ├── inclination_perturbation_per_galaxy.csv §3.3.4 inclination perturbation
 │   │
-│   ├── nulltest_per_realization.csv   §3.2 N=20 baseline per-realization (40 rows)
-│   ├── nulltest_per_galaxy.csv        §3.2 N=20 baseline per-galaxy fits (4080 rows)
-│   ├── nulltest_summary.txt           §3.2 N=20 baseline summary
-│   ├── per_realization.csv            duplicate of nulltest_per_realization.csv (legacy naming)
-│   ├── per_galaxy.csv                 duplicate of nulltest_per_galaxy.csv (legacy naming)
-│   ├── summary.txt                    duplicate of nulltest_summary.txt (legacy naming)
+│   ├── nulltest_per_realization.csv   §3.2 N=20 baseline (superseded; see shell_reality_out_n100)
+│   ├── nulltest_per_galaxy.csv        §3.2 N=20 baseline
+│   ├── nulltest_summary.txt           §3.2 N=20 baseline
+│   ├── per_realization.csv            duplicate of nulltest_per_realization.csv (legacy)
+│   ├── per_galaxy.csv                 duplicate of nulltest_per_galaxy.csv (legacy)
+│   ├── summary.txt                    duplicate of nulltest_summary.txt (legacy)
+│   │
+│   ├── einasto_full_sample_results.csv     Paper I Einasto fits (for §3.3.6 reproducibility)
+│   ├── einasto_robustness_results.csv      Paper I Einasto robustness fits
+│   │
+│   ├── ngc6674_exclusion_summary.txt  §2.3 retirement: 102-gal vs 101-gal comparison
 │   │
 │   └── shell_reality_out_n100/        §3.2 N=100 outputs (canonical for §3.2 numerics)
 │       ├── per_realization.csv        200 rows (100 scramble + 100 permute)
 │       ├── per_galaxy.csv             20,400 rows
 │       └── summary.txt                empirical p = 2/100 scramble, 0/100 permute
-│
-│   ngc6674_exclusion_summary.txt      §2.3 retirement: 102-galaxy vs 101-galaxy headline comparison for §3.3.2-4 and §3.3.7 (max shift 0.25 pp)
 │
 ├── scripts/
 │   ├── antiwarp_subsample.py            §3.3.5 analysis
@@ -109,8 +123,8 @@ halo_shells_paper2_v1.0/
 │   ├── inclination_perturbation.py      §3.3.4 perturbation runner
 │   ├── run_canonical_fits.py            Paper I production fitter (copied from Paper I)
 │   ├── einasto_control.py               §3.3.6 post-hoc analysis on Paper I Einasto fits
-│   ├── make_figures.py                  generates all 11 manuscript figures from data/
-│   └── ngc6674_exclusion_reanalysis.py  §2.3 retirement: re-aggregates §3.3.2-4 + §3.3.7 with NGC 6674 excluded
+│   ├── make_figures.py                  generates all 13 manuscript figures from data/
+│   └── ngc6674_exclusion_reanalysis.py  §2.3 retirement: re-aggregates §3.3.2-4 + §3.3.7
 │
 ├── logs/
 │   ├── antiwarp_log.txt
@@ -118,20 +132,31 @@ halo_shells_paper2_v1.0/
 │   ├── distance_perturbation_log.txt
 │   └── inclination_perturbation_log.txt
 │
-└── figures/                            (11 PDFs: 9 generated, 2 stubs pending Paper I data)
-    ├── fig_3_1_*.pdf                   4 figures: §3.1 organized structure
-    ├── fig_3_2_*.pdf                   2 figures: §3.2 null distributions (N=100)
-    ├── fig_3_3_1..5_*.pdf              5 figures: §3.3 robustness tests
-    └── (fig_3_3_6, fig_3_3_7 require Paper I einasto + backbone-shift data; stubs in make_figures.py)
+└── figures/                            (13 PDFs, all generated)
+    ├── fig_3_1_1_bulge_correlation.pdf
+    ├── fig_3_1_2_scaling_relations.pdf
+    ├── fig_3_1_3_sigma_over_r_quartile.pdf
+    ├── fig_3_1_4_inner_vs_outer.pdf
+    ├── fig_3_2_1_scramble_null.pdf
+    ├── fig_3_2_2_permute_null.pdf
+    ├── fig_3_3_1_disk_dynamical_scales.pdf
+    ├── fig_3_3_2_upsilon_perturbation.pdf
+    ├── fig_3_3_3_distance_perturbation.pdf
+    ├── fig_3_3_4_inclination_perturbation.pdf
+    ├── fig_3_3_5_antiwarp_clean.pdf
+    ├── fig_3_3_6_einasto_comparison.pdf
+    └── fig_3_3_7_backbone_shift.pdf
 ```
+
+---
 
 ## Reproducing the Paper II results
 
 ### Prerequisites
 
 - Python 3.10+ with numpy, scipy, pandas, matplotlib (see `requirements.txt`)
-- Paper I package at tag v7.1.0 (for the canonical fits CSV and the Einasto fits CSV)
-- Approximately 60-90 minutes of CPU time on a modern Apple Silicon Mac for the full perturbation + null + backbone-shift suite
+- Paper I package at tag v7.1.0 (for the canonical fits CSV)
+- Approximately 60–90 minutes of CPU time on a modern Apple Silicon Mac for the full perturbation + null + backbone-shift suite
 
 ### Setup
 
@@ -142,21 +167,21 @@ halo_shells_paper2_v1.0/
    git checkout v7.1.0
    ```
 
-2. Copy Paper I's catalogs into Paper II's data directory:
+2. Copy Paper I's canonical catalog into Paper II's data directory:
    ```
-   cp sparc-halo-shells/data/sparc_T2-T9_canonical_fits.csv halo_shells_paper2_v1.0/data/
-   cp sparc-halo-shells/data/einasto_full_sample_results.csv halo_shells_paper2_v1.0/data/
+   cp sparc-halo-shells/data/sparc_T2-T9_canonical_fits.csv sparc-halo-shell-reality/data/
    ```
+   (`einasto_full_sample_results.csv` is already included in this repo for §3.3.6 reproducibility.)
 
 3. Install dependencies:
    ```
-   cd halo_shells_paper2_v1.0
+   cd sparc-halo-shell-reality
    pip install -r requirements.txt
    ```
 
 ### Running the analyses
 
-From `halo_shells_paper2_v1.0/scripts/`:
+From `sparc-halo-shell-reality/scripts/`:
 
 ```bash
 # Pure-analysis scripts (seconds; no fitting)
@@ -172,20 +197,20 @@ python3 distance_perturbation.py                # ~10-15 min
 python3 inclination_perturbation.py             # ~10-15 min
 
 # Figure generation (seconds; no fitting)
-python3 make_figures.py --all                   # all 11 figures to ../figures/
+python3 make_figures.py --all                   # all 13 figures to ../figures/
 python3 make_figures.py --figure 3.1.1,3.2.1    # selective regeneration
 python3 make_figures.py --list                  # show all figures
 ```
-
-Outputs are written to `data/` with the canonical filenames listed above.
 
 ### Verifying outputs
 
 Each script prints a summary of the headline statistics on completion. Cross-check against:
 - `data/antiwarp_summary.txt` (anti-warp results)
 - `data/backbone_shift_summary.txt` (backbone-shift results)
-- `data/nulltest_summary.txt` (null test z-scores)
+- `data/shell_reality_out_n100/summary.txt` (N=100 null test z-scores)
 - The per-galaxy CSVs for perturbation results
+
+---
 
 ## Status
 
@@ -193,20 +218,25 @@ This package is **release v1.0-draft**, suitable for internal review and figure 
 
 | Component | Status |
 | --- | --- |
-| Manuscript text | ✅ Drafted; ~12,900 words |
+| Manuscript text | ✅ Drafted; ~13,300 words |
 | Markdown source | ✅ Canonical; ongoing edits |
-| Data CSVs (Paper II outputs) | ✅ DONE (10 CSVs in `data/` plus `shell_reality_out_n100/`) |
+| Acknowledgments | ✅ Drafted (with AI disclosure) |
+| Data CSVs (Paper II outputs) | ✅ DONE (15 CSVs in `data/` plus `shell_reality_out_n100/`) |
 | SPARC inputs | ✅ DONE (Rotmod_LTG/, classifications, sparc_sample123) |
 | Producer scripts | ✅ DONE (11 scripts in `scripts/`) |
 | Logs | ✅ Captured for all perturbation/antiwarp runs |
-| Figures | ✅ 9 of 11 PDFs in `figures/` (fig_3_3_6 Einasto and fig_3_3_7 backbone-shift await Paper I data) |
-| Bibliography | ⏳ Skeleton entries; full DOIs at submission |
+| Figures | ✅ All 13 PDFs in `figures/` |
+| §3.1.2 mass-cap acknowledgment | ✅ DONE (commit `a86a0e5`, 2026-05-21) |
+| Bibliography | ⏳ Citation hooks; full DOIs pending |
+| Tier 2 discrepancy resolution | ⏳ 2 of 4 resolved (Wilcoxon, σ count); 2 remain (KS D, Bulge OR) |
+| Cover letter | ⏳ Not started |
+| LaTeX conversion | ⏳ Pending (md → AASTeX 7.0.1) |
 | Paper I canonical CSV | ❌ EXTERNAL — see "Relationship to Paper I" |
-| Paper I Einasto CSV | ❌ EXTERNAL — see "Relationship to Paper I" |
-| NGC 6674 reruns of §3.3.2-4/§3.3.7 | ✅ DONE 2026-05-19 via aggregation (§2.3 exception list mostly retired; data/ngc6674_exclusion_summary.txt) |
-| Tier 2 discrepancy resolution | ⏳ Pending (documented in VALIDATION_STATUS.md) |
+| Paper I citation update | ⏳ Blocked on Paper I PASP decision |
 | Zenodo deposit | ⏳ Pending |
 | PASP submission | ⏳ Pending |
+
+---
 
 ## Citation
 
