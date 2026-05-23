@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: "If you use this software or data, please cite as below."
+title: "sparc-halo-shell-reality: Statistical organization of localized residual structure in SPARC rotation curves (Paper II companion)"
+abstract: >-
+  Companion software and data products for Paper II of the halo_shells series.
+  Contains the manuscript source, the per-shell analysis pipeline, perturbation
+  and null-test scripts, anti-warp clean subsample fits, Einasto and gNFW
+  backbone-family control fits, and all derived per-galaxy and per-shell CSVs
+  for the 102-galaxy SPARC T=2-9 sample.
+type: software
+authors:
+  - family-names: Bibb
+    given-names: Ron
+    orcid: "https://orcid.org/0009-0004-1153-2464"
+    email: ronbibb@gmail.com
+version: 1.0.0
+date-released: 2026-05-23
+repository-code: "https://github.com/RonBibb/sparc-halo-shell-reality"
+license: MIT
+keywords:
+  - galaxy rotation curves
+  - SPARC catalog
+  - dark matter halos
+  - localized residual structure
+  - shell-bearing galaxies
+  - Burkert profile
+  - Einasto profile
+  - generalized NFW profile
+  - astrostatistics
+  - Bayesian information criterion
+references:
+  - type: article
+    title: "Localized Residual Structure in SPARC Rotation Curves: A Burkert-Backbone Model with BIC-Selected Shells"
+    authors:
+      - family-names: Bibb
+        given-names: Ron
+        orcid: "https://orcid.org/0009-0004-1153-2464"
+    year: 2026
+    notes: "Paper I of the halo_shells series; companion repository sparc-halo-shells (Zenodo concept DOI 10.5281/zenodo.20072882)"

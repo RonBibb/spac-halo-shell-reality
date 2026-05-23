@@ -1,0 +1,41 @@
+{
+  "title": "sparc-halo-shell-reality: Statistical organization of localized residual structure in SPARC rotation curves (Paper II companion)",
+  "description": "<p>Companion software, data, and manuscript source for Paper II of the halo_shells research series. Paper II characterizes the per-shell-level organization of the localized residual structures identified in Paper I, and consolidates artifact-channel robustness tests across stellar mass-to-light perturbations, distance perturbations, inclination perturbations (including edge-on reflection treatment), an anti-warp clean subsample, two backbone-family controls (Einasto and generalized NFW), and a backbone-shift test.</p><p>Contents include: the production fitter scripts (canonical, parallel nulls, perturbations, gNFW), the per-galaxy and per-shell CSV outputs for the 102-galaxy SPARC T=2-9 sample, the validation and provenance documents, and the manuscript source (markdown). For the Burkert-backbone canonical pipeline, see Paper I's repository (sparc-halo-shells; Zenodo concept DOI 10.5281/zenodo.20072882).</p>",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "version": "v1.0.0",
+  "creators": [
+    {
+      "name": "Bibb, Ron",
+      "orcid": "0009-0004-1153-2464"
+    }
+  ],
+  "keywords": [
+    "galaxy rotation curves",
+    "SPARC catalog",
+    "dark matter halos",
+    "localized residual structure",
+    "shell-bearing galaxies",
+    "Burkert profile",
+    "Einasto profile",
+    "generalized NFW profile",
+    "astrostatistics",
+    "Bayesian information criterion"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.20072882",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://github.com/RonBibb/sparc-halo-shell-reality",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "url"
+    }
+  ],
+  "notes": "Paper II of the halo_shells research series. Paper I is archived separately under sparc-halo-shells (concept DOI 10.5281/zenodo.20072882)."
+}
