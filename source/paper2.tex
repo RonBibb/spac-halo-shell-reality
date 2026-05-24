@@ -44,7 +44,7 @@
 \begin{abstract}
 We investigate whether the localized residual structures identified in the SPARC rotation-curve framework of Paper I represent a statistically organized population or an accumulation of fitting artifacts. Paper I established the framework and identified a galaxy-level morphology gradient in shell-bearing fraction across $T = 2$--9 (Spearman $\rho = -0.83$, $p = 0.010$). The present paper characterizes the per-shell-level organization of the detected shell population and consolidates artifact-channel and confound-control robustness tests.
 
-On the 101-galaxy NGC 6674-excluded sample, the framework selects 51 shell-bearing systems and 67 individual shells. Six of seven \S3.1 organizational tests cross strict Bonferroni correction; three remain after demotion for cross-test entanglement and backbone-family attenuation: the $M$-$r$ scaling ($M \propto r^{0.76}$, $\rho = +0.64$, $p < 10^{-4}$), the $\sigma$-$r$ scaling ($\sigma \propto r^{1.04}$ under Burkert, $\rho = +0.78$, $p < 10^{-4}$), and the outer-vs-inner mass ordering in two-shell galaxies (14/16, Wilcoxon $p = 10^{-4}$). Mass-feature signatures preserve under Einasto and gNFW backbone substitutions; width-related signatures ($\sigma$-$r$ slope, $\sigma/r$ value) are specifically degenerate with Einasto curvature flexibility and preserve under gNFW.
+On the 101-galaxy NGC 6674-excluded sample, the framework selects 51 shell-bearing systems and 67 individual shells. Six of seven \S3.1 organizational tests cross strict Bonferroni correction; three remain after demotion for cross-test entanglement and backbone-family attenuation: the $M$-$r$ scaling ($M \propto r^{0.76}$, $\rho = +0.64$, $p < 10^{-4}$), the $\sigma$-$r$ scaling ($\sigma \propto r^{1.04}$ under Burkert, $\rho = +0.78$, $p < 10^{-4}$), and the inner-vs-outer mass ordering in two-shell galaxies (14/16, Wilcoxon $p = 10^{-4}$). Mass-feature signatures preserve under Einasto and gNFW backbone substitutions; width-related signatures ($\sigma$-$r$ slope, $\sigma/r$ value) are specifically degenerate with Einasto curvature flexibility and preserve under gNFW.
 
 The galaxy-level morphology gradient and bulge correlation are statistically inseparable from observational quality covariates in SPARC under multivariate adjustment and four matched-quality subsamples (\S3.3.8); we report them as observed sample-level regularities rather than independently-supported morphological effects. The per-shell signatures are internal to the detected shell population and not subject to this confound.
 
@@ -264,7 +264,7 @@ The inner and outer shell populations within two-shell galaxies occupy statistic
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/fig_3_1_4_inner_vs_outer.pdf}
-\caption{\textbf{[Figure 3.1.4 --- Inner-vs-outer in two-shell galaxies]} Paired comparison of inner versus outer shell properties in the 16 two-shell galaxies of the NGC 6674-excluded canonical sample. Outer shells are systematically more massive (14/16; Wilcoxon $p = 10^{-4}$) and broader (14/16; $p = 0.0008$) than inner shells, with median outer-to-inner mass ratio 2.06 and median outer-to-inner radius ratio 2.62. The inner and outer populations occupy statistically distinct $r/r_{\rm vir}$ distributions (KS $D = 0.69$, $p = 0.0007$). \emph{Data source:} \texttt{data/antiwarp\_per\_shell.csv} filtered to two-shell galaxies (n\_total = 2).}
+\caption{\textbf{[Figure 3.1.4 --- Inner-vs-outer in two-shell galaxies]} Paired comparison of inner versus outer shell properties in the 16 two-shell galaxies of the NGC 6674-excluded canonical sample. Outer shells are systematically more massive (14/16; Wilcoxon $p = 10^{-4}$) and broader (14/16; $p = 0.0008$) than inner shells, with median outer-to-inner mass ratio 2.06 and median outer-to-inner radius ratio 2.62. The inner and outer populations occupy statistically distinct $r/r_{\rm vir}$ distributions (KS $D = 0.69$, $p = 0.0007$). \emph{Data source:} \texttt{data/antiwarp\_per\_shell.csv} filtered to two-shell galaxies (16 pairs, 32 shells).}
 \end{figure}
 
 \subsubsection{Summary of organized structure}
@@ -279,7 +279,7 @@ Across several dimensions of shell-property organization, the shell population e
   \item \textbf{Inner-vs-outer mass ordering in two-shell galaxies:} 14/16 outer more massive (Wilcoxon $p = 10^{-4}$).
 \end{itemize}
 
-\textbf{Secondary signatures} (BH-FDR-pass; either Bonferroni-fail, entangled with another test, or attenuated under one backbone-family control --- see multi-comparisons summary below for the demotion logic):
+\textbf{Secondary signatures} (Benjamini-Hochberg FDR-pass at $\alpha = 0.05$; either Bonferroni-fail, entangled with another test, or attenuated under one backbone-family control --- see multi-comparisons summary below for the demotion logic):
 
 \begin{itemize}
   \item \textbf{Bulge correlation:} OR $= 3.67$, Fisher $p = 0.0064$. Entanglement-demoted; see \S3.1.1.
@@ -479,7 +479,7 @@ These cuts are deliberately conservative; each independently is well-motivated, 
 The 23-shell anti-warp clean subsample exhibits most of the same headline patterns as the full population, with one quantitative exception noted below. Table 3.3.5 reports the comparison.
 
 \begin{deluxetable*}{lcc}
-\tablecaption{Anti-warp clean subsample comparison on the 101-galaxy NGC 6674-excluded sample. Per-shell scaling signatures and bulge correlation preserve under the cut; the morphology gradient is significant on the full sample ($p = 0.028$) and attenuates below significance on the quality-restricted clean subsample ($p = 0.071$), consistent with the covariate-control result reported in \S3.3.8.\label{tab:auto_3}}
+\tablecaption{Anti-warp clean subsample comparison on the 101-galaxy NGC 6674-excluded sample. Per-shell scaling signatures and bulge correlation preserve under the cut; the morphology gradient is significant on the full sample ($p = 0.028$) and attenuates below significance on the quality-restricted clean subsample ($p = 0.071$), consistent with the covariate-control result reported in \S3.3.8. Bulge correlation OR computed at the galaxy level on the 23 bulge-dominated and 78 bulgeless galaxies of the 101-galaxy sample (see \S3.1.1).\label{tab:auto_3}}
 \tablehead{
 \colhead{Quantity} & \colhead{Full sample (n = 67)} & \colhead{Clean subsample (n = 23)} \\
 }
@@ -490,12 +490,12 @@ $\sigma$-$r$ slope (log $\sigma$ vs log $r$) & 1.04 & 0.67 \\
 $\sigma$-$r$ Spearman $\rho$ & $+0.78$ ($p < 10^{-4}$) & $+0.62$ ($p = 0.002$) \\
 $\sigma/r$ population median & 0.28 & 0.32 \\
 $\sigma/r$ population std & 0.12 & 0.12 \\
-Bulge correlation OR & 3.14 & 1.60 \\
+Bulge correlation OR & 3.67 & 1.70 \\
 Morphology gradient $\rho_{\rm per\text{-}T}$ & $-0.76$ ($p = 0.028$) & $-0.67$ ($p = 0.071$) \\
 \enddata
 \end{deluxetable*}
 
-The four per-shell signatures of \S3.1.2--\S3.1.4 --- $M$-$r$ scaling, $\sigma$-$r$ scaling, $\sigma/r$ universality, and inner-vs-outer dimorphism --- preserve under the cut: the $M$-$r$ and $\sigma$-$r$ Spearman coefficients are essentially unchanged in magnitude despite the 66\% reduction in sample size. Effect \emph{directions} are preserved exactly on every quantity. The galaxy-level signatures attenuate in effect size: the bulge correlation odds ratio drops from 3.14 to 1.60 (remains above unity), and the morphology gradient crosses below the $p < 0.05$ threshold on the cleaned subsample ($\rho_{\rm per\,T} = -0.67$, $p = 0.071$, $n = 8$ T-bins). This attenuation is internally consistent with the multivariate covariate test of \S3.3.8: the four anti-warp cuts select for higher-quality shells (high SPARC quality flag, disk-dominated, inner-shell, low-radius), and \S3.3.8 finds that data-quality covariates absorb the apparent T-type effect at the galaxy level. The clean-subsample result is therefore the predicted empirical signature of a quality-confounded galaxy-level gradient: restricting to high-quality shells reduces the within-sample T-quality collinearity that was inflating the bivariate gradient on the full sample.
+The four per-shell signatures of \S3.1.2--\S3.1.4 --- $M$-$r$ scaling, $\sigma$-$r$ scaling, $\sigma/r$ universality, and inner-vs-outer dimorphism --- preserve under the cut: the $M$-$r$ and $\sigma$-$r$ Spearman coefficients are essentially unchanged in magnitude despite the 66\% reduction in sample size. Effect \emph{directions} are preserved exactly on every quantity. The galaxy-level signatures attenuate in effect size: the bulge correlation odds ratio drops from 3.67 to 1.70 (remains above unity), and the morphology gradient crosses below the $p < 0.05$ threshold on the cleaned subsample ($\rho_{\rm per\,T} = -0.67$, $p = 0.071$, $n = 8$ T-bins). This attenuation is internally consistent with the multivariate covariate test of \S3.3.8: the four anti-warp cuts select for higher-quality shells (high SPARC quality flag, disk-dominated, inner-shell, low-radius), and \S3.3.8 finds that data-quality covariates absorb the apparent T-type effect at the galaxy level. The clean-subsample result is therefore the predicted empirical signature of a quality-confounded galaxy-level gradient: restricting to high-quality shells reduces the within-sample T-quality collinearity that was inflating the bivariate gradient on the full sample.
 
 A structural observation accompanies the survival result. The clean subsample's $M$-$r$ slope steepens from 0.76 to 1.48 and the $\sigma$-$r$ slope flattens from 1.04 to 0.67, while $\sigma/r$ median rises from 0.28 to 0.32. The fourth cut deliberately retains only inner-of-pair and single shells, dropping the outer of every two-shell system. These shifts therefore reflect the inner-shell sub-population's distinct structural signature, the per-shell-position dimorphism reported elsewhere in \S3.1, rather than a residual cleaning artifact. The shifts are diagnostic of structure, not of warps.
 

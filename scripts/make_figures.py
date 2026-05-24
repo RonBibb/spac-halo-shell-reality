@@ -192,10 +192,13 @@ def fig_3_1_1():
     n_bd, sb_bd = len(bulge_dom), bulge_dom['shellbearing'].sum()
     n_bl, sb_bl = len(bulgeless), bulgeless['shellbearing'].sum()
 
-    # Stats — manuscript reports OR = 3.67, Fisher p ≈ 0.01
+    # Stats — manuscript §3.1.1 reports OR = 3.67, Fisher one-sided p = 0.0064.
+    # Using alternative='greater': H1 is that bulged galaxies have a higher
+    # shell-bearing rate than bulgeless (the directional hypothesis stated in
+    # the manuscript). Two-sided would give p ≈ 0.017 and disagree with §3.1.1.
     table = np.array([[sb_bd, n_bd - sb_bd],
                       [sb_bl, n_bl - sb_bl]])
-    odds_ratio, fisher_p = fisher_exact(table, alternative='two-sided')
+    odds_ratio, fisher_p = fisher_exact(table, alternative='greater')
 
     # Figure: single column, stacked bars
     fig, ax = plt.subplots(figsize=(WIDTH_SINGLE, 2.8))
@@ -228,8 +231,8 @@ def fig_3_1_1():
 
     # Stats box
     stat_text = (f'OR = {odds_ratio:.2f}\n'
-                 f'Fisher $p = {fisher_p:.3f}$\n'
-                 f'(two-sided)')
+                 f'Fisher $p = {fisher_p:.4f}$\n'
+                 f'(one-sided)')
     ax.text(0.98, 0.97, stat_text, transform=ax.transAxes,
             ha='right', va='top', fontsize=8,
             bbox=dict(facecolor='white', edgecolor='gray',
@@ -515,12 +518,19 @@ def _null_figure(null_type, name, title_suffix, color):
 
     fig, axes = plt.subplots(1, 2, figsize=(WIDTH_DOUBLE * 0.85, 2.8))
 
+    # Format the real-data rho values so the minus sign is forced into the
+    # regular-text portion of the label rather than into mathtext, where some
+    # backends/fonts drop U+2212. Using `:+.3f` guarantees a literal '-' or '+'
+    # character before the digits.
+    rho_T_label   = f'real data: $\\rho$ = {real_rho_per_T:+.3f}'
+    rho_gal_label = f'real data: $\\rho$ = {real_rho_per_gal:+.3f}'
+
     # --- Panel 1: per-T-bin Spearman rho ---
     ax = axes[0]
     bins = max(8, int(np.sqrt(len(rho_T))))
     ax.hist(rho_T, bins=bins, color=color, alpha=0.6, edgecolor='black', lw=0.5)
     ax.axvline(real_rho_per_T, color=COLORS['secondary'], lw=1.5,
-               label=f'real data: $\\rho = {real_rho_per_T:.3f}$')
+               label=rho_T_label)
     ax.axvline(0, color=COLORS['neutral'], lw=0.6, ls=':', alpha=0.6)
     ax.set_xlabel(r'$\rho_{\rm per\text{-}T}$ (null realizations)')
     ax.set_ylabel('count')
@@ -540,7 +550,7 @@ def _null_figure(null_type, name, title_suffix, color):
     bins = max(8, int(np.sqrt(len(rho_gal))))
     ax.hist(rho_gal, bins=bins, color=color, alpha=0.6, edgecolor='black', lw=0.5)
     ax.axvline(real_rho_per_gal, color=COLORS['secondary'], lw=1.5,
-               label=f'real data: $\\rho = {real_rho_per_gal:.3f}$')
+               label=rho_gal_label)
     ax.axvline(0, color=COLORS['neutral'], lw=0.6, ls=':', alpha=0.6)
     ax.set_xlabel(r'$\rho_{\rm per\text{-}galaxy}$ (null realizations)')
     ax.set_ylabel('count')
@@ -1182,7 +1192,7 @@ def fig_3_3_8():
     sub_order = ['FULL', 'A_top_Npts', 'B_bot_Verr',
                  'C_both_quality_cuts', 'D_within_T_top_Npts']
     sub_labels = {
-        'FULL':                'Full (n=102)',
+        'FULL':                'Full (n=101)',
         'A_top_Npts':          r'A: top half $N_{\rm pts}$',
         'B_bot_Verr':          r'B: bot half $V_{\rm err}$',
         'C_both_quality_cuts': r'C: A $\cap$ B',
@@ -1214,7 +1224,7 @@ def fig_3_3_8():
         axes[0], full_log,
         [label_map[p] for p in full_log['predictor']],
         r'Logistic coefficient $\beta$ (95% CI)',
-        r'(a) Full-sample logistic, $n=102$',
+        r'(a) Full-sample logistic, $n=101$',
     )
     _draw_forest(
         axes[1], tz_match,
