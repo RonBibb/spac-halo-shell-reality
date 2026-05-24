@@ -1,0 +1,163 @@
+%% ============================================================
+%% paper2.bib — first-pass bibliography for Paper II
+%% ============================================================
+%% Core references identified from inline text in paper2.tex.
+%% Each entry includes ADS bibcode where applicable, arXiv ID,
+%% and DOI. Format: BibTeX, compatible with aasjournalv7.bst.
+%%
+%% Cite keys aligned with current \citep / \citet usage in paper2.tex.
+%% Software-block keys (harris2020array, 2020SciPy-NMeth,
+%% mckinney-proc-scipy-2010, Hunter:2007) match the AAS-recommended
+%% standard keys for the scientific Python stack.
+%% ============================================================
+
+%% --- SPARC catalog ---
+@ARTICLE{Lelli2016,
+  author       = {{Lelli}, Federico and {McGaugh}, Stacy S. and {Schombert}, James M.},
+  title        = "{SPARC: Mass Models for 175 Disk Galaxies with Spitzer Photometry and Accurate Rotation Curves}",
+  journal      = {\aj},
+  year         = 2016,
+  volume       = 152,
+  number       = 6,
+  pages        = {157},
+  doi          = {10.3847/0004-6256/152/6/157},
+  archivePrefix= {arXiv},
+  eprint       = {1606.09251},
+  adsurl       = {https://ui.adsabs.harvard.edu/abs/2016AJ....152..157L},
+  adsnote      = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+%% --- Paper I of this series ---
+%% Note: PASP-102415 is in review (2026-05-23). Update journal field once accepted.
+@ARTICLE{Bibb2026,
+  author       = {{Bibb}, Ron},
+  title        = "{Localized Residual Structure in SPARC Rotation Curves: A Burkert-Backbone Model with BIC-Selected Shells}",
+  journal      = {PASP},
+  year         = 2026,
+  note         = {Submitted; manuscript PASP-102415. Software and data: \href{https://doi.org/10.5281/zenodo.20072882}{10.5281/zenodo.20072882}},
+  doi          = {10.5281/zenodo.20072882}
+}
+
+%% --- Burkert profile ---
+@ARTICLE{Burkert1995,
+  author       = {{Burkert}, A.},
+  title        = "{The Structure of Dark Matter Halos in Dwarf Galaxies}",
+  journal      = {\apjl},
+  year         = 1995,
+  volume       = 447,
+  pages        = {L25},
+  doi          = {10.1086/309560},
+  archivePrefix= {arXiv},
+  eprint       = {astro-ph/9504041},
+  adsurl       = {https://ui.adsabs.harvard.edu/abs/1995ApJ...447L..25B}
+}
+
+%% --- BIC ---
+@ARTICLE{Schwarz1978,
+  author       = {{Schwarz}, Gideon},
+  title        = "{Estimating the Dimension of a Model}",
+  journal      = {Annals of Statistics},
+  year         = 1978,
+  volume       = 6,
+  number       = 2,
+  pages        = {461--464},
+  doi          = {10.1214/aos/1176344136}
+}
+
+%% --- NFW profile ---
+@ARTICLE{NFW1997,
+  author       = {{Navarro}, Julio F. and {Frenk}, Carlos S. and {White}, Simon D.~M.},
+  title        = "{A Universal Density Profile from Hierarchical Clustering}",
+  journal      = {\apj},
+  year         = 1997,
+  volume       = 490,
+  number       = 2,
+  pages        = {493--508},
+  doi          = {10.1086/304888},
+  archivePrefix= {arXiv},
+  eprint       = {astro-ph/9611107},
+  adsurl       = {https://ui.adsabs.harvard.edu/abs/1997ApJ...490..493N}
+}
+
+%% --- Einasto profile (modern Navarro 2004 calibration) ---
+@ARTICLE{Navarro2004,
+  author       = {{Navarro}, Julio F. and {Hayashi}, Eric and {Power}, Chris and {Jenkins}, A.~R. and {Frenk}, Carlos S. and {White}, Simon D.~M. and {Springel}, Volker and {Stadel}, Joachim and {Quinn}, Thomas R.},
+  title        = "{The inner structure of $\Lambda$CDM haloes -- III. Universality and asymptotic slopes}",
+  journal      = {\mnras},
+  year         = 2004,
+  volume       = 349,
+  number       = 3,
+  pages        = {1039--1051},
+  doi          = {10.1111/j.1365-2966.2004.07586.x},
+  archivePrefix= {arXiv},
+  eprint       = {astro-ph/0311231},
+  adsurl       = {https://ui.adsabs.harvard.edu/abs/2004MNRAS.349.1039N}
+}
+
+%% --- DC14 feedback-modified halo profile ---
+@ARTICLE{DiCintio2014,
+  author       = {{Di Cintio}, Arianna and {Brook}, Chris B. and {Macci{\`o}}, Andrea V. and {Stinson}, Gregory S. and {Knebe}, Alexander and {Dutton}, Aaron A. and {Wadsley}, James},
+  title        = "{The dependence of dark matter profiles on the stellar-to-halo mass ratio: a prediction for cusps versus cores}",
+  journal      = {\mnras},
+  year         = 2014,
+  volume       = 437,
+  number       = 1,
+  pages        = {415--423},
+  doi          = {10.1093/mnras/stt1891},
+  archivePrefix= {arXiv},
+  eprint       = {1306.0898},
+  adsurl       = {https://ui.adsabs.harvard.edu/abs/2014MNRAS.437..415D}
+}
+
+%% --- Software stack (AAS-standard keys) ---
+
+@ARTICLE{harris2020array,
+  author       = {{Harris}, Charles R. and {Millman}, K. Jarrod and {van der Walt}, St{\'e}fan J. and {Gommers}, Ralf and {Virtanen}, Pauli and {Cournapeau}, David and {Wieser}, Eric and {Taylor}, Julian and {Berg}, Sebastian and {Smith}, Nathaniel J. and others},
+  title        = "{Array programming with NumPy}",
+  journal      = {Nature},
+  year         = 2020,
+  volume       = 585,
+  number       = 7825,
+  pages        = {357--362},
+  doi          = {10.1038/s41586-020-2649-2},
+  archivePrefix= {arXiv},
+  eprint       = {2006.10256}
+}
+
+@ARTICLE{2020SciPy-NMeth,
+  author       = {{Virtanen}, Pauli and {Gommers}, Ralf and {Oliphant}, Travis E. and {Haberland}, Matt and {Reddy}, Tyler and {Cournapeau}, David and {Burovski}, Evgeni and {Peterson}, Pearu and {Weckesser}, Warren and {Bright}, Jonathan and others},
+  title        = "{SciPy 1.0: fundamental algorithms for scientific computing in Python}",
+  journal      = {Nature Methods},
+  year         = 2020,
+  volume       = 17,
+  number       = 3,
+  pages        = {261--272},
+  doi          = {10.1038/s41592-019-0686-2},
+  archivePrefix= {arXiv},
+  eprint       = {1907.10121}
+}
+
+@INPROCEEDINGS{mckinney-proc-scipy-2010,
+  author       = {{McKinney}, Wes},
+  title        = "{Data Structures for Statistical Computing in Python}",
+  booktitle    = {Proceedings of the 9th Python in Science Conference},
+  editor       = {{van der Walt}, St{\'e}fan and {Millman}, Jarrod},
+  year         = 2010,
+  pages        = {56--61},
+  doi          = {10.25080/Majora-92bf1922-00a}
+}
+
+@ARTICLE{Hunter:2007,
+  author       = {{Hunter}, John D.},
+  title        = "{Matplotlib: A 2D Graphics Environment}",
+  journal      = {Computing in Science \& Engineering},
+  year         = 2007,
+  volume       = 9,
+  number       = 3,
+  pages        = {90--95},
+  doi          = {10.1109/MCSE.2007.55}
+}
+
+%% --- Reserved keys for future entries ---
+%% Add as needed when the manuscript references additional works
+%% (e.g., de Blok 2010 review, McGaugh 2020 BTFR, Karukes & Salucci dwarf-halo).

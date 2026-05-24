@@ -53,7 +53,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 PACKAGE_ROOT = HERE.parent
 DATA_DIR = PACKAGE_ROOT / "data"
-ROTMOD_DIR = DATA_DIR / "Rotmod_LTG"
+ROTMOD_DIR = Path("../Rotmod_LTG")
 
 # Paths (with auto-fallback to local layout)
 CANONICAL_CSV = DATA_DIR / "sparc_T2-T9_canonical_fits.csv"
@@ -65,7 +65,7 @@ OUT_SUMMARY = DATA_DIR / "antiwarp_summary.txt"
 
 # Sample convention — set to [] to include NGC 6674 (Paper I convention)
 # Set to ['NGC6674'] to exclude (NGC 6674-excluded version preserved as v1.0 catalog)
-EXCLUDE_GALAXIES = ['NGC6674']
+EXCLUDE_GALAXIES = []
 
 # Anti-warp cut thresholds
 R_OVER_RHI_MAX = 0.3
@@ -216,9 +216,11 @@ def compute_morphology_gradient(df_shells, sample):
 
 def parse_canonical_to_per_shell(canonical_df, exclude_galaxies):
     """Convert Paper I canonical CSV (one row per galaxy) to per-shell long format.
-    
-    Expects canonical CSV columns including: Galaxy, T, fw_best_n_shells,
-    fw_best_r1, fw_best_M1, fw_best_sigma1, fw_best_r2, fw_best_M2, fw_best_sigma2.
+
+    Canonical CSV uses branch-specific column names:
+      n=1 fits: fw_n1_r_sh1_kpc, fw_n1_M_sh1, fw_n1_sigma_sh1_kpc
+      n=2 fits: fw_n2_r_sh{1,2}_kpc, fw_n2_M_sh{1,2}, fw_n2_sigma_sh{1,2}_kpc
+    The fw_best_n_shells column selects which branch's columns to read for that galaxy.
     """
     rows = []
     for _, row in canonical_df.iterrows():
@@ -232,13 +234,14 @@ def parse_canonical_to_per_shell(canonical_df, exclude_galaxies):
             rows.append({
                 'Galaxy': gal, 'T': row['T'], 'n_total': 1,
                 'position': 'single',
-                'r_sh_kpc': row['fw_best_r1'], 'M_sh': row['fw_best_M1'],
-                'sigma_sh_kpc': row['fw_best_sigma1'],
+                'r_sh_kpc': row['fw_n1_r_sh1_kpc'],
+                'M_sh': row['fw_n1_M_sh1'],
+                'sigma_sh_kpc': row['fw_n1_sigma_sh1_kpc'],
             })
         elif n == 2:
-            r1, r2 = row['fw_best_r1'], row['fw_best_r2']
-            M1, s1 = row['fw_best_M1'], row['fw_best_sigma1']
-            M2, s2 = row['fw_best_M2'], row['fw_best_sigma2']
+            r1, r2 = row['fw_n2_r_sh1_kpc'], row['fw_n2_r_sh2_kpc']
+            M1, s1 = row['fw_n2_M_sh1'], row['fw_n2_sigma_sh1_kpc']
+            M2, s2 = row['fw_n2_M_sh2'], row['fw_n2_sigma_sh2_kpc']
             # Order inner/outer by radius
             if r1 <= r2:
                 inner = (r1, M1, s1); outer = (r2, M2, s2)
