@@ -13,7 +13,7 @@ Usage:
 Data sources (resolved automatically from package layout or local fallback):
   ../antiwarp_per_shell.csv         (67 shells, 51 galaxies, 101-galaxy sample)
   ../galaxy_classifications.csv     (123 galaxies, full SPARC + classifications)
-  ../per_realization.csv            (N=20 null realizations; replaced by N=100 when run completes)
+  ../shell_reality_out_n100/per_realization.csv  (N=100 null realizations; scramble + permute, 100 each)
   ../upsilon_perturbation_per_galaxy.csv     (2040 rows: 102 galaxies × 20 realizations)
   ../distance_perturbation_per_galaxy.csv    (2040 rows)
   ../inclination_perturbation_per_galaxy.csv (1820 rows)
@@ -499,7 +499,11 @@ def fig_3_1_4():
 # ============================================================
 def _null_figure(null_type, name, title_suffix, color):
     """Generic null-distribution figure for scramble or permute."""
-    pr = pd.read_csv(_resolve_data('per_realization.csv'))
+    # Body text §3.2 quotes the N=100 batch (mean=-0.289 std=0.229 for scramble,
+    # mean=+0.350 std=0.235 for permute). That data lives in
+    # data/shell_reality_out_n100/per_realization.csv. Reading data/per_realization.csv
+    # would silently pick up an N=20 leftover and contradict the body.
+    pr = pd.read_csv(_resolve_data('shell_reality_out_n100/per_realization.csv'))
     sub = pr[pr['null_type'] == null_type]
     n_real = len(sub)
 
