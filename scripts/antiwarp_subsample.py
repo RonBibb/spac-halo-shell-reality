@@ -342,6 +342,18 @@ def main():
     log.info(f"Classification CSV: {len(classif)} rows")
     log.info(f"Excluded galaxies: {EXCLUDE_GALAXIES}")
     
+    # Apply EXCLUDE_GALAXIES to sample before passing to analysis functions.
+    # compute_bulge_OR and compute_morphology_gradient filter by T-type but
+    # rely on the caller to have already applied galaxy-level exclusions;
+    # without this filter the bulged denominator counts NGC 6674 and produces
+    # a hybrid 17/24 ratio (OR = 3.14) instead of the §3.1.1-consistent 17/23
+    # ratio (OR = 3.67) on the 101-galaxy primary convention.
+    if EXCLUDE_GALAXIES:
+        n_before = len(sample)
+        sample = sample[~sample['Galaxy'].isin(EXCLUDE_GALAXIES)].copy()
+        log.info(f"Sample CSV after EXCLUDE_GALAXIES filter: {len(sample)} rows "
+                 f"({n_before - len(sample)} dropped)")
+    
     # Parse canonical → per-shell
     df_shells = parse_canonical_to_per_shell(canonical, EXCLUDE_GALAXIES)
     log.info(f"Parsed {len(df_shells)} shells across {df_shells['Galaxy'].nunique()} galaxies")

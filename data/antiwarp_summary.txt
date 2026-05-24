@@ -31,9 +31,9 @@ BULGE CORRELATION (galaxy-level)
 ============================================================================
 
                                 FULL                CLEAN               
-Bulged SB rate                  17/24               7/24                
+Bulged SB rate                  17/23               7/23                
 Bulgeless SB rate               34/78               16/78               
-Odds ratio                      3.14                1.60                
+Odds ratio                      3.67                1.70                
 
 ============================================================================
 MORPHOLOGY GRADIENT (galaxy-level)
@@ -41,7 +41,7 @@ MORPHOLOGY GRADIENT (galaxy-level)
 
   T    N_gal   SB rate (full)      SB rate (clean)
   2    9       100.0%               33.3%
-  3    11       45.5%               18.2%
+  3    10       50.0%               20.0%
   4    17       52.9%               29.4%
   5    13       53.8%               23.1%
   6    16       56.2%               43.8%
