@@ -13,7 +13,7 @@ Usage:
 Data sources (resolved automatically from package layout or local fallback):
   ../antiwarp_per_shell.csv         (67 shells, 51 galaxies, 101-galaxy sample)
   ../galaxy_classifications.csv     (123 galaxies, full SPARC + classifications)
-  ../shell_reality_out_n100/per_realization.csv  (N=100 null realizations; scramble + permute, 100 each)
+  ../shell_reality_out_n100/per_realization_101gal.csv  (N=100 null realizations on 101-galaxy convention; scramble + permute, 100 each)
   ../upsilon_perturbation_per_galaxy.csv     (2040 rows: 102 galaxies × 20 realizations)
   ../distance_perturbation_per_galaxy.csv    (2040 rows)
   ../inclination_perturbation_per_galaxy.csv (1820 rows)
@@ -503,14 +503,15 @@ def _null_figure(null_type, name, title_suffix, color):
     # mean=+0.350 std=0.235 for permute). That data lives in
     # data/shell_reality_out_n100/per_realization.csv. Reading data/per_realization.csv
     # would silently pick up an N=20 leftover and contradict the body.
-    pr = pd.read_csv(_resolve_data('shell_reality_out_n100/per_realization.csv'))
+    pr = pd.read_csv(_resolve_data('shell_reality_out_n100/per_realization_101gal.csv'))
     sub = pr[pr['null_type'] == null_type]
     n_real = len(sub)
 
     # Real-data baseline from per_realization.csv: stored in nulls? No, in summary.
     # Hardcode baseline (computed live from canonical CSV at run time = -0.833 / -0.296):
-    real_rho_per_T = -0.833
-    real_rho_per_gal = -0.296
+    # 101-galaxy real-data baselines (§2.3). NGC 6674 excluded throughout.
+    real_rho_per_T = -0.762
+    real_rho_per_gal = -0.287
 
     rho_T   = sub['rho_per_T'].dropna().values
     rho_gal = sub['rho_per_gal'].dropna().values
