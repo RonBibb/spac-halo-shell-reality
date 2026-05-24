@@ -59,7 +59,7 @@ OUT_RESULTS = DATA_DIR / "covariate_results.csv"
 OUT_SUMMARY = DATA_DIR / "covariate_summary.txt"
 
 # Sample convention — empty list = manuscript primary (NGC 6674 included)
-EXCLUDE_GALAXIES = ['6674']
+EXCLUDE_GALAXIES = ['NGC6674']
 
 # T-type range for Paper II
 T_MIN, T_MAX = 2, 9

@@ -7,10 +7,10 @@ observational quality covariates IN SUBSAMPLES WHERE T-quality
 correlation is reduced?
 
 Full-sample T-quality correlations (Spearman):
-  T vs log_N_pts           ρ = -0.363  p = 0.000181
-  T vs log_mean_V_err      ρ = -0.569  p = 4.52e-10
-  T vs log_L36             ρ = -0.806  p = 1.7e-24
-  T vs cos_inc             ρ = +0.089  p = 0.373
+  T vs log_N_pts           ρ = -0.370  p = 0.000141
+  T vs log_mean_V_err      ρ = -0.564  p = 8.5e-10
+  T vs log_L36             ρ = -0.805  p = 3.45e-24
+  T vs cos_inc             ρ = +0.101  p = 0.316
 
 ==============================================================================
 SUBSAMPLE PROPERTIES
@@ -18,11 +18,11 @@ SUBSAMPLE PROPERTIES
 
   Subsample                     n  n_SB    T_range   ρ(T,Npts)   ρ(T,Verr)
   -------------------------------------------------------------------------
-  FULL                        102    52        2-9      -0.363      -0.569
+  FULL                        101    51        2-9      -0.370      -0.564
   A_top_Npts                   53    37        2-9      -0.433      -0.485
   B_bot_Verr                   51    25        3-9      -0.375      -0.276
   C_both_quality_cuts          24    15        3-9      -0.093      -0.311
-  D_within_T_top_Npts          57    37        2-9      -0.404      -0.476
+  D_within_T_top_Npts          56    37        2-9      -0.434      -0.471
 
 ==============================================================================
 LOGISTIC REGRESSION: T_z COEFFICIENT BY SUBSAMPLE
@@ -30,17 +30,17 @@ LOGISTIC REGRESSION: T_z COEFFICIENT BY SUBSAMPLE
 
   Subsample                     n   T_z coef       SE        z          p   sig
   --------------------------------------------------------------------------
-  FULL                        102     -0.044    0.476    -0.09     0.9268      
+  FULL                        101     -0.043    0.477    -0.09     0.9274      
   A_top_Npts                   53     +0.171    0.749    +0.23     0.8196      
   B_bot_Verr                   51     +0.237    0.594    +0.40     0.6895      
   C_both_quality_cuts          24     +0.538    1.079    +0.50     0.6183      
-  D_within_T_top_Npts          57     +0.898    0.768    +1.17     0.2424      
+  D_within_T_top_Npts          56     +0.793    0.775    +1.02     0.3064      
 
 ==============================================================================
 INTERPRETATION
 ==============================================================================
 
-  Full sample T_z: β = -0.044, p = 0.927
+  Full sample T_z: β = -0.043, p = 0.927
 
   T-type DOES NOT SURVIVE in any matched-quality subsample.
   Interpretation: the confounding between T-type and observational

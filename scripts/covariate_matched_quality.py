@@ -66,7 +66,7 @@ CLASSIF_CSV   = DATA_DIR / "galaxy_classifications.csv"
 OUT_RESULTS = DATA_DIR / "covariate_matched_results.csv"
 OUT_SUMMARY = DATA_DIR / "covariate_matched_summary.txt"
 
-EXCLUDE_GALAXIES = ['6674']
+EXCLUDE_GALAXIES = ['NGC6674']
 T_MIN, T_MAX = 2, 9
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
