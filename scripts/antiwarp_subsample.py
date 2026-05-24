@@ -174,10 +174,12 @@ def compute_scaling_stats(df, label=""):
 
 
 def compute_bulge_OR(df_shells, sample, classif):
-    """Bulge correlation odds ratio (galaxy-level)."""
+    """Bulge correlation odds ratio (galaxy-level), restricted to T=2-9."""
     sample_T = sample[(sample['T'] >= 2) & (sample['T'] <= 9)]
-    bulged = classif[classif['is_bulge_dom']]['Galaxy'].tolist()
-    bulgeless = classif[classif['is_bulgeless']]['Galaxy'].tolist()
+    galaxies_T = set(sample_T['Galaxy'].tolist())
+    bulged = [g for g in classif[classif['is_bulge_dom']]['Galaxy'].tolist() if g in galaxies_T]
+    bulgeless = [g for g in classif[classif['is_bulgeless']]['Galaxy'].tolist() if g in galaxies_T]
+    # ...rest unchanged
     
     sb_galaxies = set(df_shells['Galaxy'].unique())
     n_b_sb = len(set(bulged) & sb_galaxies)
