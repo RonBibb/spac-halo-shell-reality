@@ -8,32 +8,32 @@ Clean subsample cuts: shells with all of —
   - Q == 1 (highest-quality SPARC galaxy)
   - inner shell of any n=2 pair (drop outer)
 
-Total shells: 69 across 52 galaxies
-Clean shells: 24 across 24 galaxies
+Total shells: 67 across 51 galaxies
+Clean shells: 23 across 23 galaxies
 
 ============================================================================
 SCALING RELATIONS
 ============================================================================
 
                             FULL                CLEAN               
-n                           69                  24                  
-M slope                     0.76                1.51                
-  Spearman ρ                +0.587              +0.604              
-  p-value                   0.0000              0.0018              
-σ slope                     1.04                0.66                
-  Spearman ρ                +0.782              +0.623              
-  p-value                   0.0000              0.0012              
-σ/r median                  0.268               0.318               
-σ/r std                     0.116               0.122               
+n                           67                  23                  
+M slope                     0.76                1.48                
+  Spearman ρ                +0.635              +0.655              
+  p-value                   0.0000              0.0007              
+σ slope                     1.04                0.67                
+  Spearman ρ                +0.776              +0.620              
+  p-value                   0.0000              0.0016              
+σ/r median                  0.275               0.320               
+σ/r std                     0.116               0.121               
 
 ============================================================================
 BULGE CORRELATION (galaxy-level)
 ============================================================================
 
                                 FULL                CLEAN               
-Bulged SB rate                  18/24               8/24                
+Bulged SB rate                  17/24               7/24                
 Bulgeless SB rate               34/78               16/78               
-Odds ratio                      3.88                1.94                
+Odds ratio                      3.14                1.60                
 
 ============================================================================
 MORPHOLOGY GRADIENT (galaxy-level)
@@ -41,7 +41,7 @@ MORPHOLOGY GRADIENT (galaxy-level)
 
   T    N_gal   SB rate (full)      SB rate (clean)
   2    9       100.0%               33.3%
-  3    11       54.5%               27.3%
+  3    11       45.5%               18.2%
   4    17       52.9%               29.4%
   5    13       53.8%               23.1%
   6    16       56.2%               43.8%
@@ -49,6 +49,6 @@ MORPHOLOGY GRADIENT (galaxy-level)
   8    6        33.3%               16.7%
   9    16       31.2%                0.0%
 
-  ρ_per_T (full):  -0.833, p = 0.0102
-  ρ_per_T (clean): -0.714, p = 0.0465
+  ρ_per_T (full):  -0.762, p = 0.0280
+  ρ_per_T (clean): -0.667, p = 0.0710
 

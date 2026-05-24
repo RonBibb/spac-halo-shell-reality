@@ -189,8 +189,7 @@ The bulge correlation and the morphology gradient established in Paper I are not
 
 \begin{figure}[ht]
 \centering
-%% TODO: \includegraphics{...} once figure is generated
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Figure placeholder --- generation script pending]}\vspace{3cm}}}
+\includegraphics[width=0.9\textwidth]{figures/fig_3_1_1_bulge_correlation.pdf}
 
 \caption{\textbf{[Figure 3.1.1 --- Bulge correlation]} $2\times 2$ contingency or stacked bar showing bulged vs bulgeless shell-bearing fractions (17/23 vs 34/78). \emph{Data source:} \texttt{data/galaxy\_classifications.csv} (is\_bulge\_dom, is\_bulgeless) joined with Paper I canonical CSV (shell-bearing flag).}
 \end{figure}
@@ -219,10 +218,9 @@ The mass-radius slope of 0.76 indicates that more distant shells carry more encl
 
 \begin{figure}[ht]
 \centering
-%% TODO: \includegraphics{...} once figure is generated
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Figure placeholder --- generation script pending]}\vspace{3cm}}}
+\includegraphics[width=0.9\textwidth]{figures/fig_3_1_2_scaling_relations.pdf}
 
-\caption{\textbf{[Figure 3.1.2 --- Scaling relations]} Two-panel log-log scatter: (left) $\sigma$ vs $r$ with linear fit (slope $1.04 \pm 0.10$); (right) $M$ vs $r$ with linear fit (slope $0.76 \pm 0.14$). Color-code by T-type or by inner/outer position. Mark mass-bound shells distinctly. \emph{Data source:} \texttt{data/antiwarp\_per\_shell.csv} (NGC 6674-excluded sample, n=67; matches manuscript primary convention). \emph{Status:} Placeholder; generation script pending.}
+\caption{\textbf{[Figure 3.1.2 --- Scaling relations]} Two-panel log-log scatter: (left) $\sigma$ vs $r$ with linear fit (slope $1.04 \pm 0.10$); (right) $M$ vs $r$ with linear fit (slope $0.76 \pm 0.14$). Color-code by T-type or by inner/outer position. Mark mass-bound shells distinctly. \emph{Data source:} \texttt{data/antiwarp\_per\_shell.csv} (NGC 6674-excluded sample, n=67; matches manuscript primary convention).}
 \end{figure}
 
 \subsubsection{Geometric gradient: $\sigma/r$ varies with radius}
@@ -248,10 +246,9 @@ We treat this as a soft empirical observation rather than a strongly established
 
 \begin{figure}[ht]
 \centering
-%% TODO: \includegraphics{...} once figure is generated
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Figure placeholder --- generation script pending]}\vspace{3cm}}}
+\includegraphics[width=0.9\textwidth]{figures/fig_3_1_3_sigma_over_r_quartile.pdf}
 
-\caption{\textbf{[Figure 3.1.3 --- Geometric gradient]} $\sigma/r$ vs $r$ scatter (log-x) with quartile boundaries marked as vertical lines and per-quartile median $\sigma/r$ overlaid as horizontal bars. Reference line at $\sigma/r = 0.4$ (framework cap) and at population median 0.275. \emph{Data source:} \texttt{data/antiwarp\_per\_shell.csv} (columns: r\_sh\_kpc, sigma\_over\_r). \emph{Status:} Placeholder; generation script pending.}
+\caption{\textbf{[Figure 3.1.3 --- Geometric gradient]} $\sigma/r$ vs $r$ scatter (log-x) with quartile boundaries marked as vertical lines and per-quartile median $\sigma/r$ overlaid as horizontal bars. Reference line at $\sigma/r = 0.4$ (framework cap) and at population median 0.275. \emph{Data source:} \texttt{data/antiwarp\_per\_shell.csv} (columns: r\_sh\_kpc, sigma\_over\_r).}
 \end{figure}
 
 \subsubsection{Inner-vs-outer in two-shell galaxies}
@@ -263,6 +260,12 @@ In radius, outer shells are at median 2.62$\times$ the radius of inner shells (d
 When shell positions are normalized to the host's virial radius $r_{\rm vir}$, the inner and outer populations within two-shell galaxies separate at high statistical significance. Inner shells of two-shell galaxies cluster at $r/r_{\rm vir} = 0.012$ (median, IQR $[0.006, 0.017]$), outer shells at 0.027 (IQR $[0.022, 0.035]$), with a two-sample Kolmogorov-Smirnov statistic $D = 0.6875$, $p = 0.0007$ ($n = 16$ inner, $n = 16$ outer; partitions defined by radial ordering within each two-shell galaxy). Single-shell galaxies cluster at intermediate $r/r_{\rm vir} = 0.030$ (median), consistent with BIC-driven parsimony folding contributions into a single Gaussian when the data do not support two well-separated peaks.
 
 The inner and outer shell populations within two-shell galaxies occupy statistically distinct $r/r_{\rm vir}$ distributions under Burkert, consistent with multi-scale population stratification. The sample is modest ($n = 16$ paired galaxies); backbone-family behavior is reported in \S3.3.6.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig_3_1_4_inner_vs_outer.pdf}
+\caption{\textbf{[Figure 3.1.4 --- Inner-vs-outer in two-shell galaxies]} Paired comparison of inner versus outer shell properties in the 16 two-shell galaxies of the NGC 6674-excluded canonical sample. Outer shells are systematically more massive (14/16; Wilcoxon $p = 10^{-4}$) and broader (14/16; $p = 0.0008$) than inner shells, with median outer-to-inner mass ratio 2.06 and median outer-to-inner radius ratio 2.62. The inner and outer populations occupy statistically distinct $r/r_{\rm vir}$ distributions (KS $D = 0.69$, $p = 0.0007$). \emph{Data source:} \texttt{data/antiwarp\_per\_shell.csv} filtered to two-shell galaxies (n\_total = 2).}
+\end{figure}
 
 \subsubsection{Summary of organized structure}
 
@@ -374,16 +377,14 @@ The two nulls bracket a meaningful range of artifact channels: scramble tests wh
 
 \begin{figure}[ht]
 \centering
-%% TODO: \includegraphics{...} once figure is generated
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Figure placeholder --- generation script pending]}\vspace{3cm}}}
+\includegraphics[width=0.9\textwidth]{figures/fig_3_2_1_scramble_null.pdf}
 
 \caption{\textbf{[Figure 3.2.1 --- Null distributions of Spearman $\rho$ under scramble]} Two-panel histogram: (left) $\rho_{\rm per\,T}$ across 100 scramble realizations, with real-data baseline $\rho_{\rm per\,T} = -0.833$ shown as vertical red line; (right) same for $\rho_{\rm per\,galaxy}$, real-data baseline $-0.296$. Annotated: null mean, std, and empirical $p_{\rm emp} = n/100$ count of realizations $\le$ real-data value. \emph{Data source:} \texttt{data/nulltest\_per\_realization.csv} (filter null\_type='scramble'; columns rho\_per\_T, rho\_per\_gal). \emph{Status:} Generated as \texttt{figures/fig\_3\_2\_1\_scramble\_null.pdf}.}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-%% TODO: \includegraphics{...} once figure is generated
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Figure placeholder --- generation script pending]}\vspace{3cm}}}
+\includegraphics[width=0.9\textwidth]{figures/fig_3_2_2_permute_null.pdf}
 
 \caption{\textbf{[Figure 3.2.2 --- Null distributions of Spearman $\rho$ under permutation]} Two-panel histogram: (left) $\rho_{\rm per\,T}$ across 100 permute realizations, with real-data baseline shown as vertical red line; (right) same for $\rho_{\rm per\,galaxy}$. Demonstrates the asymmetric failure mode: the permute null is centered at positive $\rho$, \emph{opposite sign} from real data; no permute realization reaches the real-data value. \emph{Data source:} \texttt{data/nulltest\_per\_realization.csv} (filter null\_type='permute'; columns rho\_per\_T, rho\_per\_gal). \emph{Status:} Generated as \texttt{figures/fig\_3\_2\_2\_permute\_null.pdf}.}
 \end{figure}
@@ -400,10 +401,9 @@ The observed distributions show no preferential clustering at any of the four ca
 
 \begin{figure}[ht]
 \centering
-%% TODO: \includegraphics{...} once figure is generated
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Figure placeholder --- generation script pending]}\vspace{3cm}}}
+\includegraphics[width=0.9\textwidth]{figures/fig_3_3_1_disk_dynamical_scales.pdf}
 
-\caption{\textbf{[Figure 3.3.1 --- Disk dynamical scale coincidence]} Four-panel CDF comparison. Each panel: empirical CDF of $|r_{\rm shell} - r_{\rm scale}|/r_{\rm scale}$ for one candidate scale ($R_{\rm disk}$, $2.15\,R_{\rm disk}$, $R_{\rm eff}$, $r$ at $V_{\rm rot}^{\rm peak}$), overlaid on uniform-placement null CDF. KS $p$-value annotated per panel. \emph{Data source:} Paper I canonical CSV (shell radii) + \texttt{data/sparc\_sample123.csv} (Rdisk, Reff) + Rotmod\_LTG files (V\_rot peak radius). Producer script not yet written. \emph{Status:} Placeholder; generation script pending.}
+\caption{\textbf{[Figure 3.3.1 --- Disk dynamical scale coincidence]} Four-panel CDF comparison. Each panel: empirical CDF of $|r_{\rm shell} - r_{\rm scale}|/r_{\rm scale}$ for one candidate scale ($R_{\rm disk}$, $2.15\,R_{\rm disk}$, $R_{\rm eff}$, $r$ at $V_{\rm rot}^{\rm peak}$), overlaid on uniform-placement null CDF. KS $p$-value annotated per panel. \emph{Data source:} Paper I canonical CSV (shell radii) + \texttt{data/sparc\_sample123.csv} (Rdisk, Reff) + Rotmod\_LTG files (V\_rot peak radius). Producer script not yet written.}
 \end{figure}
 
 \subsubsection{Systematic perturbations: mass-to-light ratio}
@@ -420,10 +420,9 @@ The shell signal is therefore not driven by baryonic mass-to-light mismodeling.
 
 \begin{figure}[ht]
 \centering
-%% TODO: \includegraphics{...} once figure is generated
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Figure placeholder --- generation script pending]}\vspace{3cm}}}
+\includegraphics[width=0.9\textwidth]{figures/fig_3_3_2_upsilon_perturbation.pdf}
 
-\caption{\textbf{[Figure 3.3.2 --- $\Upsilon$ perturbation stability]} Left: stacked bar of perturbed-vs-canonical $n_{\rm shells}$ matches across 2,001 fits, stratified by canonical shell count (n=0: 92.3\%, n=1: 83.5\%, n=2: 74.3\%). Right: scatter of $\log_{10} r_{\rm shell,1}^{\rm pert}$ versus $\log_{10} r_{\rm shell,1}^{\rm canon}$ for fully-stable shell-bearing galaxies, $\pm$25\% bands marked. \emph{Data source:} \texttt{data/upsilon\_perturbation\_per\_galaxy.csv} (columns: status, n\_shells, r\_sh1) joined with Paper I canonical CSV. \emph{Status:} Placeholder; generation script pending.}
+\caption{\textbf{[Figure 3.3.2 --- $\Upsilon$ perturbation stability]} Left: stacked bar of perturbed-vs-canonical $n_{\rm shells}$ matches across 2,001 fits, stratified by canonical shell count (n=0: 92.3\%, n=1: 83.5\%, n=2: 74.3\%). Right: scatter of $\log_{10} r_{\rm shell,1}^{\rm pert}$ versus $\log_{10} r_{\rm shell,1}^{\rm canon}$ for fully-stable shell-bearing galaxies, $\pm$25\% bands marked. \emph{Data source:} \texttt{data/upsilon\_perturbation\_per\_galaxy.csv} (columns: status, n\_shells, r\_sh1) joined with Paper I canonical CSV.}
 \end{figure}
 
 \subsubsection{Systematic perturbations: distance}
@@ -440,10 +439,9 @@ The shell signal is not driven by distance measurement uncertainty.
 
 \begin{figure}[ht]
 \centering
-%% TODO: \includegraphics{...} once figure is generated
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Figure placeholder --- generation script pending]}\vspace{3cm}}}
+\includegraphics[width=0.9\textwidth]{figures/fig_3_3_3_distance_perturbation.pdf}
 
-\caption{\textbf{[Figure 3.3.3 --- Distance perturbation stability]} Same two-panel format as Figure 3.3.2, for distance perturbation. Stability stratification: n=0: 94.6\%, n=1: 86.1\%, n=2: 82.3\%. Includes per-galaxy fractional perturbation magnitude (median 8.7\%). \emph{Data source:} \texttt{data/distance\_perturbation\_per\_galaxy.csv} (columns: status, n\_shells, r\_sh1, distance\_factor) joined with Paper I canonical CSV. \emph{Status:} Placeholder; generation script pending.}
+\caption{\textbf{[Figure 3.3.3 --- Distance perturbation stability]} Same two-panel format as Figure 3.3.2, for distance perturbation. Stability stratification: n=0: 94.6\%, n=1: 86.1\%, n=2: 82.3\%. Includes per-galaxy fractional perturbation magnitude (median 8.7\%). \emph{Data source:} \texttt{data/distance\_perturbation\_per\_galaxy.csv} (columns: status, n\_shells, r\_sh1, distance\_factor) joined with Paper I canonical CSV.}
 \end{figure}
 
 \subsubsection{Systematic perturbations: inclination}
@@ -458,10 +456,9 @@ All 2,020 fits succeeded. Shell-number selections match canonical in 95.9\% of f
 
 \begin{figure}[ht]
 \centering
-%% TODO: \includegraphics{...} once figure is generated
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Figure placeholder --- generation script pending]}\vspace{3cm}}}
+\includegraphics[width=0.9\textwidth]{figures/fig_3_3_4_inclination_perturbation.pdf}
 
-\caption{\textbf{[Figure 3.3.4 --- Inclination perturbation stability]} Same two-panel format as Figure 3.3.2, for inclination perturbation. Stability stratification: n=0: 99.3\%, n=1: 92.7\%, n=2: 92.2\%. Tightest position recovery of three perturbation tests (median $|\Delta \log r_1| = 0.0022$ dex). \emph{Data source:} \texttt{data/inclination\_perturbation\_per\_galaxy.csv} (102 galaxies $\times$ 20 realizations; edge-on galaxies included via reflection treatment, see \S3.3.4 algorithm description) joined with Paper I canonical CSV. \emph{Status:} Placeholder; generation script pending.}
+\caption{\textbf{[Figure 3.3.4 --- Inclination perturbation stability]} Same two-panel format as Figure 3.3.2, for inclination perturbation. Stability stratification: n=0: 99.3\%, n=1: 92.7\%, n=2: 92.2\%. Tightest position recovery of three perturbation tests (median $|\Delta \log r_1| = 0.0022$ dex). \emph{Data source:} \texttt{data/inclination\_perturbation\_per\_galaxy.csv} (102 galaxies $\times$ 20 realizations; edge-on galaxies included via reflection treatment, see \S3.3.4 algorithm description) joined with Paper I canonical CSV.}
 \end{figure}
 
 \subsubsection{Anti-warp clean subsample}
@@ -508,10 +505,9 @@ The present test addresses the dominant warp-artifact channel accessible within 
 
 \begin{figure}[ht]
 \centering
-%% TODO: \includegraphics{...} once figure is generated
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Figure placeholder --- generation script pending]}\vspace{3cm}}}
+\includegraphics[width=0.9\textwidth]{figures/fig_3_3_5_antiwarp_clean.pdf}
 
-\caption{\textbf{[Figure 3.3.5 --- Anti-warp clean subsample]} Two-panel comparison: $\sigma$-vs-$r$ scatter (left) and $M$-vs-$r$ scatter (right). Full-sample shells (n=67) in light gray; anti-warp clean shells (n=25) highlighted. Linear fits overlaid for each population with slopes annotated (full vs clean: $M$-$r$ 0.76$\rightarrow$0.66, $\sigma$-$r$ 1.04$\rightarrow$0.93). \emph{Data source:} \texttt{data/antiwarp\_per\_shell.csv} (use is\_clean flag for the clean subsample). \emph{Status:} Placeholder; generation script pending.}
+\caption{\textbf{[Figure 3.3.5 --- Anti-warp clean subsample]} Two-panel comparison: $\sigma$-vs-$r$ scatter (left) and $M$-vs-$r$ scatter (right). Full-sample shells (n=67) in light gray; anti-warp clean shells (n=25) highlighted. Linear fits overlaid for each population with slopes annotated (full vs clean: $M$-$r$ 0.76$\rightarrow$0.66, $\sigma$-$r$ 1.04$\rightarrow$0.93). \emph{Data source:} \texttt{data/antiwarp\_per\_shell.csv} (use is\_clean flag for the clean subsample).}
 \end{figure}
 
 \subsubsection{Backbone-family controls: Einasto and gNFW comparisons at the per-shell level}
@@ -558,10 +554,9 @@ Einasto's free $\alpha$ parameter reshapes the smooth-halo curvature at all radi
 
 \begin{figure}[ht]
 \centering
-%% TODO: \includegraphics{...} once figure is generated
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Figure placeholder --- generation script pending]}\vspace{3cm}}}
+\includegraphics[width=0.9\textwidth]{figures/fig_3_3_6_einasto_comparison.pdf}
 
-\caption{\textbf{[Figure 3.3.6 --- Per-shell backbone-family comparison]} Multi-panel figure: per-shell scaling relations $M$-$r$ and $\sigma$-$r$ for shells fitted under all three backbones (Burkert, Einasto, gNFW), with linear fits annotated showing slope preservation across the three backbones for $M$-$r$ and selective attenuation under Einasto only for $\sigma$-$r$; $\sigma/r$ distribution histograms under the three backbones showing the Einasto-specific population-median shift to 0.173 vs the more modest gNFW shift to 0.230; inner-vs-outer $r/r_{\rm vir}$ histograms showing the Burkert ($D=0.69$) and gNFW ($D=0.89$) population separation and the Einasto-specific collapse ($D=0.11$). \emph{Data source:} Paper I \texttt{data/einasto\_full\_sample\_results.csv} and Paper II \texttt{data/gnfw\_full\_sample\_fits.csv}, joined with canonical Burkert per-shell fits. \emph{Status:} Placeholder; generation script pending.}
+\caption{\textbf{[Figure 3.3.6 --- Per-shell backbone-family comparison]} Multi-panel figure: per-shell scaling relations $M$-$r$ and $\sigma$-$r$ for shells fitted under all three backbones (Burkert, Einasto, gNFW), with linear fits annotated showing slope preservation across the three backbones for $M$-$r$ and selective attenuation under Einasto only for $\sigma$-$r$; $\sigma/r$ distribution histograms under the three backbones showing the Einasto-specific population-median shift to 0.173 vs the more modest gNFW shift to 0.230; inner-vs-outer $r/r_{\rm vir}$ histograms showing the Burkert ($D=0.69$) and gNFW ($D=0.89$) population separation and the Einasto-specific collapse ($D=0.11$). \emph{Data source:} Paper I \texttt{data/einasto\_full\_sample\_results.csv} and Paper II \texttt{data/gnfw\_full\_sample\_fits.csv}, joined with canonical Burkert per-shell fits.}
 \end{figure}
 
 \subsubsection{Backbone-shift test: does the smooth halo deform when shells are removed?}
@@ -586,8 +581,7 @@ We test this directly. For each galaxy in the canonical sample, we refit the fra
 
 \begin{figure}[ht]
 \centering
-%% TODO: \includegraphics{...} once figure is generated
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Figure placeholder --- generation script pending]}\vspace{3cm}}}
+\includegraphics[width=0.9\textwidth]{figures/fig_3_3_7_backbone_shift.pdf}
 
 \caption{\textbf{[Figure 3.3.7 --- Backbone shift]} Two-panel figure: (left) $\log_{10}(\rho_0[\text{BIC}]/\rho_0[n=0])$ distribution for shell-bearing (n=51) and non-shell-bearing (n=50) galaxies as overlaid histograms; (right) $\log_{10}(a[\text{BIC}]/a[n=0])$ distribution for same. Vertical lines at the medians; null line at zero shift. \emph{Data source:} \texttt{data/backbone\_shift.csv} produced by \texttt{scripts/backbone\_shift\_test.py}; 101-galaxy convention applied at aggregation time by \texttt{scripts/make\_figures.py}.}
 \end{figure}
@@ -626,6 +620,12 @@ The intrinsic SPARC T--quality correlations underlying this result are severe: $
 \textbf{Critically, this conclusion concerns galaxy-level shell-bearing classification only.} The per-shell organizational signatures of \S3.1.2 through \S3.1.4 --- the $M$-$r$ scaling, the $\sigma$-$r$ scaling, the $\sigma/r$ distribution, and the inner-vs-outer mass ordering --- are internal to the population of detected shells and are not subject to this confound. A quality-driven detection process would produce more shells in well-measured galaxies; it cannot produce coordinated $M$-$r$ and $\sigma$-$r$ scaling across the detected population, nor inner-vs-outer dimorphism within two-shell galaxies, nor the asymmetric bracketing of real data by the destructive null procedures of \S3.2, nor the survival of per-shell signatures under the strictly more flexible Einasto and gNFW backbones (\S3.3.6). The shell-existence claim of \S3.1 rests on these multiple per-shell and structural lines of evidence; the galaxy-level statistical patterns reported in \S3.1.1 and \S3.1.5 are confirmatory but not load-bearing.
 
 The covariate result has a corresponding implication for the structure of future tests: kinematic or independent-tracer confirmation of shells at predicted radii (e.g., HI velocity dispersion under the THINGS survey; \S4) is orthogonal to rotation-curve fit-quality covariates and would constitute independent observational support for the per-shell findings reported here.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig_3_3_8_covariate_forest.pdf}
+\caption{\textbf{[Figure 3.3.8 --- Covariate forest plot]} Coefficient summaries from the multivariate covariate test. \emph{Left panel (a):} Logistic regression coefficients (z-standardized continuous predictors, binary bulge flag) for galaxy-level shell-bearing classification on the full 102-galaxy sample. Horizontal bars show 95\% confidence intervals; significant predictors ($p < 0.05$) in red, non-significant in gray. The three significant predictors ($\log N_{\rm RC}$, $\log \langle V_{\rm err} \rangle$, $\log L_{3.6}$) are all observational quality covariates; T-type and bulge dominance are non-significant after adjustment. \emph{Right panel (b):} T-type coefficient across the full sample and four matched-quality subsamples ($A$ = top half $N_{\rm pts}$; $B$ = bottom half $\langle V_{\rm err} \rangle$; $C$ = $A \cap B$; $D$ = top half $N_{\rm pts}$ within each T-bin). T-type remains non-significant in all five samples, with three of the four matched subsamples showing weakly positive coefficients --- the opposite sign from the bivariate $\rho_{\rm per\,T} = -0.83$ gradient. \emph{Data sources:} \texttt{data/covariate\_results.csv} (panel a) and \texttt{data/covariate\_matched\_results.csv} (panel b).}
+\end{figure}
 
 \subsubsection{Random-structure null tests (cross-reference to \S3.2)}
 

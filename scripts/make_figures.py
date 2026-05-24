@@ -34,6 +34,7 @@ Coverage:
   Fig 3.3.5   anti-warp clean subsample            ✓ buildable
   Fig 3.3.6   Einasto backbone comparison          ✓ buildable (requires data/einasto_full_sample_results.csv from Paper I)
   Fig 3.3.7   backbone-shift test                  ✓ buildable (101-galaxy convention; uses data/backbone_shift.csv)
+  Fig 3.3.8   covariate forest plot                ✓ buildable (uses data/covariate_results.csv + data/covariate_matched_results.csv)
 
 Tested against project data; numerical outputs match manuscript values.
 """
@@ -1137,6 +1138,102 @@ def fig_3_3_7():
     return _save_figure(fig, 'fig_3_3_7_backbone_shift')
 
 
+def fig_3_3_8():
+    """Figure 3.3.8 — Covariate forest plot for §3.3.8 multivariate test.
+
+    Two-panel forest plot:
+      (a) Full-sample logistic regression coefficients for six predictors,
+          with 95% CIs. Significant predictors (p < 0.05) highlighted.
+      (b) T_z coefficient across the five samples reported in §3.3.8
+          (FULL plus four matched-quality subsamples), showing the
+          consistency of T-type non-significance after covariate adjustment.
+
+    Data sources:
+      ../data/covariate_results.csv         (logistic + RF; full sample)
+      ../data/covariate_matched_results.csv (logistic; five subsamples, long format)
+    """
+    cov_full = pd.read_csv(_resolve_data('covariate_results.csv'))
+    cov_match = pd.read_csv(_resolve_data('covariate_matched_results.csv'))
+
+    # Panel (a) data: full-sample logistic, drop intercept
+    full_log = cov_full[
+        (cov_full['method'] == 'logistic')
+        & (cov_full['predictor'] != '(intercept)')
+    ].copy()
+    full_log['ci_lo'] = full_log['coef'] - 1.96 * full_log['se']
+    full_log['ci_hi'] = full_log['coef'] + 1.96 * full_log['se']
+
+    label_map = {
+        'T_z':              r'$T_z$ (T-type)',
+        'is_bulge_dom':     'is_bulge_dom',
+        'log_N_pts_z':      r'$\log N_{\rm RC}$',
+        'log_mean_V_err_z': r'$\log \langle V_{\rm err} \rangle$',
+        'cos_inc_z':        r'$\cos i$',
+        'log_L36_z':        r'$\log L_{3.6}$',
+    }
+    pred_order = ['T_z', 'is_bulge_dom', 'log_N_pts_z',
+                  'log_mean_V_err_z', 'cos_inc_z', 'log_L36_z']
+    full_log = full_log.set_index('predictor').reindex(pred_order).reset_index()
+
+    # Panel (b) data: T_z across subsamples
+    tz_match = cov_match[cov_match['predictor'] == 'T_z'].copy()
+    tz_match['ci_lo'] = tz_match['coef'] - 1.96 * tz_match['se']
+    tz_match['ci_hi'] = tz_match['coef'] + 1.96 * tz_match['se']
+    sub_order = ['FULL', 'A_top_Npts', 'B_bot_Verr',
+                 'C_both_quality_cuts', 'D_within_T_top_Npts']
+    sub_labels = {
+        'FULL':                'Full (n=102)',
+        'A_top_Npts':          r'A: top half $N_{\rm pts}$',
+        'B_bot_Verr':          r'B: bot half $V_{\rm err}$',
+        'C_both_quality_cuts': r'C: A $\cap$ B',
+        'D_within_T_top_Npts': r'D: top $N_{\rm pts}$ within T-bin',
+    }
+    tz_match = tz_match.set_index('subsample').reindex(sub_order).reset_index()
+
+    # Plot
+    fig, axes = plt.subplots(1, 2, figsize=(WIDTH_DOUBLE, 3.0))
+
+    def _draw_forest(ax, df, label_lookup, xlabel, title):
+        y_pos = np.arange(len(df))[::-1]
+        for i, (_, row) in enumerate(df.iterrows()):
+            y = y_pos[i]
+            sig = row['p_value'] < 0.05
+            color = COLORS['secondary'] if sig else COLORS['neutral']
+            ax.plot([row['ci_lo'], row['ci_hi']], [y, y],
+                    color=color, linewidth=1.5, zorder=2)
+            ax.plot(row['coef'], y, marker='o', color=color, markersize=5,
+                    markeredgecolor='black', markeredgewidth=0.5, zorder=3)
+        ax.axvline(0, color='black', linewidth=0.5, linestyle='--', zorder=1)
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(label_lookup)
+        ax.set_xlabel(xlabel)
+        ax.set_title(title)
+        ax.grid(True, axis='x', alpha=0.3, linewidth=0.4)
+
+    _draw_forest(
+        axes[0], full_log,
+        [label_map[p] for p in full_log['predictor']],
+        r'Logistic coefficient $\beta$ (95% CI)',
+        r'(a) Full-sample logistic, $n=102$',
+    )
+    _draw_forest(
+        axes[1], tz_match,
+        [sub_labels[s] for s in tz_match['subsample']],
+        r'$T_z$ coefficient $\beta$ (95% CI)',
+        r'(b) $T_z$ across matched-quality subsamples',
+    )
+
+    # Common symmetric x-range across the two panels
+    xlim_max = max(abs(axes[0].get_xlim()[0]), abs(axes[0].get_xlim()[1]),
+                   abs(axes[1].get_xlim()[0]), abs(axes[1].get_xlim()[1]),
+                   2.5)
+    for ax in axes:
+        ax.set_xlim(-xlim_max, xlim_max)
+
+    plt.tight_layout()
+    return _save_figure(fig, 'fig_3_3_8_covariate_forest')
+
+
 # ============================================================
 # Figure registry
 # ============================================================
@@ -1154,6 +1251,7 @@ FIGURES = {
     '3.3.5': ('Anti-warp clean subsample',              fig_3_3_5),
     '3.3.6': ('Einasto backbone comparison',            fig_3_3_6),
     '3.3.7': ('Backbone-shift test',                    fig_3_3_7),
+    '3.3.8': ('Covariate forest (logistic + matched)',  fig_3_3_8),
 }
 
 

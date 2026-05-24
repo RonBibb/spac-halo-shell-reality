@@ -65,7 +65,7 @@ OUT_SUMMARY = DATA_DIR / "antiwarp_summary.txt"
 
 # Sample convention — set to [] to include NGC 6674 (Paper I convention)
 # Set to ['NGC6674'] to exclude (NGC 6674-excluded version preserved as v1.0 catalog)
-EXCLUDE_GALAXIES = []
+EXCLUDE_GALAXIES = ['NGC6674']
 
 # Anti-warp cut thresholds
 R_OVER_RHI_MAX = 0.3
